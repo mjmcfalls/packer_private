@@ -1,0 +1,53 @@
+{
+    "builders": [
+        {
+            "boot_wait": "0s",
+            "communicator": "winrm",
+            "cpus": 2,
+            "disk_size": "{{user `disk_size`}}",
+            "floppy_files": [
+                "{{user `autounattend`}}",
+                "./scripts/ConfigureRemotingForAnsible.ps1",
+                "./scripts/SetLocalAccountTokenFilterPolicy.ps1",
+                "./scripts/setup_restart.bat",
+                "./scripts/SetupComplete.cmd"
+            ],
+            "headless": true,
+            "iso_checksum": "{{user `iso_checksum`}}",
+            "iso_url": "{{user `iso_url`}}",
+            "memory": "{{user `memory`}}",
+            "shutdown_command": "a:/setup_restart.bat",
+            "switch_name": "{{user `hyperv_switchname`}}",
+            "output_directory": "windows_2019-qemu",
+            "type": "hyperv-iso",
+            "vm_name": "{{ user `vm_name`}}",
+            "winrm_password": "{{user `winrm_password`}}",
+            "winrm_timeout": "{{user `winrm_timeout`}}",
+            "winrm_username": "{{user `winrm_username`}}",
+            "winrm_use_ntlm": "{{user `winrm_use_ntlm`}}",
+            "winrm_use_ssl": "{{user `winrm_use_ssl`}}",
+            "winrm_insecure": "{{user `winrm_insecure`}}"
+        }
+    ],
+    "post-processors": [],
+    "provisioners": [],
+    "variables": {
+        "autounattend": "{{env `autounattend`}}",
+        "disk_size": "{{env `disk_size`}}",
+        "disk_type_id": "{{env `disk_type_id`}}",
+        "memory": "{{env `memory`}}",
+        "headless": "false",
+        "hyperv_switchname": "{{env `hyperv_switchname`}}",
+        "iso_checksum": "{{env `iso_checksum`}}",
+        "iso_url": "{{env `iso_url`}}",
+        "restart_timeout": "5m",
+        "vmx_version": "14",
+        "vm_name": "{{env `vm_name`}}",
+        "winrm_password": "{{env `winrm_password`}}",
+        "winrm_timeout": "{{env `winrm_timeout`}}",
+        "winrm_username": "{{env `winrm_username`}}",
+        "winrm_use_ssl": "{{env `winrm_use_ssl`}}",
+        "winrm_insecure": "{{env `winrm_insecure`}}",
+        "winrm_use_ntlm": "{{env `winrm_use_ntlm`}}"
+    }
+}

@@ -1,1 +1,4 @@
 bin/*
+iso/*
+packer_cache/*
+vars/*
