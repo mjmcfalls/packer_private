@@ -15,8 +15,14 @@
                 <ProtectYourPC>1</ProtectYourPC>
                 <HideLocalAccountScreen>true</HideLocalAccountScreen>
                 <HideOnlineAccountScreens>true</HideOnlineAccountScreens>
+                <NetworkLocation>Work</NetworkLocation>
             </OOBE>
             <TimeZone>Eastern Standard Time</TimeZone>
+        </component>
+        <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <Reseal>
+                <Mode>Audit</Mode>
+            </Reseal>
         </component>
     </settings>
     <settings pass="specialize">
@@ -141,5 +147,21 @@
             <SkipRearm>1</SkipRearm>
         </component>
     </settings>
-    <cpi:offlineImage cpi:source="wim:e:/users/administrator/downloads/iso/windows_server_2016_datacenter_eval_en-us_14393_refresh/sources/install.wim#Windows Server 2016 SERVERDATACENTER" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
+    <settings pass="auditUser">
+        <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <RunSynchronous>
+                <RunSynchronousCommand wcm:action="add">
+                    <Path>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\ConfigureRemotingForAnsible.ps1</Path>
+                    <Order>1</Order>
+                    <Description>Enable Winrm</Description>
+                </RunSynchronousCommand>
+                <RunSynchronousCommand wcm:action="add">
+                    <Path>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\SetLocalAccountTokenFilterPolicy.ps1</Path>
+                    <Order>2</Order>
+                    <Description>Set Local admin token access</Description>
+                </RunSynchronousCommand>
+            </RunSynchronous>
+        </component>
+    </settings>
+    <cpi:offlineImage cpi:source="wim:c:/users/administrator/desktop/server_eval_x64fre_en-us/sources/install.wim#Windows Server 2022 SERVERDATACENTER" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
 </unattend>
