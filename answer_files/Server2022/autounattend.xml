@@ -19,11 +19,6 @@
             </OOBE>
             <TimeZone>Eastern Standard Time</TimeZone>
         </component>
-        <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <Reseal>
-                <Mode>Audit</Mode>
-            </Reseal>
-        </component>
     </settings>
     <settings pass="specialize">
         <component name="Microsoft-Windows-ServerManager-SvrMgrNc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -64,6 +59,11 @@
                     <Order>1</Order>
                     <Path>reg add HKLM\SOFTWARE\Policies\Windows\System\DisableLogonBackground /d 1 /t REG_DWORD /f</Path>
                     <Description>Disable lock screen image.</Description>
+                </RunSynchronousCommand>
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>2</Order>
+                    <Path>xcopy a:\*.* c:\windows\setup\Scripts\</Path>
+                    <Description>Copy Files</Description>
                 </RunSynchronousCommand>
             </RunSynchronous>
         </component>
@@ -145,33 +145,6 @@
     <settings pass="generalize">
         <component name="Microsoft-Windows-Security-SPP" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <SkipRearm>1</SkipRearm>
-        </component>
-    </settings>
-    <settings pass="auditUser">
-        <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <Reseal>
-                <ForceShutdownNow>true</ForceShutdownNow>
-            </Reseal>
-            <RunSynchronous>
-                <RunSynchronousCommand wcm:action="add">
-                    <Credentials>
-                        <Username>Administrator</Username>
-                        <Password>Agunimon42</Password>
-                    </Credentials>
-                    <Path>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\ConfigureRemotingForAnsible.ps1</Path>
-                    <Order>1</Order>
-                    <Description>Enable Winrm</Description>
-                </RunSynchronousCommand>
-                <RunSynchronousCommand wcm:action="add">
-                    <Credentials>
-                        <Username>Administrator</Username>
-                        <Password>Agunimon42</Password>
-                    </Credentials>
-                    <Path>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\SetLocalAccountTokenFilterPolicy.ps1</Path>
-                    <Order>2</Order>
-                    <Description>Set Local admin token access</Description>
-                </RunSynchronousCommand>
-            </RunSynchronous>
         </component>
     </settings>
     <cpi:offlineImage cpi:source="wim:c:/users/administrator/desktop/server_eval_x64fre_en-us/sources/install.wim#Windows Server 2022 SERVERDATACENTER" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
