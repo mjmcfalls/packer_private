@@ -149,13 +149,24 @@
     </settings>
     <settings pass="auditUser">
         <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <Reseal>
+                <ForceShutdownNow>true</ForceShutdownNow>
+            </Reseal>
             <RunSynchronous>
                 <RunSynchronousCommand wcm:action="add">
+                    <Credentials>
+                        <Username>Administrator</Username>
+                        <Password>Agunimon42</Password>
+                    </Credentials>
                     <Path>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\ConfigureRemotingForAnsible.ps1</Path>
                     <Order>1</Order>
                     <Description>Enable Winrm</Description>
                 </RunSynchronousCommand>
                 <RunSynchronousCommand wcm:action="add">
+                    <Credentials>
+                        <Username>Administrator</Username>
+                        <Password>Agunimon42</Password>
+                    </Credentials>
                     <Path>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\SetLocalAccountTokenFilterPolicy.ps1</Path>
                     <Order>2</Order>
                     <Description>Set Local admin token access</Description>
