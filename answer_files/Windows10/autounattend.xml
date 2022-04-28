@@ -7,6 +7,15 @@
                     <Value>QQBnAHUAbgBpAG0AbwBuADQAMgBBAGQAbQBpAG4AaQBzAHQAcgBhAHQAbwByAFAAYQBzAHMAdwBvAHIAZAA=</Value>
                     <PlainText>false</PlainText>
                 </AdministratorPassword>
+                <LocalAccounts>
+                    <LocalAccount wcm:action="add">
+                        <Password>
+                            <Value>UABhAGMAawBlAHIAMAAxACEAUABhAHMAcwB3AG8AcgBkAA==</Value>
+                            <PlainText>false</PlainText>
+                        </Password>
+                        <Name>packer</Name>
+                    </LocalAccount>
+                </LocalAccounts>
             </UserAccounts>
             <OOBE>
                 <HideEULAPage>true</HideEULAPage>
@@ -17,6 +26,12 @@
                 <HideOnlineAccountScreens>true</HideOnlineAccountScreens>
             </OOBE>
             <TimeZone>Eastern Standard Time</TimeZone>
+        </component>
+        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <InputLocale>en-US</InputLocale>
+            <UILanguage>en-US</UILanguage>
+            <UserLocale>en-US</UserLocale>
+            <SystemLocale>en-US</SystemLocale>
         </component>
     </settings>
     <settings pass="specialize">
@@ -62,6 +77,26 @@
                     <Description>Copy Files</Description>
                 </RunSynchronousCommand>
             </RunSynchronous>
+        </component>
+        <component name="Microsoft-Windows-Deployment" processorArchitecture="wow64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <RunSynchronous>
+                <RunSynchronousCommand wcm:action="add">
+                    <Path>cmd /c net user Administrator /active:yes</Path>
+                    <Description>Enable Local admin</Description>
+                    <Order>1</Order>
+                </RunSynchronousCommand>
+            </RunSynchronous>
+        </component>
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="wow64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <AutoLogon>
+                <Password>
+                    <Value>QQBnAHUAbgBpAG0AbwBuADQAMgBQAGEAcwBzAHcAbwByAGQA</Value>
+                    <PlainText>false</PlainText>
+                </Password>
+                <Enabled>true</Enabled>
+                <Username>Administrator</Username>
+                <LogonCount>5</LogonCount>
+            </AutoLogon>
         </component>
     </settings>
     <settings pass="windowsPE">

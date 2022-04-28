@@ -164,6 +164,7 @@ build {
   provisioner "powershell" {
     inline = ["New-Item -Path c:\\Temp -ItemType directory"]
   }
+  
   provisioner "file" {
     destination = "c:/temp/${var.r_installer}"
     source      = "${var.r_src_path}/${var.r_installer}"
