@@ -15,15 +15,11 @@
                 <ProtectYourPC>1</ProtectYourPC>
                 <HideLocalAccountScreen>true</HideLocalAccountScreen>
                 <HideOnlineAccountScreens>true</HideOnlineAccountScreens>
-                <NetworkLocation>Work</NetworkLocation>
             </OOBE>
             <TimeZone>Eastern Standard Time</TimeZone>
         </component>
     </settings>
     <settings pass="specialize">
-        <component name="Microsoft-Windows-ServerManager-SvrMgrNc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <DoNotOpenServerManagerAtLogon>true</DoNotOpenServerManagerAtLogon>
-        </component>
         <component name="Microsoft-Windows-TerminalServices-LocalSessionManager" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <fDenyTSConnections>false</fDenyTSConnections>
         </component>
@@ -113,8 +109,8 @@
                     <WillShowUI>OnError</WillShowUI>
                     <InstallFrom>
                         <MetaData wcm:action="add">
-                            <Key>/IMAGE/INDEX</Key>
-                            <Value>4</Value>
+                            <Key>/IMAGE/NAME</Key>
+                            <Value>Windows 10 Pro</Value>
                         </MetaData>
                     </InstallFrom>
                     <InstallTo>
@@ -125,6 +121,10 @@
             </ImageInstall>
             <UserData>
                 <AcceptEula>true</AcceptEula>
+                <ProductKey>
+                    <Key>W269N-WFGWX-YVC9B-4J6C9-T83GX</Key>
+                    <WillShowUI>OnError</WillShowUI>
+                </ProductKey>
             </UserData>
         </component>
         <component name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -147,5 +147,5 @@
             <SkipRearm>1</SkipRearm>
         </component>
     </settings>
-    <cpi:offlineImage cpi:source="wim:c:/users/administrator/desktop/server_eval_x64fre_en-us/sources/install.wim#Windows Server 2022 SERVERDATACENTER" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
+    <cpi:offlineImage cpi:source="wim:c:/users/administrator/desktop/windows10/windows10_20220427/sources/win10pro.wim#Windows 10 Pro" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
 </unattend>
