@@ -1,2 +1,0 @@
-C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -executionpolicy bypass -file c:\Windows\Setup\Scripts\ConfigureRemotingForAnsible.ps1
-C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -executionpolicy bypass -file c:\Windows\Setup\Scripts\SetLocalAccountTokenFilterPolicy.ps1
