@@ -3,12 +3,10 @@
 Param (
     [string]$uri,
     [string]$outpath,
-    [string]$regexTarget = "release.html",
-    $urlRegex = "(?<URL>URL=R-[0-9\.]*-win.exe)",
     [switch]$install,
-    [string]$installParams = "/verysilent /NORESTART",
+    [string]$installParams = "/S",
     [switch]$public,
-    [string]$appuri = "/apps/R/",
+    [string]$appuri = "/apps/anaconda/",
     [string]$installername
 )
 
@@ -52,26 +50,11 @@ Function Write-Log {
 
 $ProgressPreference = 'SilentlyContinue'
 
+Write-Log -Level "INFO" -Message "Fetch $($installername) from $($uri)"
+
 Create-TempFolder -Path $outpath
-
 if ($public.IsPresent) {
-    Write-Log -Level "INFO" -Message "Fetch $($installername) from $($uri)"
-    $content = Invoke-WebRequest -Uri $uri -UseBasicParsing
-    $content
-
-    if ( $content.content -match $urlRegex ) {
-        $installername = ($Matches.URL -split "=")[-1]
-        Write-Log -Level "INFO" -Message "R Installer Name: $($installername)"
-    }
-    else {
-        Write-Log -Level "INFO" -Message "R Installer Name not found in redirect"
-    }
-
-    $r_download_uri = $uri.replace($regexTarget, $installername)
-    Write-Log -Level "INFO" -Message "R Download URI: $($r_download_uri)"
-
-    Write-Log -Level "INFO" -Message "Starting Download"
-    Invoke-WebRequest -Uri $r_download_uri -OutFile (Join-Path -Path $outpath -ChildPath $installername) -UseBasicParsing
+    Write-Log -Level "INFO" -Message "Anaconda - TO:Do fetch from source"
 }
 else {
     Write-Log -Level "INFO" -Message "Getting $($uri)$($appuri)$($installername)"
@@ -79,7 +62,7 @@ else {
 }
 
 if ($install.IsPresent) {
-    Write-Log -Level "INFO" -Message "Starting Install"
-    "Start-Process -NoNewWindow -FilePath $(Join-Path -Path $outpath -ChildPath $installername) -ArgumentList `"$($installParams)`""
+    Write-Log -Level "INFO" -Message "Installing of $($installername)"
+    Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $(Join-Path -Path $outpath -ChildPath $installername) -ArgumentList `"$($installParams)`""
     Start-Process -NoNewWindow -FilePath $(Join-Path -Path $outpath -ChildPath $installername) -ArgumentList "$($installParams)"
 }

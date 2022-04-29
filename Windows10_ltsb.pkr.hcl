@@ -150,6 +150,35 @@ variable "r_studio_download_uri" {
   default = "${env("r_studio_download_uri")}"
 }
 
+variable "anaconda_install_type" {
+  type    = string
+  default = "${env("anaconda_install_type")}"
+}
+
+variable "anaconda_install_addpath" {
+  type    = string
+  default = "${env("anaconda_install_addpath")}"
+}
+
+variable "anaconda_install_registerpy" {
+  type    = string
+  default = "${env("anaconda_install_registerpy")}"
+}
+
+variable "anaconda_install_silent" {
+  type    = string
+  default = "${env("anaconda_install_silent")}"
+}
+
+variable "anaconda_install_dir" {
+  type    = string
+  default = "${env("anaconda_install_dir")}"
+}
+variable "anaconda_installer" {
+  type    = string
+  default = "${env("anaconda_installer")}"
+}
+
 # source blocks are generated from your builders; a source can be referenced in
 # build blocks. A build block runs provisioner and post-processors on a
 # source. Read the documentation for source blocks here:
@@ -207,6 +236,12 @@ build {
     destination = "${var.win_temp_dir}\\Get_r_studio.ps1"
     direction   =  "upload"
   }
+
+    provisioner "file" {
+    source      = "./src/scripts/install_anaconda.ps1"
+    destination = "${var.win_temp_dir}\\install_anaconda.ps1"
+    direction   =  "upload"
+  }
   # provisioner "file" {
   #   source      = "${var.r_src_path}/${var.r_installer}"
   #   destination = "${var.win_temp_dir}\\${var.r_installer}"
@@ -217,11 +252,15 @@ build {
   }
   
   provisioner "powershell" {
-    inline = ["${var.win_temp_dir}\\download_r.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -rinstallername '${var.r_installer}' -install"]
+    inline = ["${var.win_temp_dir}\\download_r.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.r_installer}' -install"]
   }
   
   provisioner "powershell" {
     inline = ["${var.win_temp_dir}\\Get_r_studio.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.r_studio_install}' -install"]
+  }
+
+  provisioner "powershell" {
+    inline = ["${var.win_temp_dir}\\install_anaconda.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.anaconda_installer}' -installParams '${var.anaconda_install_type} ${var.anaconda_install_addpath} ${var.anaconda_install_registerpy} ${var.anaconda_install_silent} ${var.anaconda_install_dir}'-install"]
   }
 
 }

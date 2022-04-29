@@ -6,7 +6,7 @@ Param (
     [switch]$install,
     [string]$installParams = "/S",
     [switch]$public,
-    [string]$packeruri = "/apps/R_Studio/",
+    [string]$appuri = "/apps/R_Studio/",
     [string]$installername
 )
 
@@ -47,10 +47,12 @@ Function Write-Log {
         Write-Output $Line
     }
 }
-
-Write-Log -Level "INFO" -Message  "Fetch R Studio from $($uri)"
+$ProgressPreference = 'SilentlyContinue'
 
 Create-TempFolder -Path $outpath
+
+Write-Log -Level "INFO" -Message  "Fetch $($installername) from $($uri)"
+
 if ($public.IsPresent) {
     $installername = ($uri -Split "/")[-1]
 
@@ -62,8 +64,8 @@ if ($public.IsPresent) {
     Write-Log -Level "INFO" -Message "Download Completed"
 }
 else {
-    Write-Log -Level "INFO" -Message "Getting $($uri)$($packeruri)$($installername)"
-    Invoke-WebRequest -Uri "$($uri)$($packeruri)$($installername)" -OutFile (Join-Path -Path $outpath -ChildPath $installername) 
+    Write-Log -Level "INFO" -Message "Getting $($uri)$($appuri)$($installername)"
+    Invoke-WebRequest -Uri "$($uri)$($appuri)$($installername)" -OutFile (Join-Path -Path $outpath -ChildPath $installername) 
 }
 
 if ($install.IsPresent) {
