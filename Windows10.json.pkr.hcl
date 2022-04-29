@@ -207,11 +207,11 @@ build {
   #   direction   =  "upload"
   # }
   provisioner "powershell" {
-    inline = ["${var.win_temp_dir}\\download_r.ps1 -uri '${var.r_download_uri}' -OutPath '${var.win_temp_dir}' -rinstallername '${var.r_installer} -install"]
+    inline = ["${var.win_temp_dir}\\download_r.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -rinstallername '${var.r_installer}' -install"]
   }
   
   provisioner "powershell" {
-    inline = ["${var.win_temp_dir}\\Get_r_studio.ps1 -uri '${var.r_studio_download_uri}' -OutPath '${var.win_temp_dir}' -rinstallername '${var.r_studio_install} -install"]
+    inline = ["${var.win_temp_dir}\\Get_r_studio.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.r_studio_install}' -install"]
   }
 
 }
