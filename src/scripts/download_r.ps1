@@ -8,7 +8,7 @@ Param (
     [switch]$install,
     [string]$installParams = "/verysilent /NORESTART",
     [switch]$public,
-    [string]$packeruri = "/R/",
+    [string]$packeruri = "/apps/R/",
     [string]$rinstallername
 )
 

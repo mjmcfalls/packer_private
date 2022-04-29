@@ -6,7 +6,7 @@ Param (
     [switch]$install,
     [string]$installParams = "/S",
     [switch]$public,
-    [string]$packeruri = "/R_Studio/",
+    [string]$packeruri = "/apps/R_Studio/",
     [string]$installername
 )
 
