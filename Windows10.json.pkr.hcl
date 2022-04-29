@@ -189,7 +189,12 @@ build {
     destination = "${var.win_temp_dir}\\InstallApplication.ps1"
     direction   =  "upload"
   }
-  
+
+  provisioner "file" {
+    source      = "./src/scripts/Windows10_cleanup.ps1"
+    destination = "${var.win_temp_dir}\\Windows10_cleanup.ps1"
+    direction   =  "upload"
+  }
   provisioner "file" {
     source      = "./src/scripts/download_r.ps1"
     destination = "${var.win_temp_dir}\\download_r.ps1"
@@ -206,6 +211,10 @@ build {
   #   destination = "${var.win_temp_dir}\\${var.r_installer}"
   #   direction   =  "upload"
   # }
+  provisioner "powershell" {
+    inline = ["${var.win_temp_dir}\\Windows10_cleanup.ps1"]
+  }
+  
   provisioner "powershell" {
     inline = ["${var.win_temp_dir}\\download_r.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -rinstallername '${var.r_installer}' -install"]
   }
