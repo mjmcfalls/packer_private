@@ -63,17 +63,18 @@ else {
 }
 
 if ($install.IsPresent) {
-    Write-Log -Level "INFO" -Message "Unzipping $($installername)"
+    Write-Log -Level "INFO" -Message "Unzipping $($installername) to $(Join-Path -Path $outpath -ChildPath $installername)"
     Expand-Archive -Path "$($installername)" -Destination (Join-Path -Path $outpath -ChildPath $installername) -Force
 
     Write-Log -Level "INFO" -Message "Finding Chrome Installer"
     $installer = Get-Childitem (Join-Path -Path $outpath -ChildPath $installername) -Filter $fileFilter
+    $installer = $installer -Split ".zip"
 
     Write-Log -Level "INFO" -Message "Starting Install"
     Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($installer.FullName) $($installParams)`""
     Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($installer.FullName) $($installParams)"
 
     Write-Log -Level "INFO" -Message "Installing of $($installername)"
-    Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $(Join-Path -Path $outpath -ChildPath $installername) -ArgumentList `"$($installParams)`""
-    Start-Process -NoNewWindow -FilePath $(Join-Path -Path $outpath -ChildPath $installername) -ArgumentList "$($installParams)"
+    Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($installer.FullName) -ArgumentList `"$($installParams)`""
+    Start-Process -NoNewWindow -FilePath $installer.FullName -ArgumentList "$($installParams)"
 }

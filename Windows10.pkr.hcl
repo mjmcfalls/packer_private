@@ -194,6 +194,11 @@ variable "chrome_installer" {
   default = "${env("chrome_installer")}"
 }
 
+variable "seven_zip_uri" {
+  type    = string
+  default = "${env("seven_zip_uri")}"
+}
+
 # source blocks are generated from your builders; a source can be referenced in
 # build blocks. A build block runs provisioner and post-processors on a
 # source. Read the documentation for source blocks here:
@@ -264,7 +269,7 @@ build {
   #   direction   =  "upload"
   # }
   provisioner "powershell" {
-    inline = ["${var.win_temp_dir}\\Windows10_cleanup.ps1"]
+    inline = ["${var.win_temp_dir}\\scripts\\Windows10_cleanup.ps1"]
   }
   
   provisioner "powershell" {
