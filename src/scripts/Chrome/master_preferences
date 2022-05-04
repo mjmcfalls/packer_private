@@ -33,10 +33,5 @@
     "suppress_first_run_default_browser_prompt": true,
     "system_level": true,
     "verbose_logging": true
-  },
-  "first_run_tabs": [
-    "http://www.example.com",
-    "http://welcome_page",
-    "http://new_tab_page"
-  ]
+  }
 }
