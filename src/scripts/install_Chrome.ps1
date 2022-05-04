@@ -4,10 +4,11 @@ Param (
     [string]$uri = "",
     [string]$outpath,
     [switch]$install,
-    [string]$installParams = "/S",
+    [string]$installParams = "/quiet /norestart",
     [switch]$public,
-    [string]$appuri = "/apps/7zip/",
-    [string]$installername = "7z2107-x64.msi"
+    [string]$appuri = "/apps/Chrome/",
+    [string]$installername = "GoogleChromeEnterpriseBundle64.zip",
+    [string]$fileFilter = "GoogleChromeStandaloneEnterprise64.msi"
 )
 
 function Create-TempFolder {
@@ -53,7 +54,7 @@ $ProgressPreference = 'SilentlyContinue'
 Create-TempFolder -Path $outpath
 
 if ($public.IsPresent) {
-    Write-Log -Level "INFO" -Message "7Zip install from Web"
+    Write-Log -Level "INFO" -Message "Chrome - Install from Web"
     Invoke-WebRequest -Uri "$($uri)" -OutFile (Join-Path -Path $outpath -ChildPath $installername)  -UseBasicParsing
 }
 else {
@@ -62,7 +63,17 @@ else {
 }
 
 if ($install.IsPresent) {
+    Write-Log -Level "INFO" -Message "Unzipping $($installername)"
+    Expand-Archive -Path "$($installername)" -Destination (Join-Path -Path $outpath -ChildPath $installername) -Force
+
+    Write-Log -Level "INFO" -Message "Finding Chrome Installer"
+    $installer = Get-Childitem (Join-Path -Path $outpath -ChildPath $installername) -Filter $fileFilter
+
     Write-Log -Level "INFO" -Message "Starting Install"
+    Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($installer.FullName) $($installParams)`""
+    Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($installer.FullName) $($installParams)"
+
+    Write-Log -Level "INFO" -Message "Installing of $($installername)"
     Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $(Join-Path -Path $outpath -ChildPath $installername) -ArgumentList `"$($installParams)`""
     Start-Process -NoNewWindow -FilePath $(Join-Path -Path $outpath -ChildPath $installername) -ArgumentList "$($installParams)"
 }
