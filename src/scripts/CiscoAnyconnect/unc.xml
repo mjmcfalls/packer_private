@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AnyConnectProfile xmlns="http://schemas.xmlsoap.org/encoding/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.xmlsoap.org/encoding/ AnyConnectProfile.xsd">
+    <ServerList>
+        <HostEntry>
+            <HostName>vpn.unc.edu</HostName>
+            <HostAddress>vpn.unc.edu</HostAddress>
+        </HostEntry>
+    </ServerList>
+    <ClientInitialization>
+        <UseStartBeforeLogon UserControllable="true">false</UseStartBeforeLogon>
+        <AutomaticCertSelection UserControllable="true">true</AutomaticCertSelection>
+        <ShowPreConnectMessage>false</ShowPreConnectMessage>
+        <AutoConnectOnStart UserControllable="true">false</AutoConnectOnStart>
+        <MinimizeOnConnect UserControllable="true">true</MinimizeOnConnect>
+        <AutoReconnect UserControllable="false">true <AutoReconnectBehavior UserControllable="false">DisconnectOnSuspend</AutoReconnectBehavior>
+        </AutoReconnect>
+    </ClientInitialization>
+</AnyConnectProfile>

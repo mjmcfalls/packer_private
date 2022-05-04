@@ -1,0 +1,76 @@
+[CmdletBinding()]
+
+Param (
+    [string]$uri,
+    [string]$outpath,
+    [string]$regexTarget = "release.html",
+    $urlRegex = "(?<URL>URL=R-[0-9\.]*-win.exe)",
+    [switch]$install,
+    [string]$installParams = "/quiet /norestart",
+    [switch]$public,
+    [string]$appuri = "/apps/CiscoAnyconnect/",
+    [string]$installername = "anyconnect-win-4.10.05095.zip",
+    [string]$xmlProfilePath = "C:\ProgramData\Cisco\Cisco AnyConnect Secure Mobility Client\Profile",
+    [string]$xmlProfile = "unc.xml",
+    [string]$fileFilter = "*core-vpn*"
+)
+
+function Create-TempFolder {
+    [CmdletBinding(
+        SupportsShouldProcess = $True
+    )]
+    param(
+        [string]$Path
+    )
+    if (-not (Test-Path $Path)) {
+        New-Item -ItemType Directory -Path $Path
+    }
+
+}
+
+Function Write-Log {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $False)]
+        [ValidateSet("INFO", "WARN", "ERROR", "FATAL", "DEBUG")]
+        [String]
+        $Level = "INFO",
+        [Parameter(Mandatory = $True)]
+        [string]
+        $Message,
+        [Parameter(Mandatory = $False)]
+        [string]
+        $logfile
+    )
+
+    $Stamp = (Get-Date).toString("yyyy/MM/dd HH:mm:ss")
+    $Line = "$Stamp $Level $Message"
+    If ($logfile) {
+        Add-Content $logfile -Value $Line
+    }
+    Else {
+        Write-Output $Line
+    }
+}
+
+$ProgressPreference = 'SilentlyContinue'
+
+Create-TempFolder -Path $outpath
+
+Write-Log -Level "INFO" -Message "Getting $($uri)$($appuri)$($installername)"
+Invoke-WebRequest -Uri "$($uri)$($appuri)$($installername)" -OutFile (Join-Path -Path $outpath -ChildPath $installername) -UseBasicParsing
+
+if ($install.IsPresent) {
+    Write-Log -Level "INFO" -Message "Unzipping $($installername)"
+    Expand-Archive -Path "$($installername)" -Destination (Join-Path -Path $outpath -ChildPath $installername) -Force
+
+    Write-Log -Level "INFO" -Message "Finding AnyConnect Core installer"
+    $installer = Get-Childitem (Join-Path -Path $outpath -ChildPath $installername) -Filter $fileFilter
+
+    Write-Log -Level "INFO" -Message "Starting Install"
+    Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($installer.FullName) $($installParams)`""
+    Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($installer.FullName) $($installParams)"
+
+    Write-Log -Level "Copying Default Profile to $($xmlProfilePath)"
+    Move-Item -Path "$($outpath)\$($xmlProfile)" -Destination $xmlProfilePath
+}

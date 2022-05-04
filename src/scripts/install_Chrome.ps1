@@ -1,13 +1,13 @@
 [CmdletBinding()]
 
 Param (
-    [string]$uri,
+    [string]$uri = "",
     [string]$outpath,
     [switch]$install,
     [string]$installParams = "/S",
     [switch]$public,
-    [string]$appuri = "/apps/anaconda/",
-    [string]$installername
+    [string]$appuri = "/apps/7zip/",
+    [string]$installername = "7z2107-x64.msi"
 )
 
 function Create-TempFolder {
@@ -50,19 +50,19 @@ Function Write-Log {
 
 $ProgressPreference = 'SilentlyContinue'
 
-Write-Log -Level "INFO" -Message "Fetch $($installername) from $($uri)"
-
 Create-TempFolder -Path $outpath
+
 if ($public.IsPresent) {
-    Write-Log -Level "INFO" -Message "Anaconda - TO:Do fetch from source"
+    Write-Log -Level "INFO" -Message "7Zip install from Web"
+    Invoke-WebRequest -Uri "$($uri)" -OutFile (Join-Path -Path $outpath -ChildPath $installername)  -UseBasicParsing
 }
 else {
     Write-Log -Level "INFO" -Message "Getting $($uri)$($appuri)$($installername)"
-    Invoke-WebRequest -Uri "$($uri)$($appuri)$($installername)" -OutFile (Join-Path -Path $outpath -ChildPath $installername) -UseBasicParsing
+    Invoke-WebRequest -Uri "$($uri)$($appuri)$($installername)" -OutFile (Join-Path -Path $outpath -ChildPath $installername)  -UseBasicParsing
 }
 
 if ($install.IsPresent) {
-    Write-Log -Level "INFO" -Message "Installing of $($installername)"
+    Write-Log -Level "INFO" -Message "Starting Install"
     Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $(Join-Path -Path $outpath -ChildPath $installername) -ArgumentList `"$($installParams)`""
     Start-Process -NoNewWindow -FilePath $(Join-Path -Path $outpath -ChildPath $installername) -ArgumentList "$($installParams)"
 }
