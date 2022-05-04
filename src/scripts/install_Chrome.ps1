@@ -64,13 +64,13 @@ else {
 }
 
 if ($install.IsPresent) {
-    $archiveDestination = $installername -Split ".zip"
+    $archiveDestination = Join-Path -Path $outpath -ChildPath ($installername -Split ".zip")
 
-    Write-Log -Level "INFO" -Message "Unzipping $($installername) to $(Join-Path -Path $outpath -ChildPath $archiveDestination)"
+    Write-Log -Level "INFO" -Message "Unzipping $($installername) to $($archiveDestination)"
     Expand-Archive -Path "$($installerPath)" -Destination (Join-Path -Path $outpath -ChildPath $archiveDestination) -Force
 
     Write-Log -Level "INFO" -Message "Finding Chrome Installer"
-    $installer = Get-Childitem $installerPath -Filter $fileFilter
+    $installer = Get-Childitem $archiveDestination -Filter $fileFilter
     
     Write-Log -Level "INFO" -Message "Starting Install"
     Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($installer.FullName) $($installParams)`""
