@@ -62,8 +62,23 @@ else {
 }
 
 if ($install.IsPresent) {
+    $installerPath = Join-Path -Path $outpath -ChildPath $installername
+
+    Write-Log -Level "INFO" -Message "Getting Extension of $($installername)"
+    $installerExtension = [System.IO.Path]::GetExtension("$($installerPath)")
+
+    Write-Log -Level "INFO" -Message "Extension is: $($installerExtension)"
+
+    if($installerExtension -like ".msi"){
+        Write-Log -Level "INFO" -Message "MSI Install of $($installerPath)"
+        Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($installerPath) $($installParams)`""
+        Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($installerPath) $($installParams)"    
+    }
+    elseif ($installerExtension -like ".exe") {
+        Write-Log -Level "INFO" -Message "EXE Install of $($installername)"
+        Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($installerPath) -ArgumentList `"$($installParams)`""
+        Start-Process -NoNewWindow -FilePath $installerPath -ArgumentList "$($installParams)"    
+    }
+
     
-    Write-Log -Level "INFO" -Message "Installing of $($installername)"
-    Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $(Join-Path -Path $outpath -ChildPath $installername) -ArgumentList `"$($installParams)`""
-    Start-Process -NoNewWindow -FilePath $(Join-Path -Path $outpath -ChildPath $installername) -ArgumentList "$($installParams)"
 }

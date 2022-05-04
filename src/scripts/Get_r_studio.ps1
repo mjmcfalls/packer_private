@@ -58,7 +58,7 @@ if ($public.IsPresent) {
 
     Write-Log -Level "INFO" -Message "R Studio Installer Name: $($installername)"
 
-    Write-Log -Level "INFO" -Message "Starting Download of R Studio"
+    Write-Log -Level "INFO" -Message "Starting Download of $($installername)"
     Invoke-WebRequest -Uri $uri -outfile (Join-Path -Path $outpath -ChildPath $installername) -UseBasicParsing
 
     Write-Log -Level "INFO" -Message "Download Completed"
@@ -69,7 +69,7 @@ else {
 }
 
 if ($install.IsPresent) {
-    Write-Log -Level "INFO" -Message "Starging Install of R Studio"
+    Write-Log -Level "INFO" -Message "Installing of $($installername)"
     "Start-Process -NoNewWindow -FilePath $(Join-Path -Path $outpath -ChildPath $installername) -ArgumentList `"$($installParams)`""
     Start-Process -NoNewWindow -FilePath $(Join-Path -Path $outpath -ChildPath $installername) -ArgumentList "$($installParams)"
 }
