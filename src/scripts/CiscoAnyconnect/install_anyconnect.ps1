@@ -10,7 +10,7 @@ Param (
     [switch]$public,
     [string]$appuri = "/apps/CiscoAnyconnect/",
     [string]$installername = "anyconnect-win-4.10.05095.zip",
-    [string]$xmlProfilePath = "C:\ProgramData\Cisco\Cisco AnyConnect Secure Mobility Client\Profile",
+    [string]$xmlProfilePathDest = "C:\ProgramData\Cisco\Cisco AnyConnect Secure Mobility Client\Profile",
     [string]$xmlProfile = "unc.xml",
     [string]$fileFilter = "*core-vpn*"
 )
@@ -71,6 +71,9 @@ if ($install.IsPresent) {
     Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($installer.FullName) $($installParams)`""
     Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($installer.FullName) $($installParams)"
 
-    Write-Log -Level "Copying Default Profile to $($xmlProfilePath)"
-    Move-Item -Path "$($outpath)\$($xmlProfile)" -Destination $xmlProfilePath
+    Write-Log -Level "INFO" -Message "Searching $() for $($xmlProfile)"
+    $xmlProfileSrc = Get-Childitem -Path $outpath -Filter $xmlProfile -Recurse
+
+    Write-Log -Level "INFO" -Message  "Copying Default Profile to $($xmlProfilePathDest)"
+    Move-Item -Path "$($xmlProfileSrc.FullName)" -Destination $xmlProfilePathDest -Force
 }

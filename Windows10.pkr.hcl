@@ -199,6 +199,10 @@ variable "seven_zip_uri" {
   default = "${env("seven_zip_uri")}"
 }
 
+variable "anyconnect_installer" {
+  type    = string
+  default = "${env("anyconnect_installer")}"
+}
 # source blocks are generated from your builders; a source can be referenced in
 # build blocks. A build block runs provisioner and post-processors on a
 # source. Read the documentation for source blocks here:
@@ -287,15 +291,17 @@ build {
   provisioner "powershell" {
     inline = ["${var.win_temp_dir}\\scripts\\install_7zip.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.seven_zip_installer}' -install"]
   }
+
   provisioner "powershell" {
     inline = ["${var.win_temp_dir}\\scripts\\install_Chrome.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.chrome_installer}' -install"]
   }
 
   provisioner "powershell" {
-    inline = [
-      "Get-Childitem '${var.win_temp_dir}' -Recurse | Remove-Item -force",
-      "Get-Childitem $env:temp -Recurse | Remove-Item -Force"
-    ]
+    inline = ["${var.win_temp_dir}\\scripts\\install_anyconnect.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.anyconnect_installer}' -install"]
+  }
+
+  provisioner "powershell" {
+    inline = [ "${var.win_temp_dir}\\scripts\\Win10_Packer_cleanup.ps1 -tempdir '${var.win_temp_dir}'"]
   }
 
 

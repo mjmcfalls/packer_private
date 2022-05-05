@@ -1,8 +1,7 @@
 [CmdletBinding()]
-
 Param (
     [string]$uri = "",
-    [string]$outpath,
+    [string]$outpath = "c:\temp",
     [switch]$install,
     [string]$installParams = "/quiet /norestart",
     [switch]$public,
@@ -64,13 +63,13 @@ else {
 }
 
 if ($install.IsPresent) {
-    $archiveDestination = Join-Path -Path $outpath -ChildPath ($installername -Split ".zip")
+    $archiveDestination = Join-Path -Path $outpath -ChildPath ($installername -Split ".zip")[0]
 
     Write-Log -Level "INFO" -Message "Unzipping $($installername) to $($archiveDestination)"
-    Expand-Archive -Path "$($installerPath)" -Destination (Join-Path -Path $outpath -ChildPath $archiveDestination) -Force
+    Expand-Archive -Path "$($installerPath)" -Destination $archiveDestination -Force
 
     Write-Log -Level "INFO" -Message "Finding Chrome Installer"
-    $installer = Get-Childitem $archiveDestination -Filter $fileFilter
+    $installer = Get-Childitem $archiveDestination -Filter $fileFilter -recurse
     
     Write-Log -Level "INFO" -Message "Starting Install"
     Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($installer.FullName) $($installParams)`""

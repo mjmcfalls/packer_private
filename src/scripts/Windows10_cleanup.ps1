@@ -20,4 +20,4 @@ reg unload HKEY_LOCAL_MACHINE\WIM
 
 
 # Disable Windows Feeds
-Set-ItemProperty -Path "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" -Name EnableFeeds -Value 0 -PropertyType "DWORD" -Force
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" /v EnableFeeds /t REG_DWORD /d 0 /f
