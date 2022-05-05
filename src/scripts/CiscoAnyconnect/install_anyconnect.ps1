@@ -2,7 +2,7 @@
 
 Param (
     [string]$uri,
-    [string]$outpath,
+    [string]$outpath = "c:\temp",
     [string]$regexTarget = "release.html",
     $urlRegex = "(?<URL>URL=R-[0-9\.]*-win.exe)",
     [switch]$install,
@@ -43,7 +43,7 @@ Function Write-Log {
         $logfile
     )
 
-    $Stamp = (Get-Date).toString("yyyy/MM/dd HH:mm:ss")
+    $Stamp = (Get-Date).toString("yyyy-MM-dd HH:mm:ss")
     $Line = "$Stamp $Level $Message"
     If ($logfile) {
         Add-Content $logfile -Value $Line
@@ -56,16 +56,19 @@ Function Write-Log {
 $ProgressPreference = 'SilentlyContinue'
 
 Create-TempFolder -Path $outpath
+$installerPath = Join-Path -Path $outpath -ChildPath $installername
 
 Write-Log -Level "INFO" -Message "Getting $($uri)$($appuri)$($installername)"
-Invoke-WebRequest -Uri "$($uri)$($appuri)$($installername)" -OutFile (Join-Path -Path $outpath -ChildPath $installername) -UseBasicParsing
+Invoke-WebRequest -Uri "$($uri)$($appuri)$($installername)" -OutFile $installerPath -UseBasicParsing
 
 if ($install.IsPresent) {
+    $archiveDestination = Join-Path -Path $outpath -ChildPath ($installername -Split ".zip")[0]
+
     Write-Log -Level "INFO" -Message "Unzipping $($installername)"
-    Expand-Archive -Path "$($installername)" -Destination (Join-Path -Path $outpath -ChildPath $installername) -Force
+    Expand-Archive -Path "$($installerPath)" -Destination $archiveDestination -Force
 
     Write-Log -Level "INFO" -Message "Finding AnyConnect Core installer"
-    $installer = Get-Childitem (Join-Path -Path $outpath -ChildPath $installername) -Filter $fileFilter
+    $installer = Get-Childitem $archiveDestination -Filter $fileFilter
 
     Write-Log -Level "INFO" -Message "Starting Install"
     Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($installer.FullName) $($installParams)`""
