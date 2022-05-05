@@ -74,9 +74,15 @@ if ($install.IsPresent) {
     Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($installer.FullName) $($installParams)`""
     Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($installer.FullName) $($installParams)"
 
-    Write-Log -Level "INFO" -Message "Searching $() for $($xmlProfile)"
+    Write-Log -Level "INFO" -Message "Searching $($outpath) for $($xmlProfile)"
     $xmlProfileSrc = Get-Childitem -Path $outpath -Filter $xmlProfile -Recurse
 
-    Write-Log -Level "INFO" -Message  "Copying Default Profile to $($xmlProfilePathDest)"
-    Move-Item -Path "$($xmlProfileSrc.FullName)" -Destination $xmlProfilePathDest -Force
+    if($xmlProfileSrc){
+        Write-Log -Level "INFO" -Message  "Copying $($xmlProfileSrc.FullName) to $($xmlProfilePathDest)"
+        Move-Item -Path $xmlProfileSrc.FullName -Destination $xmlProfilePathDest -Force
+    }
+    else{
+        Write-Log -Level "INFO" -Message  "Not Found - $($xmlProfile) in $($outpath)"
+    }
+
 }

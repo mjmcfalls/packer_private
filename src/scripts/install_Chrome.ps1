@@ -7,7 +7,10 @@ Param (
     [switch]$public,
     [string]$appuri = "/apps/Chrome/",
     [string]$installername = "GoogleChromeEnterpriseBundle64.zip",
-    [string]$fileFilter = "GoogleChromeStandaloneEnterprise64.msi"
+    [string]$fileFilter = "GoogleChromeStandaloneEnterprise64.msi",
+    [string]$preferenceFile = "master_preferences.xml",
+    [string]$preferenceFileDest = "C:\Program Files\Google\Chrome\Application\initial_preferences",
+    [string]$preferenceFilter = "*Chrome\"
 )
 
 function Create-TempFolder {
@@ -75,8 +78,16 @@ if ($install.IsPresent) {
     Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($installer.FullName) $($installParams)`""
     Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($installer.FullName) $($installParams)"
 
-    # Not sure why this is here?
-    # Write-Log -Level "INFO" -Message "Installing of $($installername)"
-    # Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($installer.FullName) -ArgumentList `"$($installParams)`""
-    # Start-Process -NoNewWindow -FilePath $installer.FullName -ArgumentList "$($installParams)"
+    Write-Log -Level "INFO" -Message "Search for preference file: $($preferenceFile)"
+    $preferenceFileState = Get-ChildItem $outpath -recurse | Where-Object { $_.FullName -Like "$($preferenceFilter)$($preferenceFile)" }
+
+    if($preferenceFileState){
+        Write-Log -Level "INFO" -Message "Found - $($preferenceFileState.FullName)"
+        Write-Log -Level "INFO" -Message "Copy-Item -Path $($preferenceFile.FullName) -Destination $($preferenceFileDest) -Force"
+        Copy-Item -Path $preferenceFile.FullName -Destination $preferenceFileDest -Force
+    }
+    else{
+        Write-Log -Level "INFO" -Message "No preference file found."
+    }
+
 }
