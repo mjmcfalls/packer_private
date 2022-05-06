@@ -67,7 +67,23 @@ else {
 
 if ($install.IsPresent) {
     $archiveDestination = Join-Path -Path $outpath -ChildPath ($installername -Split ".zip")[0]
+    
+    Write-Log -Level "INFO" -Message "Search for preference file: $($preferenceFile)"
+    $preferenceFileState = Get-ChildItem $outpath -recurse | Where-Object { $_.FullName -Like "$($preferenceFilter)$($preferenceFile)" }
 
+    if ($preferenceFileState) {
+        Write-Log -Level "INFO" -Message "Found - $($preferenceFileState.FullName)"
+        Write-Log -Level "INFO" -Message "Copy-Item -Path $($preferenceFileState.FullName) -Destination $($preferenceFileDest) -Force"
+        Copy-Item -Path $preferenceFileState.FullName -Destination $preferenceFileDest -Force
+
+        Write-Log -Level "INFO" -Message "Copy-Item -Path $($preferenceFileState.FullName) -Destination $(Join-Path -Path $installerPath -ChildPath "master_preferences") -Force"
+        Copy-Item -Path $preferenceFileState.FullName -Destination (Join-Path -Path $installerPath -ChildPath "master_preferences") -Force
+        # $preferenceData = [System.Web.HTTPUtility]::UrlEncode((Get-Content $preferenceFileState.FullName | ConvertFrom-Json | ConvertTo-Json -Compress))
+        # $preferenceData | Set-Content $preferenceFileDest
+    }
+    else {
+        Write-Log -Level "INFO" -Message "No preference file found."
+    }
     Write-Log -Level "INFO" -Message "Unzipping $($installername) to $($archiveDestination)"
     Expand-Archive -Path "$($installerPath)" -Destination $archiveDestination -Force
 
@@ -78,18 +94,9 @@ if ($install.IsPresent) {
     Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($installer.FullName) $($installParams)`""
     Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($installer.FullName) $($installParams)"  -Wait
 
-    Write-Log -Level "INFO" -Message "Search for preference file: $($preferenceFile)"
-    $preferenceFileState = Get-ChildItem $outpath -recurse | Where-Object { $_.FullName -Like "$($preferenceFilter)$($preferenceFile)" }
-
-    if($preferenceFileState){
+    if ($preferenceFileState) {
         Write-Log -Level "INFO" -Message "Found - $($preferenceFileState.FullName)"
-        # Write-Log -Level "INFO" -Message "Copy-Item -Path $($preferenceFileState.FullName) -Destination $($preferenceFileDest) -Force"
-        # Copy-Item -Path $preferenceFileState.FullName -Destination $preferenceFileDest -Force
-        $preferenceData = [System.Web.HTTPUtility]::UrlEncode((Get-Content $preferenceFileState.FullName | ConvertFrom-Json | ConvertTo-Json -Compress))
-        $preferenceData | Set-Content $preferenceFileDest
+        Write-Log -Level "INFO" -Message "Copy-Item -Path $($preferenceFileState.FullName) -Destination $($preferenceFileDest) -Force"
+        Copy-Item -Path $preferenceFileState.FullName -Destination $preferenceFileDest -Force
     }
-    else{
-        Write-Log -Level "INFO" -Message "No preference file found."
-    }
-
 }
