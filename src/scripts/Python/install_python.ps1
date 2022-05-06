@@ -56,10 +56,8 @@ New-TempFolder -Path $outpath
 if ($public.IsPresent) {
     $installername = ($uri -Split "/")[-1]
     
-    Write-Log -Level "INFO" -Message "Fetch from Web"
+    Write-Log -Level "INFO" -Message "Fetch from Web - $($uri)"
     Invoke-WebRequest -Uri "$($uri)" -OutFile (Join-Path -Path $outpath -ChildPath $installername) -UseBasicParsing
-
-
 }
 else {
     Write-Log -Level "INFO" -Message "Fetch from $($uri)$($appuri)$($installername)"
@@ -70,6 +68,7 @@ else {
 if ($install.IsPresent) {
     $installerPath = Join-Path -Path $outpath -ChildPath $installername
 
+    Write-Log -Level "INFO" -Message "Installer Path: $($installerPath)"
     # Set Version if not present or contains a period
     if(-Not $version){
         $version = (($installername -Split "-")[-1] -Split ".")[0..1] -Join ""
@@ -83,11 +82,12 @@ if ($install.IsPresent) {
     
     # Copy unattend file to same directory as python installer
     Write-Log -Level "INFO" -Message "Searching for Python$($version) unattend file"
-    $unattendXmlPath = Get-ChildItem -Path $outpath -Recurse -File | Where-Object {$_.Name -Like "Python$($verion)*"}
+    $unattendXmlPath = Get-ChildItem -Path $outpath -Recurse -File | Where-Object {$_.Name -Like "Python$($verion)*.xml"}
+    $unattendXmlPath
     if($unattendXmlPath){
-        Write-Log -Level "INFO" -Message "Found: $($unattendXmlPath)"
-        Write-Log -Level "INFO" -Message "Copy $($unattendXmlPath) to $(Join-Path -Path $outpath -ChildPath "unattend.xml")"
-        Copy-Item -Path $unattendXmlPath -Destination (Join-Path -Path $outpath -ChildPath "unattend.xml")
+        Write-Log -Level "INFO" -Message "Found: $($unattendXmlPath.FullName)"
+        Write-Log -Level "INFO" -Message "Copy $($unattendXmlPath.FullName) to $(Join-Path -Path $outpath -ChildPath "unattend.xml")"
+        Copy-Item -Path $unattendXmlPath.FullName -Destination (Join-Path -Path $outpath -ChildPath "unattend.xml")
     }
     else{
         Write-Log -Level "ERROR" -Message "No Unattend file found!"
