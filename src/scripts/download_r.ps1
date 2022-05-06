@@ -6,7 +6,7 @@ Param (
     [string]$regexTarget = "release.html",
     $urlRegex = "(?<URL>URL=R-[0-9\.]*-win.exe)",
     [switch]$install,
-    [string]$installParams = "/verysilent /NORESTART",
+    [string]$installParams = "/verysilent /NORESTART /MERGETASKS=!desktopicon",
     [switch]$public,
     [string]$appuri = "/apps/R/",
     [string]$installername
