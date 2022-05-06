@@ -203,6 +203,12 @@ variable "anyconnect_installer" {
   type    = string
   default = "${env("anyconnect_installer")}"
 }
+
+variable "python_uri" {
+  type    = string
+  default = "${env("python_uri")}"
+}
+
 # source blocks are generated from your builders; a source can be referenced in
 # build blocks. A build block runs provisioner and post-processors on a
 # source. Read the documentation for source blocks here:
@@ -276,17 +282,21 @@ build {
     inline = ["${var.win_temp_dir}\\scripts\\Windows10_cleanup.ps1"]
   }
   
-  # provisioner "powershell" {
-  #   inline = ["${var.win_temp_dir}\\scripts\\download_r.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.r_installer}' -install"]
-  # }
+  provisioner "powershell" {
+    inline = ["${var.win_temp_dir}\\scripts\\download_r.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.r_installer}' -install"]
+  }
   
-  # provisioner "powershell" {
-  #   inline = ["${var.win_temp_dir}\\scripts\\Get_r_studio.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.r_studio_install}' -install"]
-  # }
+  provisioner "powershell" {
+    inline = ["${var.win_temp_dir}\\scripts\\Get_r_studio.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.r_studio_install}' -install"]
+  }
 
-  # provisioner "powershell" {
-  #   inline = ["${var.win_temp_dir}\\scripts\\install_anaconda.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.anaconda_installer}' -installParams '${var.anaconda_install_type} ${var.anaconda_install_addpath} ${var.anaconda_install_registerpy} ${var.anaconda_install_silent} ${var.anaconda_install_dir}'-install"]
-  # }
+  provisioner "powershell" {
+    inline = ["${var.win_temp_dir}\\scripts\\Python\install_python.ps1 -uri '${var.python_uri}' -OutPath '${var.win_temp_dir}' -public -install"]
+  }
+
+  provisioner "powershell" {
+    inline = ["${var.win_temp_dir}\\scripts\\install_anaconda.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.anaconda_installer}' -installParams '${var.anaconda_install_type} ${var.anaconda_install_addpath} ${var.anaconda_install_registerpy} ${var.anaconda_install_silent} ${var.anaconda_install_dir}'-install"]
+  }
 
   provisioner "powershell" {
     inline = ["${var.win_temp_dir}\\scripts\\install_7zip.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.seven_zip_installer}' -install"]
@@ -300,7 +310,7 @@ build {
     inline = ["${var.win_temp_dir}\\scripts\\CiscoAnyconnect\\install_anyconnect.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.anyconnect_installer}' -install"]
   }
 
-    provisioner "powershell" {
+  provisioner "powershell" {
     inline = ["${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install"]
   }
 

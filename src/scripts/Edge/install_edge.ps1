@@ -3,7 +3,8 @@ Param (
     [string]$outpath = $env:temp,
     [string]$preferenceFile = "edge_master_preferences",
     [string]$preferenceFileDest = "C:\Program Files (x86)\Microsoft\Edge\Application",
-    [string]$preferenceFilter = "*"
+    [string]$preferenceFilter = "*",
+    [string]$install
 )
 
 function New-TempFolder {

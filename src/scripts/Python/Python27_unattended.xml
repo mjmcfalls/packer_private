@@ -1,0 +1,10 @@
+<Options>
+    <Option Name="InstallAllUsers" Value="yes" />
+    <Option Name="PrependPath" Value="1" />
+    <Option Name="DefaultCustomTargetDir" Value="c:\python27" />
+    <Option Name="Include_launcher" Value="0" />
+    <Option Name="Include_test" Value="1" />
+    <Option Name="Include_tools" Value="1" />
+    <Option Name="SimpleInstall" Value="yes" />
+    <Option Name="Include_pip" Value="1" />
+</Options>
