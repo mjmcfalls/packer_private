@@ -263,7 +263,7 @@ build {
   }
 
   provisioner "powershell" {
-    inline = ["${var.win_temp_dir}\\scripts\\Python\install_python.ps1 -uri '${var.python_uri}' -OutPath '${var.win_temp_dir}' -public -install"]
+    inline = ["${var.win_temp_dir}\\scripts\\Python\\install_python.ps1 -uri '${var.python_uri}' -OutPath '${var.win_temp_dir}' -public -install"]
   }
 
   provisioner "powershell" {

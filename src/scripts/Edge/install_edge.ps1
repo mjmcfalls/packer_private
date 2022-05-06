@@ -2,9 +2,9 @@
 Param (
     [string]$outpath = $env:temp,
     [string]$preferenceFile = "edge_master_preferences",
-    [string]$preferenceFileDest = "C:\Program Files (x86)\Microsoft\Edge\Application",
+    [string]$preferenceFileDest = "C:\Program Files (x86)\Microsoft\Edge\Application\initial_preferences",
     [string]$preferenceFilter = "*",
-    [string]$install
+    [switch]$install
 )
 
 function New-TempFolder {
@@ -53,7 +53,7 @@ if ($install.IsPresent) {
 
     if ($preferenceFileState) {
         Write-Log -Level "INFO" -Message "Found - $($preferenceFileState.FullName)"
-        Write-Log -Level "INFO" -Message "Copy-Item -Path $($preferenceFile.FullName) -Destination $($preferenceFileDest) -Force"
+        Write-Log -Level "INFO" -Message "Copy-Item -Path $($preferenceFile.FullName) -Destination "$($preferenceFileDest)\" -Force"
         Copy-Item -Path $preferenceFile.FullName -Destination $preferenceFileDest -Force
     }
     else {

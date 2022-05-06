@@ -8,7 +8,7 @@ Param (
     [switch]$public,
     [string]$appuri = "/apps/Python/",
     [string]$installername,
-    [string]$version,
+    [string]$version
 )
 
 function New-TempFolder {
