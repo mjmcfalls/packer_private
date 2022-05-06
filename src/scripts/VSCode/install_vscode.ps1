@@ -8,7 +8,6 @@ Param (
     [switch]$public,
     [string]$appuri = "/apps/VSCode/",
     [string]$installername = "VSCodeSetup-x64-1.67.0.exe",
-    [string]$preferenceFile = "chrome_master_preferences",
     [switch]$disableAutoUpdate,
     [switch]$disableTelemetry,
     [switch]$disableCrashReporting
@@ -86,10 +85,11 @@ if ($install.IsPresent) {
     if($disableAutoUpdate.IsPresent){
         Write-Log -Level "INFO" -Message "Disabling VSCode AutoUpdate"
     }
+
     if($disableTelemetry.IsPresent){
         Write-Log -Level "INFO" -Message "Disabling VSCode Telemetry"
-
     }
+
     if($disableCrashReporting.IsPresent){
         Write-Log -Level "INFO" -Message "Disabling VSCode Crash reporting"
     }

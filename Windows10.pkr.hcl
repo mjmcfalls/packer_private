@@ -283,6 +283,11 @@ build {
   }
 
   provisioner "powershell" {
+    inline = ["${var.win_temp_dir}\\scripts\\VSCode\\install_vscode.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.anyconnect_installer}' -install"]
+  }
+
+
+  provisioner "powershell" {
     inline = ["${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install"]
   }
 
