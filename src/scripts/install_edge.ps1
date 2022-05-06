@@ -1,7 +1,7 @@
 [CmdletBinding()]
 Param (
-    [string]$outpath = "c:\temp",
-    [string]$preferenceFile = "edge_aster_preferences.xml",
+    [string]$outpath = $env:temp,
+    [string]$preferenceFile = "edge_master_preferences",
     [string]$preferenceFileDest = "C:\Program Files (x86)\Microsoft\Edge\Application",
     [string]$preferenceFilter = "*"
 )

@@ -1,14 +1,14 @@
 [CmdletBinding()]
 Param (
     [string]$uri = "",
-    [string]$outpath = "c:\temp",
+    [string]$outpath = $env:temp,
     [switch]$install,
     [string]$installParams = "/quiet /norestart",
     [switch]$public,
     [string]$appuri = "/apps/Chrome/",
     [string]$installername = "GoogleChromeEnterpriseBundle64.zip",
     [string]$fileFilter = "GoogleChromeStandaloneEnterprise64.msi",
-    [string]$preferenceFile = "chrome_master_preferences.xml",
+    [string]$preferenceFile = "chrome_master_preferences",
     [string]$preferenceFileDest = "C:\Program Files\Google\Chrome\Application\initial_preferences",
     [string]$preferenceFilter = "*"
 )

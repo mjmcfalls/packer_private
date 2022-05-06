@@ -2,7 +2,7 @@
 
 Param (
     [string]$uri,
-    [string]$outpath,
+    [string]$outpath = $env:temp,
     [string]$regexTarget = "release.html",
     $urlRegex = "(?<URL>URL=R-[0-9\.]*-win.exe)",
     [switch]$install,

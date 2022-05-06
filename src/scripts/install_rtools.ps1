@@ -2,8 +2,7 @@
 
 Param (
     [string]$uri,
-    [string]$outpath,
-    [string]$regexTarget = "release.html",
+    [string]$outpath = $env:temp,
     [switch]$install,
     [string]$installParams = "/verysilent /DIR='C:\R\R-3.3.0'",
     [switch]$public,

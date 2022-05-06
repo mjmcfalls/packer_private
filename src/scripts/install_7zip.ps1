@@ -2,7 +2,7 @@
 
 Param (
     [string]$uri,
-    [string]$outpath = "c:\temp",
+    [string]$outpath = $env:temp,
     [switch]$install,
     [string]$installParams = "/S",
     [switch]$public,
