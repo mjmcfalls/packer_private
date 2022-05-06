@@ -250,34 +250,6 @@ build {
     direction   =  "upload"
   }
 
-  # provisioner "file" {
-  #   source      = "./src/scripts/Windows10_cleanup.ps1"
-  #   destination = "${var.win_temp_dir}\\Windows10_cleanup.ps1"
-  #   direction   =  "upload"
-  # }
-  
-  # provisioner "file" {
-  #   source      = "./src/scripts/download_r.ps1"
-  #   destination = "${var.win_temp_dir}\\download_r.ps1"
-  #   direction   =  "upload"
-  # }
-
-  # provisioner "file" {
-  #   source      = "./src/scripts/Get_r_studio.ps1"
-  #   destination = "${var.win_temp_dir}\\Get_r_studio.ps1"
-  #   direction   =  "upload"
-  # }
-
-  #   provisioner "file" {
-  #   source      = "./src/scripts/install_anaconda.ps1"
-  #   destination = "${var.win_temp_dir}\\install_anaconda.ps1"
-  #   direction   =  "upload"
-  # }
-  # provisioner "file" {
-  #   source      = "${var.r_src_path}/${var.r_installer}"
-  #   destination = "${var.win_temp_dir}\\${var.r_installer}"
-  #   direction   =  "upload"
-  # }
   provisioner "powershell" {
     inline = ["${var.win_temp_dir}\\scripts\\Windows10_cleanup.ps1"]
   }
