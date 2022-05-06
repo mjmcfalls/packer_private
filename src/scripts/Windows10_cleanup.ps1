@@ -11,7 +11,7 @@ Start-Process -NoNewWindow -FilePath $oneDrivePath -ArgumentList $oneDriveUninst
 
 # Remove OneDrive Setup 
 takeown /F "$($oneDrivePath)" /A
-Add-NTFSAccess -Path $oneDrivePath -Account "BUILTIN\Administrators" -AccessRights FullControl
+# Add-NTFSAccess -Path $oneDrivePath -Account "BUILTIN\Administrators" -AccessRights FullControl
 Remove-Item $oneDrivePath
 
 reg load HKEY_LOCAL_MACHINE\WIM $mountdir\Users\Default\ntuser.dat
