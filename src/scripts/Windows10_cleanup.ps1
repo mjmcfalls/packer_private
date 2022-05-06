@@ -1,13 +1,18 @@
 
+$oneDrivePath = "$($mountdir)\Windows\SysWOW64\onedrivesetup.exe"
+$oneDriveUninstallParams = "/uninstall"
 # Remove AppX Packages
 Get-AppxPackage | Where-Object {$_.Name -notlike "*Search*" -or $_.Name -notlike "*Calc*" -or $_.Name -notlike "*Store*"} | Remove-AppXPackage
 
 dism /Online /Get-ProvisionedAppxPackages | Select-String PackageName | Select-String xbox | ForEach-Object {$_.Line.Split(':')[1].Trim()} | ForEach-Object { dism /Online /Remove-ProvisionedAppxPackage /PackageName:$_ }
 
+# Uninstall OneDrive
+Start-Process -NoNewWindow -FilePath $oneDrivePath -ArgumentList $oneDriveUninstallParams -Wait
+
 # Remove OneDrive Setup 
-takeown /F $mountdir\Windows\SysWOW64\OneDriveSetup.exe /A
-Add-NTFSAccess -Path "$($mountdir)\Windows\SysWOW64\onedrivesetup.exe" -Account "BUILTIN\Administrators" -AccessRights FullControl
-Remove-Item $mountdir\Windows\SysWOW64\onedrivesetup.exe
+takeown /F "$($oneDrivePath)" /A
+Add-NTFSAccess -Path $oneDrivePath -Account "BUILTIN\Administrators" -AccessRights FullControl
+Remove-Item $oneDrivePath
 
 reg load HKEY_LOCAL_MACHINE\WIM $mountdir\Users\Default\ntuser.dat
 reg delete "HKEY_LOCAL_MACHINE\WIM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v OneDriveSetup /f
@@ -16,11 +21,10 @@ reg delete "HKEY_LOCAL_MACHINE\WIM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
 reg add HKEY_LOCAL_MACHINE\WIM\SOFTWARE\Policies\Microsoft\Windows\CloudContent
 reg add HKEY_LOCAL_MACHINE\WIM\SOFTWARE\Policies\Microsoft\Windows\CloudContent /v DisableWindowsConsumerFeatures /t REG_DWORD /d 1 /f
 
-# Unload, Unmount, Commit
-reg unload HKEY_LOCAL_MACHINE\WIM
-
-
 # Disable Windows Feeds
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" /v EnableFeeds /t REG_DWORD /d 0 /f
+
+# Unload, Unmount, Commit
+reg unload HKEY_LOCAL_MACHINE\WIM
 
 Stop-Process -Name "Explorer"
