@@ -68,5 +68,5 @@ else {
 if ($install.IsPresent) {
     Write-Log -Level "INFO" -Message "Installing of $($installername)"
     Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($installerPath) -ArgumentList `"$($installParams)`""
-    Start-Process -NoNewWindow -FilePath $($installerPath) -ArgumentList "$($installParams)"
+    Start-Process -NoNewWindow -FilePath $($installerPath) -ArgumentList "$($installParams)" -Wait
 }

@@ -72,7 +72,7 @@ if ($install.IsPresent) {
     if($installerExtension -like ".msi"){
         Write-Log -Level "INFO" -Message "MSI Install of $($installerPath)"
         Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($installerPath) $($installParams)`""
-        Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($installerPath) $($installParams)"    
+        Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($installerPath) $($installParams)" -Wait
     }
     elseif ($installerExtension -like ".exe") {
         Write-Log -Level "INFO" -Message "EXE Install of $($installername)"

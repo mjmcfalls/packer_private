@@ -72,7 +72,7 @@ if ($install.IsPresent) {
 
     Write-Log -Level "INFO" -Message "Starting Install"
     Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($installer.FullName) $($installParams)`""
-    Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($installer.FullName) $($installParams)"
+    Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($installer.FullName) $($installParams)" -Wait
 
     Write-Log -Level "INFO" -Message "Searching $($outpath) for $($xmlProfile)"
     $xmlProfileSrc = Get-Childitem -Path $outpath -Filter $xmlProfile -Recurse
