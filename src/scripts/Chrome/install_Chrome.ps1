@@ -13,7 +13,7 @@ Param (
     [string]$preferenceFilter = "*"
 )
 
-function Create-TempFolder {
+function New-TempFolder {
     [CmdletBinding(
         SupportsShouldProcess = $True
     )]
@@ -53,7 +53,7 @@ Function Write-Log {
 
 $ProgressPreference = 'SilentlyContinue'
 
-Create-TempFolder -Path $outpath
+New-TempFolder -Path $outpath
 $installerPath = Join-Path -Path $outpath -ChildPath $installername
 
 if ($public.IsPresent) {

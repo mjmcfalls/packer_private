@@ -293,11 +293,15 @@ build {
   }
 
   provisioner "powershell" {
-    inline = ["${var.win_temp_dir}\\scripts\\install_Chrome.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.chrome_installer}' -install"]
+    inline = ["${var.win_temp_dir}\\scripts\\Chrome\\install_Chrome.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.chrome_installer}' -install"]
   }
 
   provisioner "powershell" {
     inline = ["${var.win_temp_dir}\\scripts\\CiscoAnyconnect\\install_anyconnect.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.anyconnect_installer}' -install"]
+  }
+
+    provisioner "powershell" {
+    inline = ["${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install"]
   }
 
   provisioner "powershell" {
