@@ -83,8 +83,8 @@ if ($install.IsPresent) {
 
     if($preferenceFileState){
         Write-Log -Level "INFO" -Message "Found - $($preferenceFileState.FullName)"
-        Write-Log -Level "INFO" -Message "Copy-Item -Path $($preferenceFile.FullName) -Destination $($preferenceFileDest) -Force"
-        Copy-Item -Path $preferenceFile.FullName -Destination $preferenceFileDest -Force
+        Write-Log -Level "INFO" -Message "Copy-Item -Path $($preferenceFileState.FullName) -Destination $($preferenceFileDest) -Force"
+        Copy-Item -Path $preferenceFileState.FullName -Destination $preferenceFileDest -Force
     }
     else{
         Write-Log -Level "INFO" -Message "No preference file found."
