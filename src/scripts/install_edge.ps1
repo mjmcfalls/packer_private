@@ -1,9 +1,9 @@
 [CmdletBinding()]
 Param (
     [string]$outpath = "c:\temp",
-    [string]$preferenceFile = "master_preferences.xml",
+    [string]$preferenceFile = "edge_aster_preferences.xml",
     [string]$preferenceFileDest = "C:\Program Files (x86)\Microsoft\Edge\Application",
-    [string]$preferenceFilter = "*Edge\"
+    [string]$preferenceFilter = "*"
 )
 
 function New-TempFolder {

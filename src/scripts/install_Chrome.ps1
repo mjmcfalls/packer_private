@@ -8,9 +8,9 @@ Param (
     [string]$appuri = "/apps/Chrome/",
     [string]$installername = "GoogleChromeEnterpriseBundle64.zip",
     [string]$fileFilter = "GoogleChromeStandaloneEnterprise64.msi",
-    [string]$preferenceFile = "master_preferences.xml",
+    [string]$preferenceFile = "chrome_master_preferences.xml",
     [string]$preferenceFileDest = "C:\Program Files\Google\Chrome\Application\initial_preferences",
-    [string]$preferenceFilter = "*Chrome\"
+    [string]$preferenceFilter = "*"
 )
 
 function Create-TempFolder {

@@ -10,7 +10,7 @@ Param (
     [switch]$public,
     [string]$appuri = "/apps/CiscoAnyconnect/",
     [string]$installername = "anyconnect-win-4.10.05095.zip",
-    [string]$xmlProfilePathDest = "C:\ProgramData\Cisco\Cisco AnyConnect Secure Mobility Client\Profile",
+    [string]$xmlProfilePathDest = "C:\ProgramData\Cisco\Cisco AnyConnect Secure Mobility Client\Profile\",
     [string]$xmlProfile = "unc.xml",
     [string]$fileFilter = "*core-vpn*"
 )
@@ -78,6 +78,9 @@ if ($install.IsPresent) {
     $xmlProfileSrc = Get-Childitem -Path $outpath -Filter $xmlProfile -Recurse
 
     if($xmlProfileSrc){
+        if(-Not (Test-Path $xmlProfilePathDest)){
+            New-Item -Path $xmlProfilePathDest -ItemType Directory
+        }
         Write-Log -Level "INFO" -Message  "Copying $($xmlProfileSrc.FullName) to $($xmlProfilePathDest)"
         Move-Item -Path $xmlProfileSrc.FullName -Destination $xmlProfilePathDest -Force
     }
