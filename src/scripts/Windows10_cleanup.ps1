@@ -1,6 +1,11 @@
 
 $oneDrivePath = "$($mountdir)\Windows\SysWOW64\onedrivesetup.exe"
 $oneDriveUninstallParams = "/uninstall"
+
+# Set High Performance
+$highperfguid = ((((powercfg /list | Select-String "High Performance") -Split ":")[1]) -Split "\(")[0].trim()
+powercfg /setactive "$($highperfguid)"
+
 # Remove AppX Packages
 Get-AppxPackage | Where-Object {$_.Name -notlike "*Search*" -or $_.Name -notlike "*Calc*" -or $_.Name -notlike "*Store*"} | Remove-AppXPackage
 
