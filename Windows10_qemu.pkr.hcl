@@ -67,7 +67,7 @@ variable "memory" {
 
 variable "output_directory" {
   type    = string
-  default = "${env("output_directory")}"
+  default = "${env("nix_output_directory")}"
 }
 
 variable "r_install_path" {
