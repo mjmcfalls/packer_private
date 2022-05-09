@@ -213,6 +213,13 @@ variable "vscode_installer" {
   type    = string
   default = "${env("vscode_installer")}"
 }
+
+variable "firefox_uri" {
+  type    = string
+  default = "${env("firefox_uri")}"
+}
+
+
 # source blocks are generated from your builders; a source can be referenced in
 # build blocks. A build block runs provisioner and post-processors on a
 # source. Read the documentation for source blocks here:
@@ -276,6 +283,10 @@ build {
 
   provisioner "powershell" {
     inline = ["${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install"]
+  }
+
+  provisioner "powershell" {
+    inline = ["${var.win_temp_dir}\\scripts\\Firefox\\install_firefox.ps1 -OutPath '${var.win_temp_dir}' -uri ${var.firefox_uri}' -install"]
   }
 
   provisioner "powershell" {
