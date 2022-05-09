@@ -65,7 +65,7 @@ variable "memory" {
   default = "${env("memory")}"
 }
 
-variable "output_directory" {
+variable "nix_output_directory" {
   type    = string
   default = "${env("nix_output_directory")}"
 }
@@ -237,9 +237,9 @@ source "qemu" "Windows_10" {
   iso_checksum     = "${var.iso_checksum}"
   iso_url          = "${var.iso_url}"
   memory           = "${var.memory}"
-  output_directory = "${var.output_directory}"
+  output_directory = "${var.nix_output_directory}"
   shutdown_command = "a:/setup_restart.bat"
-  switch_name      = "${var.switchname}"
+  net_bridge      = "${var.switchname}"
   vm_name          = "${var.vm_name}"
   winrm_insecure   = "${var.winrm_insecure}"
   winrm_password   = "${var.winrm_password}"
@@ -247,7 +247,6 @@ source "qemu" "Windows_10" {
   winrm_use_ntlm   = "${var.winrm_use_ntlm}"
   winrm_use_ssl    = "${var.winrm_use_ssl}"
   winrm_username   = "${var.winrm_username}"
-  keep_registered  = "${var.keep_registered}"
 }
 
 # a build block invokes sources and runs provisioning steps on them. The
