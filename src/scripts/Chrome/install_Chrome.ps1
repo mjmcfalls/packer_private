@@ -74,7 +74,7 @@ if ($install.IsPresent) {
     if ($preferenceFileState) {
         Write-Log -Level "INFO" -Message "Found - $($preferenceFileState.FullName)"
         Write-Log -Level "INFO" -Message "Copy-Item -Path $($preferenceFileState.FullName) -Destination $($preferenceFileDest) -Force"
-        Copy-Item -Path $preferenceFileState.FullName -Destination $preferenceFileDest -Force
+        # Copy-Item -Path $preferenceFileState.FullName -Destination $preferenceFileDest -Force
 
         Write-Log -Level "INFO" -Message "Copy-Item -Path $($preferenceFileState.FullName) -Destination $(Join-Path -Path $installerPath -ChildPath "master_preferences") -Force"
         Copy-Item -Path $preferenceFileState.FullName -Destination (Join-Path -Path $installerPath -ChildPath "master_preferences") -Force
