@@ -226,7 +226,7 @@ variable "firefox_uri" {
 # https://www.packer.io/docs/templates/hcl_templates/blocks/source
 source "qemu" "Windows_10" {
   accelerator      = "kvm"
-  boot_wait        = "0s"
+  boot_wait        = "60s"
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
   disk_size        = "${var.disk_size}"
@@ -239,7 +239,7 @@ source "qemu" "Windows_10" {
   memory           = "${var.memory}"
   output_directory = "${var.nix_output_directory}"
   shutdown_command = "a:/setup_restart.bat"
-  net_bridge      = "${var.switchname}"
+  # net_bridge      = "${var.switchname}"
   vm_name          = "${var.vm_name}"
   winrm_insecure   = "${var.winrm_insecure}"
   winrm_password   = "${var.winrm_password}"
