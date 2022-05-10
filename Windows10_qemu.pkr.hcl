@@ -226,7 +226,7 @@ variable "firefox_uri" {
 # https://www.packer.io/docs/templates/hcl_templates/blocks/source
 source "qemu" "Windows_10" {
   accelerator      = "kvm"
-  boot_wait        = "60s"
+  boot_wait        = "120s"
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
   disk_size        = "${var.disk_size}"
