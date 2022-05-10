@@ -49,7 +49,7 @@ Function Write-Log {
     }
 }
 
-Get-FirefoxIni {
+Function Get-FirefoxIni {
     [CmdletBinding(
         SupportsShouldProcess = $True
     )]
@@ -61,6 +61,7 @@ Get-FirefoxIni {
     $files = Get-ChildItem -Path $Path -Recurse -File | Where-Object { $_.name -like $ininame }
     $files
 }
+
 $ProgressPreference = 'SilentlyContinue'
 
 Create-TempFolder -Path $outpath
