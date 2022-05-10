@@ -230,15 +230,13 @@ source "qemu" "Windows_10" {
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
   disk_size        = "${var.disk_size}"
-  disk_interface   = "sata"
-  floppy_files     = ["${var.autounattend}","./src/scripts/"]
+  floppy_files     = ["${var.autounattend}","./src/scripts/","/usr/share/virtio-win/drivers/by-os/amd64/w10/"]
   format           = "qcow2"
   headless         = "${var.headless}"
   http_directory   = "${var.http_directory}"
   iso_checksum     = "${var.iso_checksum}"
   iso_url          = "${var.iso_url}"
   memory           = "${var.memory}"
-  net_device       = "e1000"
   output_directory = "${var.nix_output_directory}"
   shutdown_command = "a:/setup_restart.bat"
   # net_bridge      = "${var.switchname}"
