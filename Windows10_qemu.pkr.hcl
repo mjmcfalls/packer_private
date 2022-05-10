@@ -230,6 +230,7 @@ source "qemu" "Windows_10" {
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
   disk_size        = "${var.disk_size}"
+  disk_interface   = "scsi"
   floppy_files     = ["${var.autounattend}","./src/scripts/"]
   cd_files         = ["/usr/share/virtio-win/drivers/amd64/Win10/"]
   cd_label         = "cidata"
