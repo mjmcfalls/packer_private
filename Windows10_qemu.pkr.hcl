@@ -260,7 +260,7 @@ build {
   sources = ["source.qemu.Windows_10"]
   
   provisioner "powershell" {
-    inline = ["a:\Config_Winrm.ps1"]
+    inline = ["a:/Config_Winrm.ps1"]
   }
   
 
