@@ -230,7 +230,7 @@ source "qemu" "Windows_10" {
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
   disk_size        = "${var.disk_size}"
-  disk_interface   = "scsi"
+  disk_interface   = "ide"
   floppy_files     = ["${var.autounattend}","./src/scripts/"]
   cd_files         = ["/usr/share/virtio-win/drivers/amd64/Win10/"]
   cd_label         = "cidata"
@@ -258,6 +258,11 @@ source "qemu" "Windows_10" {
 
 build {
   sources = ["source.qemu.Windows_10"]
+  
+  provisioner "powershell" {
+    inline = ["a:\Config_Winrm.ps1"]
+  }
+  
 
   provisioner "file" {
     source      = "./src/scripts/"
