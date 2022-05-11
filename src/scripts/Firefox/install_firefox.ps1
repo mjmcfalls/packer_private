@@ -72,8 +72,8 @@ New-TempFolder -Path $outpath
 $decodeUri = [System.Web.HTTPUtility]::UrlDecode($uri)
 
 Write-Log -Level "INFO" -Message "Checking if URL is encoded - $($uri); decoded: $($decodeUri)"
-if(-Not $uri -like $decodeUri){
-    Write-Log -Level "INFO" -Message "Setting decoded uri to uri"
+if($uri -Notlike $decodeUri){
+    Write-Log -Level "INFO" -Message "Setting decodeduri to uri"
     $uri = $decodeUri
 }
 
