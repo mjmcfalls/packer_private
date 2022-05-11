@@ -7,9 +7,9 @@ $highperfguid = ((((powercfg /list | Select-String "High Performance") -Split ":
 powercfg /setactive "$($highperfguid)"
 
 # Remove AppX Packages
-Get-AppxPackage | Where-Object {$_.Name -notlike "*Search*" -or $_.Name -notlike "*Calc*" -or $_.Name -notlike "*Store*"} | Remove-AppXPackage
+Get-AppxPackage | Where-Object { $_.Name -notlike "*Search*" -or $_.Name -notlike "*Calc*" -or $_.Name -notlike "*Store*" } | Remove-AppXPackage
 
-dism /Online /Get-ProvisionedAppxPackages | Select-String PackageName | Select-String xbox | ForEach-Object {$_.Line.Split(':')[1].Trim()} | ForEach-Object { dism /Online /Remove-ProvisionedAppxPackage /PackageName:$_ }
+dism /Online /Get-ProvisionedAppxPackages | Select-String PackageName | Select-String xbox | ForEach-Object { $_.Line.Split(':')[1].Trim() } | ForEach-Object { dism /Online /Remove-ProvisionedAppxPackage /PackageName:$_ }
 
 # Uninstall OneDrive
 Start-Process -NoNewWindow -FilePath $oneDrivePath -ArgumentList $oneDriveUninstallParams -Wait
@@ -32,9 +32,9 @@ reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" /
 # Unload, Unmount, Commit
 reg unload HKEY_LOCAL_MACHINE\WIM
 
-if(Get-Process -Name "Explorer"){
+if (Get-Process -Name "Explorer") {
     Stop-Process -Name "Explorer"
 }
-else{
+else {
     "No Explorer.exe process found."
 }
