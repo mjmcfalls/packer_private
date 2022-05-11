@@ -1,35 +1,56 @@
 {
-  "homepage": "http://www.google.com",
-  "homepage_is_newtabpage": false,
-  "browser": {
-    "show_home_button": true
-  },
-  "session": {
-    "restore_on_startup": 4,
-    "startup_urls": [
-      "http://www.google.com/"
-    ]
-  },
-  "bookmark_bar": {
-    "show_on_all_tabs": true
-  },
-  "sync_promo": {
-    "show_on_first_run_allowed": false
-  },
-  "distribution": {
-    "import_bookmarks_from_file": "bookmarks.html",
-    "import_bookmarks": true,
-    "import_history": true,
-    "import_home_page": true,
-    "import_search_engine": true,
-    "ping_delay": 60,
-    "suppress_first_run_bubble": true,
-    "do_not_create_desktop_shortcut": true,
-    "do_not_create_quick_launch_shortcut": true,
-    "do_not_launch_chrome": true,
-    "do_not_register_for_update_launch": true,
-    "suppress_first_run_default_browser_prompt": true,
-    "system_level": true,
-    "verbose_logging": false
-  }
+	"bookmark_bar": {
+		"show_apps_shortcut": false,
+		"show_managed_bookmarks": true,
+		"show_on_all_tabs": false
+	},
+	"bookmarks": {
+		"editing_enabled": true
+	},
+	"browser": {
+		"clear_data": {
+			"browsing_history": true,
+			"browsing_history_basic": true,
+			"cache": true,
+			"cache_basic": true,
+			"cookies": true,
+			"download_history": true,
+			"form_data": false,
+			"passwords": false
+		},
+		"clear_data_on_exit": {
+			"browsing_history": false,
+			"cache": false,
+			"cookies": false,
+			"download_history": false,
+			"form_data": false,
+			"hosted_apps_data": false,
+			"passwords": false,
+			"site_settings": false
+		},
+		"dark_theme": true,
+		"show_toolbar_bookmarks_button": true,
+		"show_toolbar_collections_button": true,
+		"show_toolbar_downloads_button": false,
+		"show_home_button": true,
+		"show_prompt_before_closing_tabs": false,
+		"show_toolbar_history_button": true
+	},
+	"default_search_provider": {
+		"enabled": true,
+		"search_url": "www.google.com"
+	},
+	"fullscreen": {
+		"allowed": true
+	},
+	"homepage": "https://www.google.com/",
+	"homepage_is_newtabpage": true,
+	"history": {
+		"clear_on_exit": false,
+		"deleting_enabled": true
+	},
+	"feedback_allowed": false,
+	"session": {
+		"restore_on_startup": 4
+	}
 }
