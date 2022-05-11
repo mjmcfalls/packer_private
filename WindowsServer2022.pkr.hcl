@@ -20,6 +20,11 @@ variable "autounattend" {
   default = "${env("autounattend")}"
 }
 
+variable "cpu_num" {
+  type    = string
+  default = "${env("cpus")}"
+}
+
 variable "disk_size" {
   type    = string
   default = "${env("disk_size")}"
@@ -32,12 +37,17 @@ variable "disk_type_id" {
 
 variable "headless" {
   type    = string
-  default = "false"
+   default = "${env("headless")}"
 }
 
-variable "hyperv_switchname" {
+variable "http_directory"{
   type    = string
-  default = "${env("hyperv_switchname")}"
+  default = "${env("http_directory")}"
+}
+
+variable "switchname" {
+  type    = string
+  default = "${env("switchname")}"
 }
 
 variable "iso_checksum" {
@@ -55,14 +65,14 @@ variable "memory" {
   default = "${env("memory")}"
 }
 
-variable "output_directory" {
+variable "nix_output_directory" {
   type    = string
-  default = "${env("output_directory")}"
+  default = "${env("nix_output_directory")}"
 }
 
 variable "r_install_path" {
   type    = string
-  default = "${env("r_src_path")}/${env("r_installer")}"
+  default = "${env("r_src_path")}/${env("r_version")}"
 }
 
 variable "r_installer" {
@@ -130,6 +140,94 @@ variable "winrm_username" {
   default = "${env("winrm_username")}"
 }
 
+variable "r_download_uri" {
+  type    = string
+  default = "${env("r_download_uri")}"
+}
+
+variable "r_studio_download_uri" {
+  type    = string
+  default = "${env("r_studio_download_uri")}"
+}
+
+variable "anaconda_install_type" {
+  type    = string
+  default = "${env("anaconda_install_type")}"
+}
+
+variable "anaconda_install_addpath" {
+  type    = string
+  default = "${env("anaconda_install_addpath")}"
+}
+
+variable "anaconda_install_registerpy" {
+  type    = string
+  default = "${env("anaconda_install_registerpy")}"
+}
+
+variable "anaconda_install_silent" {
+  type    = string
+  default = "${env("anaconda_install_silent")}"
+}
+
+variable "anaconda_install_dir" {
+  type    = string
+  default = "${env("anaconda_install_dir")}"
+}
+variable "anaconda_installer" {
+  type    = string
+  default = "${env("anaconda_installer")}"
+}
+
+variable "keep_registered" {
+  type    = string
+  default = "${env("keep_registered")}"
+}
+
+variable "seven_zip_installer" {
+  type    = string
+  default = "${env("seven_zip_installer")}"
+}
+
+variable "chrome_installer" {
+  type    = string
+  default = "${env("chrome_installer")}"
+}
+
+variable "seven_zip_uri" {
+  type    = string
+  default = "${env("seven_zip_uri")}"
+}
+
+variable "anyconnect_installer" {
+  type    = string
+  default = "${env("anyconnect_installer")}"
+}
+
+variable "python_uri" {
+  type    = string
+  default = "${env("python_uri")}"
+}
+
+variable "vscode_installer" {
+  type    = string
+  default = "${env("vscode_installer")}"
+}
+
+variable "firefox_uri" {
+  type    = string
+  default = "${env("firefox_uri")}"
+}
+
+variable "git_installer" {
+  type    = string
+  default = "${env("git_installer")}"
+}
+
+variable "git_uri" {
+  type    = string
+  default = "${env("git_uri")}"
+}
 # source blocks are generated from your builders; a source can be referenced in
 # build blocks. A build block runs provisioner and post-processors on a
 # source. Read the documentation for source blocks here:
@@ -170,6 +268,10 @@ build {
   }
 
   provisioner "powershell" {
+    inline = ["${var.win_temp_dir}\\scripts\\install_git.ps1 -uri 'http://${var.git_uri}' -OutPath '${var.win_temp_dir}' -installername '${var.git_installer}' -install"]
+  }
+
+  provisioner "powershell" {
     inline = ["${var.win_temp_dir}\\scripts\\VSCode\\install_vscode.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.vscode_installer}' -install"]
   }
 
@@ -180,7 +282,7 @@ build {
   provisioner "powershell" {
     inline = ["${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install"]
   }
-  
+
   provisioner "powershell" {
     inline = [ "${var.win_temp_dir}\\scripts\\Win10_Packer_cleanup.ps1 -tempdir '${var.win_temp_dir}'"]
   }

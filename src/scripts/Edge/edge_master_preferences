@@ -28,10 +28,8 @@
     "do_not_create_quick_launch_shortcut": true,
     "do_not_launch_chrome": true,
     "do_not_register_for_update_launch": true,
-    "make_chrome_default": true,
-    "make_chrome_default_for_user": true,
     "suppress_first_run_default_browser_prompt": true,
     "system_level": true,
-    "verbose_logging": true
+    "verbose_logging": false
   }
 }
