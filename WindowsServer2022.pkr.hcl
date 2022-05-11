@@ -228,6 +228,17 @@ variable "git_uri" {
   type    = string
   default = "${env("git_uri")}"
 }
+
+variable "ms_adk_uri" {
+  type    = string
+  default = "${env("ms_adk_uri")}"
+}
+
+variable "ms_adk_installer" {
+  type    = string
+  default = "${env("ms_adk_installer")}"
+}
+
 # source blocks are generated from your builders; a source can be referenced in
 # build blocks. A build block runs provisioner and post-processors on a
 # source. Read the documentation for source blocks here:
@@ -264,11 +275,15 @@ build {
   }
 
   provisioner "powershell" {
+    inline = ["${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install"]
+  }
+
+  provisioner "powershell" {
     inline = ["${var.win_temp_dir}\\scripts\\Chrome\\install_Chrome.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.chrome_installer}' -install"]
   }
 
   provisioner "powershell" {
-    inline = ["${var.win_temp_dir}\\scripts\\install_git.ps1 -uri 'http://${var.git_uri}' -OutPath '${var.win_temp_dir}' -installername '${var.git_installer}' -install"]
+    inline = ["${var.win_temp_dir}\\scripts\\install_git.ps1 -uri 'http://${var.git_uri}' -OutPath '${var.win_temp_dir}' -installername '${var.git_installer}' -public -install"]
   }
 
   provisioner "powershell" {
@@ -280,7 +295,7 @@ build {
   }
 
   provisioner "powershell" {
-    inline = ["${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install"]
+    inline = ["${var.win_temp_dir}\\scripts\\Microsoft\\install_adk.ps1 -uri '${var.ms_adk_uri}' -OutPath '${var.win_temp_dir}' -installername '${var.ms_adk_installer}' -public -install"]
   }
 
   provisioner "powershell" {

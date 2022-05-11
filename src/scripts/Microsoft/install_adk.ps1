@@ -4,10 +4,10 @@ Param (
     [string]$uri,
     [string]$outpath = $env:temp,
     [switch]$install,
-    [string]$installParams = "/S",
+    [string]$installParams = "/ceip off /norestart /quiet /features OptionId.WindowsPerformanceToolkit OptionId.DeploymentTools OptionId.ApplicationCompatibilityToolkit OptionId.WindowsAssessmentToolkit",
     [switch]$public,
-    [string]$appuri = "/apps/7zip/",
-    [string]$installername = "7z2107-x64.exe"
+    [string]$appuri = "/apps/Microsoft/",
+    [string]$installername = "adksetup.exe"
 )
 
 function New-TempFolder {
@@ -82,3 +82,5 @@ if ($install.IsPresent) {
 
     
 }
+
+
