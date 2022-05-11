@@ -88,7 +88,7 @@ else {
 
 if ($install.IsPresent) {
     Write-Log -Level "INFO" -Message "Searching for $($ininame) in $($outpath)"
-    $inipath = Get-FirefoxIni -Path $outpath ininame $ininame
+    $inipath = Get-FirefoxIni -Path $outpath -ininame $ininame
 
     $installParams = $installParams.replace("INIPATH", $inipath.fullname)
     Write-Log -Level "INFO" -Message "Updated Install parameters: $($inipath)"
