@@ -1,5 +1,5 @@
 
-$oneDrivePath = "$($mountdir)\Windows\SysWOW64\onedrivesetup.exe"
+$oneDrivePath = "c:\Windows\SysWOW64\onedrivesetup.exe"
 $oneDriveUninstallParams = "/uninstall"
 
 # Set High Performance
