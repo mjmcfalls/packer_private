@@ -296,7 +296,7 @@ build {
   }
 
   provisioner "powershell" {
-    inline = ["${var.win_temp_dir}\\scripts\\Firefox\\install_firefox.ps1 -OutPath '${var.win_temp_dir}' -uri '${var.firefox_uri}' -install"]
+    inline = ["${var.win_temp_dir}\\scripts\\Firefox\\install_firefox.ps1 -OutPath '${var.win_temp_dir}' -uri '${var.firefox_uri}' -public -install"]
   }
 
   provisioner "powershell" {
