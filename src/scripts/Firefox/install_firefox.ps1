@@ -11,7 +11,7 @@ Param (
     [string]$installername = "firefox_installer.exe"
 )
 
-function Create-TempFolder {
+function New-TempFolder {
     [CmdletBinding(
         SupportsShouldProcess = $True
     )]
@@ -64,7 +64,7 @@ Function Get-FirefoxIni {
 
 $ProgressPreference = 'SilentlyContinue'
 
-Create-TempFolder -Path $outpath
+New-TempFolder -Path $outpath
 
 if ($public.IsPresent) {
     Write-Log -Level "INFO" -Message "Install from Web - $($uri)"
@@ -77,7 +77,7 @@ else {
 
 if ($install.IsPresent) {
     Write-Log -Level "INFO" -Message "Searching for $($ininame) in $($outpath)"
-    $inipath = Get-FirefoxIni -Path $outpath -inifile $ininame
+    $inipath = Get-FirefoxIni -Path $outpath ininame $ininame
 
     $installParams = $installParams.replace("INIPATH", $inipath.fullname)
     Write-Log -Level "INFO" -Message "Updated Install parameters: $($inipath)"
