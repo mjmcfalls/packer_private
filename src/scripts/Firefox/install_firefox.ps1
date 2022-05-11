@@ -62,9 +62,17 @@ Function Get-FirefoxIni {
     $files
 }
 
+Add-Type -AssemblyName System.Web
+
 $ProgressPreference = 'SilentlyContinue'
 
 New-TempFolder -Path $outpath
+
+# Check if URL Encoded
+$decodeUri = [System.Web.HTTPUtility]::UrlDecode($uri)
+if(-Not $uri -like $decodeUri){
+    $uri = $decodeUri
+}
 
 if ($public.IsPresent) {
     Write-Log -Level "INFO" -Message "Install from Web - $($uri)"
