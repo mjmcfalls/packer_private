@@ -32,4 +32,9 @@ reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" /
 # Unload, Unmount, Commit
 reg unload HKEY_LOCAL_MACHINE\WIM
 
-Stop-Process -Name "Explorer"
+if(Get-Process -Name "Explorer"){
+    Stop-Process -Name "Explorer"
+}
+else{
+    "No Explorer.exe process found."
+}
