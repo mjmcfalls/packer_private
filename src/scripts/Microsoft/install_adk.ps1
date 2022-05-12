@@ -53,7 +53,7 @@ $ProgressPreference = 'SilentlyContinue'
 New-TempFolder -Path $outpath
 
 if ($public.IsPresent) {
-    Write-Log -Level "INFO" -Message "7Zip install from Web"
+    Write-Log -Level "INFO" -Message "ADK install from Web"
     Invoke-WebRequest -Uri "$($uri)" -OutFile (Join-Path -Path $outpath -ChildPath $installername)  -UseBasicParsing
 }
 else {
