@@ -249,9 +249,12 @@ source "qemu" "Windows_10" {
   cpus             = "${var.cpu_num}"
   disk_size        = "${var.disk_size}"
   disk_interface   = "ide"
-  floppy_files     = ["${var.autounattend}","./src/scripts/Config_Winrm.ps1","./src/apps/VirtIO/w10/"]
-  # cd_files         = ["/usr/share/virtio-win/drivers/amd64/"]
-  # cd_label         = "Drivers"
+  # floppy_files     = ["${var.autounattend}","./src/scripts/"]
+  # floppy_content   = {
+  #                       "virtio" = "/usr/share/virtio-win/drivers/amd64/"
+  #                     }
+  cd_files         = ["${var.autounattend}","./src/scripts/","/usr/share/virtio-win/drivers/amd64/"]
+  cd_label         = "Drivers"
   format           = "qcow2"
   headless         = "${var.headless}"
   http_directory   = "${var.http_directory}"
