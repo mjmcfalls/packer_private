@@ -250,8 +250,8 @@ source "qemu" "Windows_10" {
   disk_size        = "${var.disk_size}"
   disk_interface   = "ide"
   floppy_files     = ["${var.autounattend}","./src/scripts/"]
-  cd_files         = ["/usr/share/virtio-win/drivers/amd64/Win10/"]
-  cd_label         = "cidata"
+  cd_files         = ["/usr/share/virtio-win/drivers/amd64/"]
+  cd_label         = "Drivers"
   format           = "qcow2"
   headless         = "${var.headless}"
   http_directory   = "${var.http_directory}"
