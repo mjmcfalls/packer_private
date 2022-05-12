@@ -1,7 +1,8 @@
 [CmdletBinding()]
 Param (
     [string]$outPath = "c:\temp",
-    [string]$sdelete_uri = "https://download.sysinternals.com/files/SDelete.zip"
+    [string]$sdelete_uri = "https://download.sysinternals.com/files/SDelete.zip",
+    $dotNetPaths = @("c:\windows\microsoft.net\framework64\v4.0.30319\ngen.exe", "c:\windows\microsoft.net\framework\v4.0.30319\ngen.exe"),
 )
 
 Function Write-Log {
@@ -29,7 +30,7 @@ Function Write-Log {
     }
 }
 
-Function Clean-Directory {
+Function Clear-Directory {
     [Cmdletbinding()]
     Param(
         $patharray
@@ -74,14 +75,22 @@ Function Start-Sdelete {
     
 }
 
-# Recomplie Dot Net x64
-Write-Log -Level "INFO" -Message "Recompiling x64 dot net"
-Start-Process -NoNewWindow -FilePath "c:\windows\microsoft.net\framework64\v4.0.30319\ngen.exe"  -ArgumentList "update /force" -Wait
+Function Start-DotNetRecompile {
+    [CmdletBinding()]
+    Param (
+        $dotNetPaths = @("c:\windows\microsoft.net\framework64\v4.0.30319\ngen.exe", "c:\windows\microsoft.net\framework\v4.0.30319\ngen.exe"),
+        [string]$dotNetRecompileArgs = "update /force"
+    )
 
+    foreach ($dotNetPath in $dotNetPaths) {
+        Write-Log -Level "INFO" -Message "Recompiling x64 dot net"
+        Start-Process -NoNewWindow -FilePath $dotNetPath -ArgumentList $dotNetRecompileArgs -Wait
 
-# Recomplie Dot Net x86
-Write-Log -Level "INFO" -Message "Recompiling x86 dot net"
-Start-Process -NoNewWindow -FilePath "c:\windows\microsoft.net\framework\v4.0.30319\ngen.exe "  -ArgumentList "update /force" -Wait
+    }
+}
+
+# Recomplie Dot Net
+Start-DotNetRecompile -dotNetPaths $dotNetPaths 
 
 # Clean-up Online image
 Write-Log -Level "INFO" -Message "Running Dism.exe /online /Cleanup-Image /StartComponentCleanup"
@@ -91,15 +100,16 @@ Start-Process -NoNewWindow -FilePath "Dism.exe" -ArgumentList "/online /Cleanup-
 # Write-Log -Level "INFO" -Message "Running Dism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase"
 # Start-Process -NoNewWindow -FilePath "Dism.exe" -ArgumentList "/online /Cleanup-Image /StartComponentCleanup /ResetBase"
 
-
 $tempPaths = New-Object System.Collections.Generic.List[System.Object]
 $tempPaths.Add($env:temp)
 $tempPaths.Add($outPath)
 
-Clean-Directory -patharray $tempPaths
-
+# Clean up from installs
+Clear-Directory -patharray $tempPaths
 
 # Clean free space
+Start-Sdelete
 
-Clean-Directory -patharray $tempPaths
+# Clean up after sdelete
+Clear-Directory -patharray $tempPaths
 
