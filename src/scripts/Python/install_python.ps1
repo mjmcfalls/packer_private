@@ -83,7 +83,13 @@ if ($install.IsPresent) {
     # Copy unattend file to same directory as python installer
     Write-Log -Level "INFO" -Message "Searching for Python$($version) unattend file"
     $unattendXmlPath = Get-ChildItem -Path $outpath -Recurse -File | Where-Object {$_.Name -Like "Python$($verion)*.xml"}
-    $unattendXmlPath
+    if($unattendXmlPath){
+        Write-Log -Level "INFO" -Message "Found: $($unattendXmlPath.FullName)"
+    }
+    else{
+        Write-Log -Level "INFO" -Message "No Python$($version) unattend file found."
+    }
+    
     if($unattendXmlPath){
         Write-Log -Level "INFO" -Message "Found: $($unattendXmlPath.FullName)"
         Write-Log -Level "INFO" -Message "Copy $($unattendXmlPath.FullName) to $(Join-Path -Path $outpath -ChildPath "unattend.xml")"
