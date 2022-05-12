@@ -248,7 +248,7 @@ source "qemu" "Windows_10" {
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
   disk_size        = "${var.disk_size}"
-  disk_interface   = "ide"
+  disk_interface   = "virtio"
   # floppy_files     = ["${var.autounattend}","./src/scripts/"]
   # floppy_content   = {
   #                       "virtio" = "/usr/share/virtio-win/drivers/amd64/"
@@ -261,7 +261,7 @@ source "qemu" "Windows_10" {
   iso_checksum     = "${var.iso_checksum}"
   iso_url          = "${var.iso_url}"
   memory           = "${var.memory}"
-  net_device       = "e1000"
+  net_device       = "virtio"
   output_directory = "${var.nix_output_directory}"
   shutdown_command = "a:/setup_restart.bat"
   # net_bridge      = "${var.switchname}"
