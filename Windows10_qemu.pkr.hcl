@@ -305,7 +305,7 @@ build {
       "${var.win_temp_dir}\\scripts\\CiscoAnyconnect\\install_anyconnect.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.anyconnect_installer}' -install",
       "${var.win_temp_dir}\\scripts\\install_git.ps1 -OutPath '${var.win_temp_dir}' -uri '${var.git_uri}' -public -install",
       "${var.win_temp_dir}\\scripts\\Microsoft\\install_adk.ps1 -uri '${var.ms_adk_uri}' -OutPath '${var.win_temp_dir}' -installername '${var.ms_adk_installer}' -public -install",
-      "${var.win_temp_dir}\\scripts\\Win10_Packer_cleanup.ps1 -tempdir '${var.win_temp_dir}'"
+      "${var.win_temp_dir}\\scripts\\Win10_Packer_cleanup.ps1 -outpath '${var.win_temp_dir}'"
       ]
   }
 
