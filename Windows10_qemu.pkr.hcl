@@ -219,7 +219,25 @@ variable "firefox_uri" {
   default = "${env("firefox_uri")}"
 }
 
+variable "git_installer" {
+  type    = string
+  default = "${env("git_installer")}"
+}
 
+variable "git_uri" {
+  type    = string
+  default = "${env("git_uri")}"
+}
+
+variable "ms_adk_uri" {
+  type    = string
+  default = "${env("ms_adk_uri")}"
+}
+
+variable "ms_adk_installer" {
+  type    = string
+  default = "${env("ms_adk_installer")}"
+}
 # source blocks are generated from your builders; a source can be referenced in
 # build blocks. A build block runs provisioner and post-processors on a
 # source. Read the documentation for source blocks here:
@@ -276,15 +294,17 @@ build {
     inline = [
       "${var.win_temp_dir}\\scripts\\Windows10_cleanup.ps1",
       "${var.win_temp_dir}\\scripts\\install_7zip.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.seven_zip_installer}' -install",
+      "${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install",
       "${var.win_temp_dir}\\scripts\\Chrome\\install_Chrome.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.chrome_installer}' -install",
       "${var.win_temp_dir}\\scripts\\VSCode\\install_vscode.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.vscode_installer}' -install",
       "${var.win_temp_dir}\\scripts\\Python\\install_python.ps1 -uri '${var.python_uri}' -OutPath '${var.win_temp_dir}' -public -install",
-      "${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install",
       "${var.win_temp_dir}\\scripts\\Firefox\\install_firefox.ps1 -OutPath '${var.win_temp_dir}' -uri '${var.firefox_uri}' -public -install",
       "${var.win_temp_dir}\\scripts\\download_r.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.r_installer}' -install",
       "${var.win_temp_dir}\\scripts\\Get_r_studio.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.r_studio_install}' -install",
       "${var.win_temp_dir}\\scripts\\install_anaconda.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.anaconda_installer}' -installParams '${var.anaconda_install_type} ${var.anaconda_install_addpath} ${var.anaconda_install_registerpy} ${var.anaconda_install_silent} ${var.anaconda_install_dir}'-install",
       "${var.win_temp_dir}\\scripts\\CiscoAnyconnect\\install_anyconnect.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.anyconnect_installer}' -install",
+      "${var.win_temp_dir}\\scripts\\install_git.ps1 -OutPath '${var.win_temp_dir}' -uri '${var.git_uri}' -public -install",
+      "${var.win_temp_dir}\\scripts\\Microsoft\\install_adk.ps1 -uri '${var.ms_adk_uri}' -OutPath '${var.win_temp_dir}' -installername '${var.ms_adk_installer}' -public -install"
       "${var.win_temp_dir}\\scripts\\Win10_Packer_cleanup.ps1 -tempdir '${var.win_temp_dir}'"
       ]
   }
