@@ -271,6 +271,7 @@ build {
     direction   =  "upload"
   }
 
+# 40 minutess
   provisioner "powershell" {
     inline = [
       "${var.win_temp_dir}\\scripts\\Windows10_cleanup.ps1",
