@@ -109,7 +109,7 @@ if ($install.IsPresent) {
     elseif ($installerExtension -like ".exe") {
         Write-Log -Level "INFO" -Message "EXE Install of $($installername)"
         Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($installerPath) -ArgumentList `"$($installParams)`""
-        Start-Process -NoNewWindow -FilePath $installerPath -ArgumentList "$($installParams)"    
+        Start-Process -NoNewWindow -FilePath $installerPath -ArgumentList "$($installParams)" -Wait    
     }
 
     
