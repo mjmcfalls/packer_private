@@ -69,9 +69,9 @@ foreach($tpath in $tempPaths){
 }
 
 Write-Log -Level "INFO" -Message "Downloading Sdelete"
-Invoke-WebRequest -Uri $sdelete_uri -OutFile (Join-Path -Path $outpath -ChildPath "sdelete.exe")  -UseBasicParsing
+Invoke-WebRequest -Uri $sdelete_uri -OutFile (Join-Path -Path $outpath -ChildPath "sdelete.zip")  -UseBasicParsing
 
-Expand-Archive -LiteralPath (Join-Path -Path $outpath -ChildPath "sdelete.exe") -DestinationPath $outpath 
+Expand-Archive -Path (Join-Path -Path $outpath -ChildPath "sdelete.zip") -DestinationPath $outpath 
 
 Start-Process -NoNewWindow -FilePath (Join-Path -Path $outpath -ChildPath "sdelete.exe") -ArgumentList "-nobanner -z -c -p 1"
 
