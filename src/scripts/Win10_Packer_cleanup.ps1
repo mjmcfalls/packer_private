@@ -29,6 +29,50 @@ Function Write-Log {
     }
 }
 
+Function Clean-Directory {
+    [Cmdletbinding()]
+    Param(
+        $patharray
+    )
+
+    foreach ($tpath in $tempPaths) {
+        Write-Log -Level "INFO" -Message "Cleaning $($tpath)"
+    
+        Write-Log -Level "INFO" -Message "Getting files in $($tpath)"
+        $tempFiles = Get-ChildItem $tpath -Recurse -File
+        # $tempFiles
+        Write-Log -Level "INFO" -Message "Removing files in $($tpath)"
+        $tempFiles | Remove-Item -Force #-ErrorAction SilentlyContinue
+    
+        Write-Log -Level "INFO" -Message "Getting Directories in $($tpath)"
+        $tempDirs = Get-ChildItem $tpath -Recurse -Directory
+        # $tempFiles
+        Write-Log -Level "INFO" -Message "Removing Directories in $($tpath)"
+        $tempDirs | Remove-Item -Force -Recurse #-ErrorAction SilentlyContinue
+    }
+
+}
+
+Function Start-Sdelete {
+    [CmdletBinding()]
+    Param (
+        [string]$outPath = "c:\temp",
+        [string]$sdelete_uri = "https://download.sysinternals.com/files/SDelete.zip",
+        [string]$sdelete_params = "-nobanner -z -c -p 1"
+    )
+    
+    $sdeleteZipPath = Join-Path -Path $outpath -ChildPath "sdelete.zip"
+
+    Write-Log -Level "INFO" -Message "Downloading Sdelete"
+    Invoke-WebRequest -Uri $sdelete_uri -OutFile $sdeleteZipPath -UseBasicParsing
+    
+    Write-Log -Level "INFO" -Message "Unzipping $($sdeleteZipPath) to $($outPath)"
+    Expand-Archive -Path $sdeleteZipPath -DestinationPath $outpath 
+    
+    Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $(Join-Path -Path $outpath -ChildPath 'sdelete.exe') -ArgumentList $($sdelete_params)"
+    Start-Process -NoNewWindow -FilePath (Join-Path -Path $outpath -ChildPath "sdelete.exe") -ArgumentList $sdelete_params
+    
+}
 
 # Recomplie Dot Net x64
 Write-Log -Level "INFO" -Message "Recompiling x64 dot net"
@@ -52,42 +96,10 @@ $tempPaths = New-Object System.Collections.Generic.List[System.Object]
 $tempPaths.Add($env:temp)
 $tempPaths.Add($outPath)
 
-foreach($tpath in $tempPaths){
-    Write-Log -Level "INFO" -Message "Cleaning $($tpath)"
+Clean-Directory -patharray $tempPaths
 
-    Write-Log -Level "INFO" -Message "Getting files in $($tpath)"
-    $tempFiles = Get-ChildItem $tpath -Recurse -File
-    # $tempFiles
-    Write-Log -Level "INFO" -Message "Removing files in $($tpath)"
-    $tempFiles | Remove-Item -Force #-ErrorAction SilentlyContinue
 
-    Write-Log -Level "INFO" -Message "Getting Directories in $($tpath)"
-    $tempDirs = Get-ChildItem $tpath -Recurse -Directory
-    # $tempFiles
-    Write-Log -Level "INFO" -Message "Removing Directories in $($tpath)"
-    $tempDirs | Remove-Item -Force -Recurse #-ErrorAction SilentlyContinue
-}
+# Clean free space
 
-Write-Log -Level "INFO" -Message "Downloading Sdelete"
-Invoke-WebRequest -Uri $sdelete_uri -OutFile (Join-Path -Path $outpath -ChildPath "sdelete.zip")  -UseBasicParsing
-
-Expand-Archive -Path (Join-Path -Path $outpath -ChildPath "sdelete.zip") -DestinationPath $outpath 
-
-Start-Process -NoNewWindow -FilePath (Join-Path -Path $outpath -ChildPath "sdelete.exe") -ArgumentList "-nobanner -z -c -p 1"
-
-foreach($tpath in $tempPaths){
-    Write-Log -Level "INFO" -Message "Cleaning $($tpath)"
-
-    Write-Log -Level "INFO" -Message "Getting files in $($tpath)"
-    $tempFiles = Get-ChildItem $tpath -Recurse -File
-    # $tempFiles
-    Write-Log -Level "INFO" -Message "Removing files in $($tpath)"
-    $tempFiles | Remove-Item -Force #-ErrorAction SilentlyContinue
-
-    Write-Log -Level "INFO" -Message "Getting Directories in $($tpath)"
-    $tempDirs = Get-ChildItem $tpath -Recurse -Directory
-    # $tempFiles
-    Write-Log -Level "INFO" -Message "Removing Directories in $($tpath)"
-    $tempDirs | Remove-Item -Force -Recurse #-ErrorAction SilentlyContinue
-}
+Clean-Directory -patharray $tempPaths
 
