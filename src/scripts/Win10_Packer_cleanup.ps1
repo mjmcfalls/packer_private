@@ -39,8 +39,6 @@ Start-Process -NoNewWindow -FilePath "c:\windows\microsoft.net\framework64\v4.0.
 Write-Log -Level "INFO" -Message "Recompiling x86 dot net"
 Start-Process -NoNewWindow -FilePath "c:\windows\microsoft.net\framework\v4.0.30319\ngen.exe "  -ArgumentList "update /force" -Wait
 
-
-
 # Clean-up Online image
 Write-Log -Level "INFO" -Message "Running Dism.exe /online /Cleanup-Image /StartComponentCleanup"
 Start-Process -NoNewWindow -FilePath "Dism.exe" -ArgumentList "/online /Cleanup-Image /StartComponentCleanup"
