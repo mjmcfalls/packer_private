@@ -35,11 +35,12 @@ $tempPaths.Add($tempDir)
 
 # Recomplie Dot Net x64
 Write-Log -Level "INFO" -Message "Recompiling x64 dot net"
-&"c:\windows\microsoft.net\framework64\v4.0.30319\ngen.exe update /force"
+Start-Process -NoNewWindow -FilePath "c:\windows\microsoft.net\framework64\v4.0.30319\ngen.exe"  -ArgumentList "update /force" -Wait
+&
 
 # Recomplie Dot Net x86
 Write-Log -Level "INFO" -Message "Recompiling x86 dot net"
-&"c:\windows\microsoft.net\framework\v4.0.30319\ngen.exe update /force"
+Start-Process -NoNewWindow -FilePath "c:\windows\microsoft.net\framework\v4.0.30319\ngen.exe "  -ArgumentList "update /force" -Wait
 
 foreach($tpath in $tempPaths){
     Write-Log -Level "INFO" -Message "Cleaning $($tpath)"
@@ -56,3 +57,11 @@ foreach($tpath in $tempPaths){
     Write-Log -Level "INFO" -Message "Removing Directories in $($tpath)"
     $tempDirs | Remove-Item -Force -Recurse #-ErrorAction SilentlyContinue
 }
+
+
+
+# Clean-up Online image
+Dism.exe /online /Cleanup-Image /StartComponentCleanup
+
+# Clean-up and remove all superseded versions of every component in the component store
+# Dism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase
