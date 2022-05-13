@@ -262,7 +262,7 @@ source "qemu" "Windows_10" {
   iso_checksum     = "${var.iso_checksum}"
   iso_url          = "${var.iso_url}"
   memory           = "${var.memory}"
-  net_device       = "virtio-net"
+  net_device       = "e1000"
   output_directory = "${var.nix_output_directory}"
   shutdown_command = "a:/setup_restart.bat"
   # net_bridge      = "${var.switchname}"
