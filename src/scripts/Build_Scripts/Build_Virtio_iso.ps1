@@ -1,18 +1,17 @@
 [CmdletBinding()]
 
 Param (
-    [string]$wimFile,
+    [string]$windowsWimFile = "install.wim",
+    [string]$bootWimFile = "boot.wim",
+    [string]$setupIsoPath,
     [string]$mountPath = "c:\temp\wim_mount",
     [string]$driversPath,
-    # [switch]$isoFile,
     [string]$isoPath = "c:\temp\iso\windows10_$(Get-Date -Format yyyyMMddHHmm).iso",
     [string]$bootLoaderPath = "C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Deployment Tools\amd64\Oscdimg\etfsboot.com",
     [string]$oscdimgPath = "C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Deployment Tools\amd64\Oscdimg\oscdimg.exe",
     [string]$winPEPath = "C:\Temp\WinPE_amd64",
-    [string]$winPEWimPathStub = "media\sources\boot.wim",
+    [string]$winPEWimPathStub = "sources\boot.wim",
     [string]$winPEMountPathStub = "mount",
-    [string]$makeWinPEMediaPath = "C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Windows Preinstallation Environment\MakeWinPEMedia.cmd",
-    [string]$copyPEPath = "C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Windows Preinstallation Environment\copype.cmd",
     [string]$wimIndex = 1,
     [string]$pe_arch = "amd64"
     
@@ -43,7 +42,6 @@ Function Write-Log {
     }
 }
 
-$winPEWimPath = Join-Path -Path $winPEPath -ChildPath $winPEWimPathStub
 $winPEMountPath = Join-Path -Path $winPEPath -ChildPath $winPEMountPathStub
 
 Write-Log -Level "INFO" -Message "Win PE Wim Path: $($winPEWimPath)"
@@ -67,48 +65,59 @@ if (-Not (Test-Path $mountPath)) {
     New-Item -ItemType Directory -Path $mountPath -Force | Out-Null
 }
 
-# # Mount WIM
-# Write-Log -Level "INFO" -Message "Mounting -ImagePath $($wimFile) -index:$($wimIndex) -Path:$($mountPath) -Optimize"
-# Mount-WindowsImage -Path $mountPath -Index $wimIndex -ImagePath $wimFile -Optimize
+# Find install wim
+Write-Log -Level "INFO" -Message "Windows - Searching for $($windowsWimFile) in $($setupIsoPath)"
+$windowsWimPath = Get-ChildItem -Recurse -Path $setupIsoPath | Where-Object { $_.name -like $windowsWimFile }
 
-# # Add Drivers in Folder
-# Write-Log -Level "INFO" -Message "Adding drivers in $($driversPath) to $($mountPath) -Recurse"
-# Add-WindowsDriver -Path $mountPath -Driver $driversPath -Recurse
+if ($windowsWimPath) {
+    Write-Log -Level "INFO" -Message "Windows - Found at $($windowsWimPath.FullName)"
+    # Mount WIM
+    Write-Log -Level "INFO" -Message "Windows - Mounting -ImagePath $($windowsWimPath.FullName) -index:$($wimIndex) -Path:$($mountPath) -Optimize"
+    Mount-WindowsImage -Path $mountPath -Index $wimIndex -ImagePath $windowsWimPath.FullName -Optimize
 
-# # Commit changes and unmount WIM
-# Write-Log -Level "INFO" -Message "Dismount $($mountPath) and commit changes"
-# Dismount-WindowsImage -Path $mountPath -Save
+    # Add Drivers in Folder
+    Write-Log -Level "INFO" -Message Windows - "Adding drivers in $($driversPath) to $($mountPath) -Recurse"
+    Add-WindowsDriver -Path $mountPath -Driver $driversPath -Recurse
 
-# Copy Window PE FIles
-Write-Log -Level "INFO" -Message "WinPE - $($copyPEPath) $($pe_arch) $($winPEPath)"
-Start-Process -NoNewWindow -FilePath $copyPEPath -ArgumentList "$($pe_arch) $($winPeWimPath)"
+    # Commit changes and unmount WIM
+    Write-Log -Level "INFO" -Message "Windows - Dismount $($mountPath) and commit changes"
+    Dismount-WindowsImage -Path $mountPath -Save
+}
+else {
+    Write-Log -Level "ERROR" -Message "Windows - No $($windowsWimFile) found in $($setupIsoPath)"
+}
+
 
 # Find WinPE Boot Wim
+Write-Log -Level "INFO" -Message "WinPE - Searching for $($bootWimFile) in $($setupIsoPath)"
 
+$bootWimPath = Get-ChildItem -Recurse -Path $setupIsoPath | Where-Object { $_.name -like $bootWimFile }
 
-# Mount WinPE wim
-Write-Log -Level "INFO" -Message "WinPE - Mounting WIM- ImagePath:$($winPeWimPath); index:$($wimIndex); Path:$winPEMountPath)"
-Mount-WindowsImage -Path $winPEMountPath -Index $wimIndex -ImagePath $winPeWimPath -Optimize
+if ($bootWimPath) {
+    Write-Log -Level "INFO" -Message "WinPE - Found at $($bootWimPath.FullName)"
+    # Mount WinPE wim
+    Write-Log -Level "INFO" -Message "WinPE - Mounting WIM- ImagePath:$($bootWimPath.FullName); index:$($wimIndex); Path:$winPEMountPath)"
+    Mount-WindowsImage -Path $winPEMountPath -Index $wimIndex -ImagePath $bootWimPath.FullName -Optimize
 
-# Add Drivers in Folder
-Write-Log -Level "INFO" -Message "WinPE - Adding drivers from $($driversPath) to $($winPEMountPath)/Recurse"
-Add-WindowsDriver -Path $winPEMountPath -Driver $driversPath -Recurse
+    # Add Drivers in Folder
+    Write-Log -Level "INFO" -Message "WinPE - Adding drivers from $($driversPath) to $($winPEMountPath)/Recurse"
+    Add-WindowsDriver -Path $winPEMountPath -Driver $driversPath -Recurse
 
-# Commit changes and unmount WIM
-Write-Log -Level "INFO" -Message "WinPE - Dismount and commit $($winPEMountPath)"
-Dismount-WindowsImage -Path $winPEMountPath -Save
-
-# Copy PE Wim to ISO
-Write-Log -Level "INFO" -Message "WinPE - Copy boot.wim to ISO location"
+    # Commit changes and unmount WIM
+    Write-Log -Level "INFO" -Message "WinPE - Dismount and commit $($winPEMountPath)"
+    Dismount-WindowsImage -Path $winPEMountPath -Save
+}
+else {
+    Write-Log -Level "ERROR" -Message "WinPe - No $($bootWimFile) found in $($setupIsoPath)"
+}
 
 
 # Create ISO
 Write-Log -Level "INFO" -Message "ISO - OSCDIMG building iso at $($isoPath)"
-Write-Log -Level "INFO" -Message "ISO - oscdimg -n -m -o u2 -b$($bootLoaderPath) $($SOURCEFILES) $($isoPath)"
-# Start-Process -NoNewWindow -FilePath $oscdimgPath -ArgumentList "-n -m -o u2 -b$($bootLoaderPath) $($SOURCEFILES) $($isoPath)"
+Write-Log -Level "INFO" -Message "ISO - oscdimg -n -m -o u2 -b$($bootLoaderPath) $($setupIsoPath) $($isoPath)"
+Start-Process -NoNewWindow -FilePath $oscdimgPath -ArgumentList "-n -m -o u2 -b$($bootLoaderPath) $($setupIsoPath) $($isoPath)"
 
 # Clean Up 
 Write-Log -Level "INFO" -Message "Clean-up paths"
-# Delete files and folders in winPEPath
-Get-ChildItem -Recurse $winPEWimPath  | Remove-Item -Force
 Get-ChildItem -Recurse $winPEMountPath | Remove-Item -Recurse -Force
+Get-ChildItem -Recurse $mountPath | Remove-Item -Recurse -Force
