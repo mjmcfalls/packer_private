@@ -253,11 +253,8 @@ source "qemu" "Windows_10" {
   # floppy_content   = {
   #                       "virtio" = "/usr/share/virtio-win/drivers/amd64/"
   #                     }
-  cd_files         = ["${var.autounattend}","./src/scripts/"]
+  cd_files         = ["${var.autounattend}","./src/scripts/", "/usr/share/virtio-win/drivers/amd64/"]
   cd_label         = "Drivers"
-  cd_content       = {
-                      "$WinpeDriver$" = "/usr/share/virtio-win/drivers/amd64/"
-                    }
   cdrom_interface  = "ide"
   format           = "qcow2"
   headless         = "${var.headless}"
