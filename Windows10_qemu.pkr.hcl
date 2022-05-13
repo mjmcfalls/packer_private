@@ -256,7 +256,7 @@ source "qemu" "Windows_10" {
   cd_files         = ["${var.autounattend}","./src/scripts/"]
   cd_label         = "Drivers"
   cd_content       = {
-                      "$WinpeDriver" = "/usr/share/virtio-win/drivers/amd64/"
+                      "$WinpeDriver$" = "/usr/share/virtio-win/drivers/amd64/"
                     }
   cdrom_interface  = "ide"
   format           = "qcow2"
