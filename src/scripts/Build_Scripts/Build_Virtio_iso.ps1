@@ -2,12 +2,19 @@
 
 Param (
     [string]$wimFile,
-    [string]$mountPath,
+    [string]$mountPath = "c:\temp\wim_mount",
     [string]$driversPath,
-    [switch]$isoName,
-    [string]$isoPath,
+    # [switch]$isoFile,
+    [string]$isoPath = "c:\temp\iso\windows10_$(Get-Date -Format yyyyMMddHHmm).iso",
     [string]$bootLoaderPath = "C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Deployment Tools\amd64\Oscdimg\etfsboot.com",
-    [string]$oscdimgPath = "C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Deployment Tools\amd64\Oscdimg\oscdimg.exe"
+    [string]$oscdimgPath = "C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Deployment Tools\amd64\Oscdimg\oscdimg.exe",
+    [string]$winPEPath = "C:\Temp\WinPE_amd64",
+    [string]$winPEWimPathStub = "media\sources\boot.wim",
+    [string]$winPEMountPathStub = "mount",
+    [string]$makeWinPEMediaPath = "C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Windows Preinstallation Environment\MakeWinPEMedia.cmd",
+    [string]$copyPEPath = "C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Windows Preinstallation Environment\copype.cmd",
+    [string]$wimIndex = 1,
+    [string]$pe_arch = "amd64"
     
 )
 
@@ -36,33 +43,72 @@ Function Write-Log {
     }
 }
 
-# Mount WIM
-Dism /Mount-Image /ImageFile:($wimFile) /MountDir:($mountPath)
+$winPEWimPath = Join-Path -Path $winPEPath -ChildPath $winPEWimPathStub
+$winPEMountPath = Join-Path -Path $winPEPath -ChildPath $winPEMountPathStub
 
-# Add Drivers in Folder
-Dism /Image:$mountPath /Add-Driver /Driver:$driversPath /Recurse
+Write-Log -Level "INFO" -Message "Win PE Wim Path: $($winPEWimPath)"
+Write-Log -Level "INFO" -Message "Win PE Wim Mount Path: $($winPEMountPath)"
+Write-Log -Level "INFO" -Message "Win PE ISO Path: $($isoPath)"
 
-# Commit changes and unmount WIM
-Dism /Unmount-Image /MountDir:$mountPath /Commit
+# Create Directories if they do not exist
+if (-Not (Test-Path $winPEWimPath)) {
+    New-Item -ItemType Directory -Path $winPeWimPath -Force | Out-Null
+}
 
+if (-Not (Test-Path $winPEMountPath)) {
+    New-Item -ItemType Directory -Path $winPEMountPath -Force | Out-Null
+}
 
-# Copy WinPE Source file
-MakeWinPEMedia /UFD C:\WinPE_amd64 F:
+if (-Not (Test-Path $isoPath)) {
+    New-Item -ItemType Directory -Path $isoPath -Force | Out-Null
+}
 
-# Mount WinPE wim
-Dism /Mount-Image /ImageFile:"C:\WinPE_amd64\media\sources\boot.wim" /index:1 /MountDir:"C:\WinPE_amd64\mount"
+if (-Not (Test-Path $mountPath)) {
+    New-Item -ItemType Directory -Path $mountPath -Force | Out-Null
+}
 
-# Add Drivers in Folder
-Dism /Image:$mountPath /Add-Driver /Driver:$driversPath /Recurse
+# # Mount WIM
+# Write-Log -Level "INFO" -Message "Mounting -ImagePath $($wimFile) -index:$($wimIndex) -Path:$($mountPath) -Optimize"
+# Mount-WindowsImage -Path $mountPath -Index $wimIndex -ImagePath $wimFile -Optimize
 
-# Commit changes and unmount WIM
-Dism /Unmount-Image /MountDir:$mountPath /Commit
+# # Add Drivers in Folder
+# Write-Log -Level "INFO" -Message "Adding drivers in $($driversPath) to $($mountPath) -Recurse"
+# Add-WindowsDriver -Path $mountPath -Driver $driversPath -Recurse
 
+# # Commit changes and unmount WIM
+# Write-Log -Level "INFO" -Message "Dismount $($mountPath) and commit changes"
+# Dismount-WindowsImage -Path $mountPath -Save
 
 # Copy Window PE FIles
-copype amd64 $winPEPath
+Write-Log -Level "INFO" -Message "WinPE - $($copyPEPath) $($pe_arch) $($winPEPath)"
+Start-Process -NoNewWindow -FilePath $copyPEPath -ArgumentList "$($pe_arch) $($winPeWimPath)"
+
+# Find WinPE Boot Wim
+
+
+# Mount WinPE wim
+Write-Log -Level "INFO" -Message "WinPE - Mounting WIM- ImagePath:$($winPeWimPath); index:$($wimIndex); Path:$winPEMountPath)"
+Mount-WindowsImage -Path $winPEMountPath -Index $wimIndex -ImagePath $winPeWimPath -Optimize
+
+# Add Drivers in Folder
+Write-Log -Level "INFO" -Message "WinPE - Adding drivers from $($driversPath) to $($winPEMountPath)/Recurse"
+Add-WindowsDriver -Path $winPEMountPath -Driver $driversPath -Recurse
+
+# Commit changes and unmount WIM
+Write-Log -Level "INFO" -Message "WinPE - Dismount and commit $($winPEMountPath)"
+Dismount-WindowsImage -Path $winPEMountPath -Save
+
+# Copy PE Wim to ISO
+Write-Log -Level "INFO" -Message "WinPE - Copy boot.wim to ISO location"
 
 
 # Create ISO
-MakeWinPEMedia /ISO C:\WinPE_amd64 C:\WinPE_amd64\WinPE_amd64.iso
-# oscdimg -n -m -bc:\temp\WindowsISO\boot\etfsboot.com $mou C:\temp\WindowsISOdrivers\windows.iso
+Write-Log -Level "INFO" -Message "ISO - OSCDIMG building iso at $($isoPath)"
+Write-Log -Level "INFO" -Message "ISO - oscdimg -n -m -o u2 -b$($bootLoaderPath) $($SOURCEFILES) $($isoPath)"
+# Start-Process -NoNewWindow -FilePath $oscdimgPath -ArgumentList "-n -m -o u2 -b$($bootLoaderPath) $($SOURCEFILES) $($isoPath)"
+
+# Clean Up 
+Write-Log -Level "INFO" -Message "Clean-up paths"
+# Delete files and folders in winPEPath
+Get-ChildItem -Recurse $winPEWimPath  | Remove-Item -Force
+Get-ChildItem -Recurse $winPEMountPath | Remove-Item -Recurse -Force

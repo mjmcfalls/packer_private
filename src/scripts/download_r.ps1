@@ -12,7 +12,7 @@ Param (
     [string]$installername
 )
 
-function New-TempFolder {
+Function New-TempFolder {
     [CmdletBinding(
         SupportsShouldProcess = $True
     )]
