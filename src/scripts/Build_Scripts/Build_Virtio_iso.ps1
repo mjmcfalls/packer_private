@@ -129,7 +129,10 @@ Write-Log -Level "INFO" -Message "ISO - oscdimg -n -m -o u2 -b$($bootLoaderPath)
 $results = Start-Process -FilePath $oscdimgPath -ArgumentList @("-bootdata:$BootData",'-u2','-udfver102',"$setupisopath","$isoPath") -PassThru -Wait -NoNewWindow
 if($results.ExitCode -ne 0)
 {
-    Write-Log -Level "ERROR" -Message "Failed to generate ISO with exitcode: $($results.ExitCode)"
+    Write-Log -Level "ERROR" -Message "ISO - Failed to generate ISO with exitcode: $($results.ExitCode)"
+}
+else{
+    Write-Log -Level "INFO" -Message "ISO - Successfully created $($isoPath)"
 }
 
 # Clean Up 
