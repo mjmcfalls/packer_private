@@ -12,7 +12,7 @@ Param (
     [string]$installername
 )
 
-function Create-TempFolder {
+function New-TempFolder {
     [CmdletBinding(
         SupportsShouldProcess = $True
     )]
@@ -52,7 +52,7 @@ Function Write-Log {
 
 $ProgressPreference = 'SilentlyContinue'
 
-Create-TempFolder -Path $outpath
+New-TempFolder -Path $outpath
 
 if ($public.IsPresent) {
     Write-Log -Level "INFO" -Message "Fetch $($installername) from $($uri)"
