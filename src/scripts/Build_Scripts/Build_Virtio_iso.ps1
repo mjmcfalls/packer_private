@@ -86,7 +86,7 @@ if ($windowsWimPath) {
     Mount-WindowsImage -Path $mountPath -Index $wimIndex -ImagePath $windowsWimPath.FullName -Optimize
 
     # Add Drivers in Folder
-    Write-Log -Level "INFO" -Message Windows - "Adding drivers in $($driversPath) to $($mountPath) -Recurse"
+    Write-Log -Level "INFO" -Message "Windows - Adding drivers in $($driversPath) to $($mountPath) -Recurse"
     Add-WindowsDriver -Path $mountPath -Driver $driversPath -Recurse
 
     # Commit changes and unmount WIM
