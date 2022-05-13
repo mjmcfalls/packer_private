@@ -13,6 +13,7 @@ Param (
     [string]$winPEWimPathStub = "sources\boot.wim",
     [string]$winPEMountPathStub = "mount",
     [string]$wimIndex = 1,
+    [int]$windowsSetupIndex=2,
     [string]$pe_arch = "amd64"
     
 )
@@ -107,7 +108,7 @@ if ($bootWimPath) {
     Write-Log -Level "INFO" -Message "WinPE - Found at $($bootWimPath.FullName)"
     # Mount WinPE wim
     Write-Log -Level "INFO" -Message "WinPE - Mounting WIM- ImagePath:$($bootWimPath.FullName); index:$($wimIndex); Path:$winPEMountPath)"
-    Mount-WindowsImage -Path $winPEMountPath -Index $wimIndex -ImagePath $bootWimPath.FullName -Optimize
+    Mount-WindowsImage -Path $winPEMountPath -Index $windowsSetupIndex -ImagePath $bootWimPath.FullName -Optimize
 
     # Add Drivers in Folder
     Write-Log -Level "INFO" -Message "WinPE - Adding drivers from $($driversPath) to $($winPEMountPath)/Recurse"

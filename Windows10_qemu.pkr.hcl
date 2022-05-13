@@ -249,18 +249,15 @@ variable "shutdown_command" {
 # https://www.packer.io/docs/templates/hcl_templates/blocks/source
 source "qemu" "Windows_10" {
   accelerator      = "kvm"
-  boot_wait        = "120s"
+  boot_wait        = "180s"
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
   disk_size        = "${var.disk_size}"
   disk_interface   = "ide"
-  # floppy_files     = ["${var.autounattend}","./src/scripts/"]
-  # floppy_content   = {
-  #                       "virtio" = "/usr/share/virtio-win/drivers/amd64/"
-  #                     }
-  cd_files         = ["${var.autounattend}","./src/scripts/", "/usr/share/virtio-win/drivers/amd64/"]
-  cd_label         = "Drivers"
-  cdrom_interface  = "ide"
+  floppy_files     = ["${var.autounattend}","./src/scripts/"]
+  # cd_files         = ["./src/apps/VirtIO/"]
+  # cd_label         = "Drivers"
+  # cdrom_interface  = "ide"
   format           = "qcow2"
   headless         = "${var.headless}"
   http_directory   = "${var.http_directory}"
@@ -268,7 +265,7 @@ source "qemu" "Windows_10" {
   iso_url          = "${var.iso_url}"
   memory           = "${var.memory}"
   net_device       = "e1000"
-  net_bridge      = "${var.switchname}"
+  # net_bridge      = "${var.switchname}"
   output_directory = "${var.nix_output_directory}"
   shutdown_command = "${var.shutdown_command}"
   vm_name          = "${var.vm_name}"
