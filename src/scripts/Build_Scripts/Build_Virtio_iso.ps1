@@ -49,21 +49,31 @@ Write-Log -Level "INFO" -Message "Win PE Wim Mount Path: $($winPEMountPath)"
 Write-Log -Level "INFO" -Message "Win PE ISO Path: $($isoPath)"
 
 # Create Directories if they do not exist
-if (-Not (Test-Path $winPEWimPath)) {
-    New-Item -ItemType Directory -Path $winPeWimPath -Force | Out-Null
-}
-
 if (-Not (Test-Path $winPEMountPath)) {
     New-Item -ItemType Directory -Path $winPEMountPath -Force | Out-Null
-}
-
-if (-Not (Test-Path $isoPath)) {
-    New-Item -ItemType Directory -Path $isoPath -Force | Out-Null
 }
 
 if (-Not (Test-Path $mountPath)) {
     New-Item -ItemType Directory -Path $mountPath -Force | Out-Null
 }
+
+# if (-Not (Test-Path $isoPath)) {
+#     New-Item -ItemType Directory -Path $isoPath -Force | Out-Null
+# }
+
+# if ( -Not (Get-Item $isoPath) -is [System.IO.DirectoryInfo]) {
+#     $isoPathDir = (Get-Item $isoPath).Directory
+
+#     if (-Not (Test-Path $isoPathDir)) {
+#         New-Item -ItemType Directory -Path $isoPathDir -Force | Out-Null
+#     }
+# }
+# else {
+#     if (-Not (Test-Path $isoPath)) {
+#         New-Item -ItemType Directory -Path $isoPath -Force | Out-Null
+#     }
+# }
+
 
 # Find install wim
 Write-Log -Level "INFO" -Message "Windows - Searching for $($windowsWimFile) in $($setupIsoPath)"
@@ -111,11 +121,16 @@ else {
     Write-Log -Level "ERROR" -Message "WinPe - No $($bootWimFile) found in $($setupIsoPath)"
 }
 
-
 # Create ISO
+$BootData='2#p0,e,b"{0}"#pEF,e,b"{1}"' -f "$setupisopath\boot\etfsboot.com","$setupisopath\efi\Microsoft\boot\efisys.bin"
+
 Write-Log -Level "INFO" -Message "ISO - OSCDIMG building iso at $($isoPath)"
 Write-Log -Level "INFO" -Message "ISO - oscdimg -n -m -o u2 -b$($bootLoaderPath) $($setupIsoPath) $($isoPath)"
-Start-Process -NoNewWindow -FilePath $oscdimgPath -ArgumentList "-n -m -o u2 -b$($bootLoaderPath) $($setupIsoPath) $($isoPath)"
+$results = Start-Process -FilePath $oscdimgPath -ArgumentList @("-bootdata:$BootData",'-u2','-udfver102',"$setupisopath","$isoPath") -PassThru -Wait -NoNewWindow
+if($results.ExitCode -ne 0)
+{
+    Write-Log -Level "ERROR" -Message "Failed to generate ISO with exitcode: $($results.ExitCode)"
+}
 
 # Clean Up 
 Write-Log -Level "INFO" -Message "Clean-up paths"
