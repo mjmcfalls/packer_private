@@ -9,7 +9,7 @@ Param (
     [string]$isoPath = "c:\temp\iso\windows10_$(Get-Date -Format yyyyMMddHHmm).iso",
     [string]$bootLoaderPath = "C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Deployment Tools\amd64\Oscdimg\etfsboot.com",
     [string]$oscdimgPath = "C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Deployment Tools\amd64\Oscdimg\oscdimg.exe",
-    [string]$winPEPath = "C:\Temp\WinPE_amd64",
+    [string]$winPEPath = "C:\Temp\WinPE",
     [string]$winPEWimPathStub = "sources\boot.wim",
     [string]$winPEMountPathStub = "mount",
     [string]$wimIndex = 1,
