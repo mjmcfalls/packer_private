@@ -238,6 +238,11 @@ variable "ms_adk_installer" {
   type    = string
   default = "${env("ms_adk_installer")}"
 }
+
+variable "shutdown_command" {
+  type    = string
+  default = "${env("shutdown_command")}"
+}
 # source blocks are generated from your builders; a source can be referenced in
 # build blocks. A build block runs provisioner and post-processors on a
 # source. Read the documentation for source blocks here:
@@ -248,7 +253,7 @@ source "qemu" "Windows_10" {
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
   disk_size        = "${var.disk_size}"
-  disk_interface   = "virtio"
+  disk_interface   = "ide"
   # floppy_files     = ["${var.autounattend}","./src/scripts/"]
   # floppy_content   = {
   #                       "virtio" = "/usr/share/virtio-win/drivers/amd64/"
@@ -263,9 +268,9 @@ source "qemu" "Windows_10" {
   iso_url          = "${var.iso_url}"
   memory           = "${var.memory}"
   net_device       = "e1000"
-# net_bridge      = "${var.switchname}"
+  net_bridge      = "${var.switchname}"
   output_directory = "${var.nix_output_directory}"
-  shutdown_command = "a:/setup_restart.bat"
+  shutdown_command = "${var.shutdown_command}"
   vm_name          = "${var.vm_name}"
   winrm_insecure   = "${var.winrm_insecure}"
   winrm_password   = "${var.winrm_password}"
