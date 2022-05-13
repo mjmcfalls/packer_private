@@ -255,6 +255,7 @@ source "qemu" "Windows_10" {
   #                     }
   cd_files         = ["${var.autounattend}","./src/scripts/","/usr/share/virtio-win/drivers/amd64/"]
   cd_label         = "Drivers"
+  cdrom_interface  = "ide"
   format           = "qcow2"
   headless         = "${var.headless}"
   http_directory   = "${var.http_directory}"
