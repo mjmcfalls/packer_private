@@ -2,7 +2,7 @@
 Param (
     [string]$outPath = "c:\temp",
     [string]$sdelete_uri = "https://download.sysinternals.com/files/SDelete.zip",
-    $dotNetPaths = @("c:\windows\microsoft.net\framework64\v4.0.30319\ngen.exe", "c:\windows\microsoft.net\framework\v4.0.30319\ngen.exe"),
+    $dotNetPaths = @("c:\windows\microsoft.net\framework64\v4.0.30319\ngen.exe", "c:\windows\microsoft.net\framework\v4.0.30319\ngen.exe")
 )
 
 Function Write-Log {
@@ -71,7 +71,7 @@ Function Start-Sdelete {
     Expand-Archive -Path $sdeleteZipPath -DestinationPath $outpath 
     
     Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $(Join-Path -Path $outpath -ChildPath 'sdelete.exe') -ArgumentList $($sdelete_params)"
-    Start-Process -NoNewWindow -FilePath (Join-Path -Path $outpath -ChildPath "sdelete.exe") -ArgumentList $sdelete_params
+    Start-Process -NoNewWindow -FilePath (Join-Path -Path $outpath -ChildPath "sdelete.exe") -ArgumentList $sdelete_params -Wait
     
 }
 

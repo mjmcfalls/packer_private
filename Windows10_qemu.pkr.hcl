@@ -253,7 +253,7 @@ source "qemu" "Windows_10" {
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
   disk_size        = "${var.disk_size}"
-  disk_interface   = "ide"
+  disk_interface   = "virtio"
   floppy_files     = ["${var.autounattend}","./src/scripts/"]
   # cd_files         = ["./src/apps/VirtIO/"]
   # cd_label         = "Drivers"
