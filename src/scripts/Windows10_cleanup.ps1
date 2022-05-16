@@ -37,8 +37,6 @@ Function Write-Log {
 }
 
 
-
-
 # Set High Performance
 $highperfguid = ((((powercfg /list | Select-String "High Performance") -Split ":")[1]) -Split "\(")[0].trim()
 Write-Log -Level "INFO" -Message "Setting performance plan to $($highperfguid)"
