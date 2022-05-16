@@ -1,4 +1,5 @@
-#! /bin/bash
+#!/bin/bash
+
 export PACKER_LOG=1
 export PACKER_LOG_PATH="/home/mmcfalls/packer_logs.log"
 
