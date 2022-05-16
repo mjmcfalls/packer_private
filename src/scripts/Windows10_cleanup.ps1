@@ -1,10 +1,52 @@
 
+[CmdletBinding()]
+Param (
+    [string]$outPath = "c:\temp",
+    [string]$sdelete_uri = "https://download.sysinternals.com/files/SDelete.zip",
+    $dotNetPaths = @("c:\windows\microsoft.net\framework64\v4.0.30319\ngen.exe", "c:\windows\microsoft.net\framework\v4.0.30319\ngen.exe")
+)
+
+Function Write-Log {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $False)]
+        [ValidateSet("INFO", "WARN", "ERROR", "FATAL", "DEBUG")]
+        [String]
+        $Level = "INFO",
+        [Parameter(Mandatory = $True)]
+        [string]
+        $Message,
+        [Parameter(Mandatory = $False)]
+        [string]
+        $logfile
+    )
+
+    $Stamp = (Get-Date).toString("yyyy/MM/dd HH:mm:ss")
+    $Line = "$Stamp $Level $Message"
+    If ($logfile) {
+        Add-Content $logfile -Value $Line
+    }
+    Else {
+        Write-Output $Line
+    }
+}
+
+
 $oneDrivePath = "c:\Windows\SysWOW64\onedrivesetup.exe"
 $oneDriveUninstallParams = "/uninstall"
 
 # Set High Performance
 $highperfguid = ((((powercfg /list | Select-String "High Performance") -Split ":")[1]) -Split "\(")[0].trim()
 powercfg /setactive "$($highperfguid)"
+
+
+
+# Install dot Net 3.5
+
+Write-Log -Level "INFO" -Message "Installing .NET 3.5"
+dism /online /Enable-Feature /FeatureName:NetFx3 /All /LimitAccess /Source:$NetFX3_Source /NoRestart
+
+
 
 # Remove AppX Packages
 Get-AppxPackage | Where-Object { $_.Name -notlike "*Search*" -or $_.Name -notlike "*Calc*" -or $_.Name -notlike "*Store*" } | Remove-AppXPackage
