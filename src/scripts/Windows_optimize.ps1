@@ -40,16 +40,22 @@ Function Clear-Directory {
         Write-Log -Level "INFO" -Message "Cleaning $($tpath)"
     
         Write-Log -Level "INFO" -Message "Getting files in $($tpath)"
-        $tempFiles = Get-ChildItem $tpath -Recurse -File
+        $tempFiles = Get-ChildItem $tpath -Recurse
         # $tempFiles
         Write-Log -Level "INFO" -Message "Removing files in $($tpath)"
         $tempFiles | Remove-Item -Force #-ErrorAction SilentlyContinue
+
+        # Write-Log -Level "INFO" -Message "Getting files in $($tpath)"
+        # $tempFiles = Get-ChildItem $tpath -Recurse -File
+        # # $tempFiles
+        # Write-Log -Level "INFO" -Message "Removing files in $($tpath)"
+        # $tempFiles | Remove-Item -Force #-ErrorAction SilentlyContinue
     
-        Write-Log -Level "INFO" -Message "Getting Directories in $($tpath)"
-        $tempDirs = Get-ChildItem $tpath -Recurse -Directory
-        # $tempFiles
-        Write-Log -Level "INFO" -Message "Removing Directories in $($tpath)"
-        $tempDirs | Remove-Item -Force -Recurse #-ErrorAction SilentlyContinue
+        # Write-Log -Level "INFO" -Message "Getting Directories in $($tpath)"
+        # $tempDirs = Get-ChildItem $tpath -Recurse -Directory
+        # # $tempFiles
+        # Write-Log -Level "INFO" -Message "Removing Directories in $($tpath)"
+        # $tempDirs | Remove-Item -Force -Recurse #-ErrorAction SilentlyContinue
     }
 
 }
