@@ -100,7 +100,7 @@ Write-Log -Level "INFO" -Message "Loading Default User Registry"
 reg load HKEY_LOCAL_MACHINE\WIM $mountdir\Users\Default\ntuser.dat
 
 Write-Log -Level "INFO" -Message "Deleting OneDrive Setup from Default User"
-reg delete "HKEY_LOCAL_MACHINE\WIM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v OneDriveSetup /f
+
 
 Write-Log -Level "INFO" -Message "Removing OneDrive Startup from Default User"
 Remove-Itemproperty -Path 'HKLM:\WIM\Software\Microsoft\Windows\CurrentVersion\Run\' -name 'OneDriveSetup'
