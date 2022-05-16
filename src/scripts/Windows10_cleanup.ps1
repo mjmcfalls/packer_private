@@ -2,15 +2,21 @@
 [CmdletBinding()]
 Param (
     [string]$outPath = "c:\temp",
-    $oneDrivePath = "c:\Windows\SysWOW64\onedrivesetup.exe",
-    $oneDriveUninstallParams = "/uninstall",
+    [string]$oneDrivePath = "c:\Windows\SysWOW64\onedrivesetup.exe",
+    [string]$oneDriveUninstallParams = "/uninstall",
     $appxIgnoreList = @("microsoft.windowscommunicationsapps", "Microsoft.WindowsCalculator", "Microsoft.DesktopAppInstaller", "Microsoft.WindowsStore", "Microsoft.StorePurchaseApp", "Microsoft.Appconnector"),
     $winFeaturesToDisable = @("DirectPlay", "WindowsMediaPlayer"),
-    $defaultsUsersSettingsPath = "Microsoft\DefaultUsersSettings.txt",
-    $ScheduledTasksListPath = "Microsoft\ScheduledTasks.txt",
-    $automaticTracingFilePath = "Microsoft\AutomaticTracers.txt",
-    $servicesToDisablePath = "Microsoft\ServicesToDisable.txt"
+    [string]$defaultsUsersSettings = (Join-Path -Path $outPath -ChildPath "Scripts\Microsoft\DefaultUsersSettings.txt"),
+    [string]$ScheduledTasksListPath = (Join-Path -Path $outPath -ChildPath "Scripts\Microsoft\ScheduledTasks.txt"),
+    [string] $automaticTracingFilePath = (Join-Path -Path $outPath -ChildPath "Scripts\Microsoft\AutomaticTracers.txt"),
+    [string]$servicesToDisablePath = (Join-Path -Path $outPath -ChildPath "Scripts\Microsoft\ServicesToDisable.txt"),
+    [int]$FileInfoCacheEntriesValue = 1024,
+    [int]$DirectoryCacheEntriesMax = 1024,
+    [int]$FileNotFoundCacheEntriesMax = 2048,
+    [int]$DormantFileLimit = 256,
+    [int]$DisableBandwidthThrottling = 1
 )
+
 Function Write-Log {
     [CmdletBinding()]
     Param(
@@ -111,7 +117,9 @@ if (Test-Path $defaultsUsersSettingsPath) {
     }
 
 }
-
+else {
+    Write-Log -Level "INFO" -Message  "Unable to find $($defaultsUsersSettingsPath)"
+}
 
 # Disable Scheduled Tasks
 if (Test-Path $ScheduledTasksListPath) {
@@ -124,21 +132,28 @@ if (Test-Path $ScheduledTasksListPath) {
         $EnabledScheduledTasks = Get-ScheduledTask | Where-Object { $_.State -ne "Disabled" }
 
         Foreach ($item in $SchTasksList) {
-            Write-Log -INFO "INFO" -Message "Disabling scheduled task: $($item)"
+            Write-Log -Level "INFO" -Message "Disabling scheduled task: $($item)"
             $EnabledScheduledTasks | Where-Object { $_.TaskName -like "$($item.trim())" } | Disable-ScheduledTask
         }
     }
 }
+else {
+    Write-Log -Level "INFO" -Message  "Unable to find $($ScheduledTasksListPath)"
+}
+
 # Disable Windows Services
 if (Test-Path $servicesToDisablePath) {
     $servicesToDisable = Get-Content $servicesToDisablePath
     if ($servicesToDisable.count -gt 0) {
         Foreach ($service in $servicesToDisable) {
-            Write-Log -INFO "INFO" -Message  "Disabling service: $($service)"
+            Write-Log -Level "INFO" -Message  "Disabling service: $($service)"
             Stop-Service $service
             Set-Service -Name $service -StartupType Disabled
         }
     }
+}
+else {
+    Write-Log -Level "INFO" -Message  "Unable to find $($servicesToDisablePath)"
 }
 
 # Disable Windows Automatic tracing
@@ -146,17 +161,55 @@ if (Test-Path $automaticTracingFilePath) {
     $AutomaticTracers = Get-Content $automaticTracingFilePath
     if ($AutomaticTracers.count -gt 0) {
         Foreach ($tracer in $AutomaticTracers) {
-            Write-Log -INFO "INFO" -Message  "Disabling tracing: $($tracer)"
+            Write-Log -Level "INFO" -Message  "Disabling tracing: $($tracer)"
             New-ItemProperty -Path "$($tracer)" -Name "Start" -PropertyType "DWORD" -Value "0" -Force
         }
     }
 }
+else {
+    Write-Log -Level "INFO" -Message  "Unable to find $($automaticTracingFilePath)"
+}
+
 # Disable Windows Features
 foreach ($feature in $winFeaturesToDisable) {
     Write-Log -Level "INFO" -Message "Removing $($feature)"
     Disable-WindowsOptionalFeature -Online -FeatureName $feature
 }
 
+# Disable System Restore
+Write-Log -Level "INFO" -Message "Disable System Restore for C:"
+Disable-ComputerRestore -Drive "C:\"
+
+# Disable Hibernate
+Write-Log -Level "INFO" -Message "Disable Hibernate"
+POWERCFG -h off
+
+# Disable Crash Dumps
+Write-Log -Level "INFO" -Message "Disable System crash dumps"
+Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\CrashControl' -Name 'CrashDumpEnabled' -Value '1'
+Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\CrashControl' -Name 'LogEvent' -Value '0'
+Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\CrashControl' -Name 'SendAlert' -Value '0'
+Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\CrashControl' -Name 'AutoReboot' -Value '1'
+
+
+# Disable Logon Background
+Write-Log -Level "INFO" -Message "Disable Logon Background"
+Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\System' -Name 'DisableLogonBackgroundImage' -Value '1'
+
 # Network Optimization
+Write-Log -Level "INFO" -Message "Disable SMB Bandwidth Throttling"
+Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Services\LanmanWorkstation\Parameters" DisableBandwidthThrottling -Value $DisableBandwidthThrottling -Force
+
+Write-Log -Level "INFO" -Message "Set FileInfoCacheEntries to $($FileInfoCacheEntriesValue)"
+Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Services\LanmanWorkstation\Parameters" FileInfoCacheEntriesMax -Value $FileInfoCacheEntriesValue -Force
+
+Write-Log -Level "INFO" -Message "Set DirectoryCacheEntriesMax to $($DirectoryCacheEntriesMax)"
+Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Services\LanmanWorkstation\Parameters" DirectoryCacheEntriesMax -Value $DirectoryCacheEntriesMax -Force
+
+Write-Log -Level "INFO" -Message "Set FileNotFoundCacheEntriesMax to $($FileNotFoundCacheEntriesMax)"
+Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Services\LanmanWorkstation\Parameters" FileNotFoundCacheEntriesMax -Value $FileNotFoundCacheEntriesMax -Force
+
+Write-Log -Level "INFO" -Message "Set DormantFileLimit to $($DormantFileLimit )"
+Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Services\LanmanWorkstation\Parameters" DormantFileLimit -Value $DormantFileLimit -Force
 
 # Disk cleanup will occur post application installs
