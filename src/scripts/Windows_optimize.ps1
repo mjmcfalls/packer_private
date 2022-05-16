@@ -107,6 +107,27 @@ $tempPaths.Add($outPath)
 # Clean up from installs
 Clear-Directory -patharray $tempPaths
 
+# Clean up tmp files from Windows
+Write-Log -Level "INFO" -Message "Removing .tmp, .dmp, .etl, .evtx, thumbcache*.db, *.log"
+Get-ChildItem -Path c:\ -Include *.tmp, *.dmp, *.etl, *.evtx, thumbcache*.db, *.log -File -Recurse -Force -ErrorAction SilentlyContinue | Remove-Item -ErrorAction SilentlyContinue
+
+Write-Log -Level "INFO" -Message "Removing $($env:ProgramData)\Microsoft\Windows\WER\Temp\*"
+Remove-Item -Path $env:ProgramData\Microsoft\Windows\WER\Temp\* -Recurse -Force -ErrorAction SilentlyContinue
+
+Write-Log -Level "INFO" -Message "Removing $($env:ProgramData)\Microsoft\Windows\WER\ReportArchive\*"
+Remove-Item -Path $env:ProgramData\Microsoft\Windows\WER\ReportArchive\* -Recurse -Force -ErrorAction SilentlyContinue
+
+Write-Log -Level "INFO" -Message "Removing $($env:ProgramData)Microsoft\Windows\WER\ReportQueue\*"
+Remove-Item -Path $env:ProgramData\Microsoft\Windows\WER\ReportQueue\* -Recurse -Force -ErrorAction SilentlyContinue
+
+# Clear Recyclebin
+Write-Log -Level "INFO" -Message "Clearing Recycle Bin"
+Clear-RecycleBin -Force -ErrorAction SilentlyContinue
+
+# Clear BCCache
+Write-Log -Level "INFO" -Message "Clearing BC Cache"
+Clear-BCCache -Force -ErrorAction SilentlyContinue
+
 # Clean free space
 Start-Sdelete
 
