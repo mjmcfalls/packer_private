@@ -6,7 +6,10 @@ Param (
     $oneDriveUninstallParams = "/uninstall",
     $appxIgnoreList = @("microsoft.windowscommunicationsapps", "Microsoft.WindowsCalculator", "Microsoft.DesktopAppInstaller", "Microsoft.WindowsStore", "Microsoft.StorePurchaseApp", "Microsoft.Appconnector"),
     $winFeaturesToDisable = @("DirectPlay", "WindowsMediaPlayer"),
-    $defaultsUsersSettingsPath = "Microsoft\DefaultUsersSettings.txt"
+    $defaultsUsersSettingsPath = "Microsoft\DefaultUsersSettings.txt",
+    $ScheduledTasksListPath = "Microsoft\ScheduledTasks.txt",
+    $automaticTracingFilePath = "Microsoft\AutomaticTracers.txt",
+    $servicesToDisablePath = "Microsoft\ServicesToDisable.txt"
 )
 Function Write-Log {
     [CmdletBinding()]
@@ -46,38 +49,24 @@ powercfg /setactive "$($highperfguid)"
 Write-Log -Level "INFO" -Message "Installing .NET 3.5"
 dism /online /Enable-Feature /FeatureName:NetFx3 /All /LimitAccess /Source:$NetFX3_Source /NoRestart
 
-
-Write-Log -Level "INFO" -Message "Disabling Consumer Features (Internet App Downloads)"
-New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\' -Name 'CloudContent' | Out-Null
-New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent' -Name 'DisableWindowsConsumerFeatures' -PropertyType DWORD -Value '1' #| Out-Null 
-
-Write-Log -Level "INFO" -Message "Disabling Windows tips"
-New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent' -Name 'DisableSoftLanding' -PropertyType DWORD -Value '1' #| Out-Null 
-
-# Disable Windows Feeds
-Write-Log -Level "INFO" -Message "Disabling Windows Feeds"
-New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" -Name "EnableFeeds" -PropertyType DWORD -Value "0" #| Out-Null 
-# reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" /v EnableFeeds /t REG_DWORD /d 0 /f
-
-
 # Remove AppX Packages
 $installedAppXApps = Get-ProvisionedAppxPackage -Online
 
 foreach ($appX in $installedAppXApps) {
     if (-Not ($appX.DisplayName -in $appxIgnoreList)) {
         Write-Log -Level "INFO" -Message "Removing AppX Provisioned Package: $($appX.DisplayName)"
-        Remove-AppxProvisionedPackage -Online -PackageName $($appX.PackageName | Out-Null
+        Remove-AppxProvisionedPackage -Online -AllUsers -PackageName $($appX.PackageName) | Out-Null
 
-        New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\' -Name 'Windows Search' | Out-Null"Removing AppX Package: $($appX.DisplayName)"
-        Remove-AppxPackage -Package $($appX.PackageName | Out-Null
+        Write-Log -Level "INFO" -Message "Removing AppX Package: $($appX.DisplayName)"
+        Remove-AppxPackage -AllUsers -Package $($appX.PackageName) | Out-Null
     }
 }
 
 # dism /Online /Get-ProvisionedAppxPackages | Select-String PackageName | Select-String xbox | ForEach-Object { $_.Line.Split(':')[1].Trim() } | ForEach-Object { dism /Online /Remove-ProvisionedAppxPackage /PackageName:$_ }
 
 # Disable Cortana
-New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\' -Name 'Windows Search' | Out-Null
 Write-Log -Level "INFO" -Message "Disable Cortana"
+New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\' -Name 'Windows Search' | Out-Null
 New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search' -Name 'AllowCortana' -PropertyType DWORD -Value '0' | Out-Null
 
 
@@ -96,14 +85,17 @@ Remove-Item -Path "C:\Windows\ServiceProfiles\NetworkService\AppData\Roaming\Mic
 
 
 # Registry changes
-Write-Log -Level "INFO" -Message "Loading Default User Registry"
-reg load HKEY_LOCAL_MACHINE\WIM $mountdir\Users\Default\ntuser.dat
+Write-Log -Level "INFO" -Message "Disabling Consumer Features (Internet App Downloads)"
+New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\' -Name 'CloudContent' | Out-Null
+New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent' -Name 'DisableWindowsConsumerFeatures' -PropertyType DWORD -Value '1' #| Out-Null 
 
-Write-Log -Level "INFO" -Message "Deleting OneDrive Setup from Default User"
+Write-Log -Level "INFO" -Message "Disabling Windows tips"
+New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent' -Name 'DisableSoftLanding' -PropertyType DWORD -Value '1' #| Out-Null 
 
-
-Write-Log -Level "INFO" -Message "Removing OneDrive Startup from Default User"
-Remove-Itemproperty -Path 'HKLM:\WIM\Software\Microsoft\Windows\CurrentVersion\Run\' -name 'OneDriveSetup'
+# Disable Windows Feeds
+Write-Log -Level "INFO" -Message "Disabling Windows Feeds"
+New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" -Name "EnableFeeds" -PropertyType DWORD -Value "0" #| Out-Null 
+# reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" /v EnableFeeds /t REG_DWORD /d 0 /f
 
 Write-Log -Level "INFO" -Message "Disabling OneDrive Syncing for All users"
 New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\' -Name 'Skydrive' | Out-Null
@@ -111,20 +103,62 @@ New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Skydrive' -Nam
 New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Skydrive' -Name 'DisableLibrariesDefaultSaveToSkyDrive' -PropertyType DWORD -Value '1' | Out-Null 
 
 
-# Unload, Unmount, Commit
-reg unload HKEY_LOCAL_MACHINE\WIM
+if (Test-Path $defaultsUsersSettingsPath) {
+    $DefaultUserSettings = Get-Content $defaultsUsersSettingsPath
+
+    if ($DefaultUserSettings.count -gt 0) {
+        Foreach ($item in $DefaultUserSettings) {
+            Start-Process C:\Windows\System32\Reg.exe -ArgumentList "$($item)" -Wait
+        }
+    }
+
+}
 
 
+# Disable Scheduled Tasks
+if (Test-Path $ScheduledTasksListPath) {
+    Write-Log -Level "INFO" -Message "Found $($ScheduledTasksListPath)"
+    $SchTasksList = Get-Content $ScheduledTasksListPath
+
+    if ($SchTasksList.count -gt 0) {
+        Write-Log -Level "INFO" -Message "$($ScheduledTasksListPath) is not empty"
+        Write-Log -Level "INFO" -Message "Getting Enabled Scheduled Tasks"
+        $EnabledScheduledTasks = Get-ScheduledTask | Where-Object { $_.State -ne "Disabled" }
+
+        Foreach ($item in $SchTasksList) {
+            Write-Log -INFO "INFO" -Message "Disabling scheduled task: $($item)"
+            $EnabledScheduledTasks | Where-Object { $_.TaskName -like "$($item.trim())" } | Disable-ScheduledTask
+        }
+    }
+}
+# Disable Windows Services
+if (Test-Path $servicesToDisablePath) {
+    $servicesToDisable = Get-Content $servicesToDisablePath
+    if ($servicesToDisable.count -gt 0) {
+        Foreach ($service in $servicesToDisable) {
+            Write-Log -INFO "INFO" -Message  "Disabling service: $($service)"
+            Stop-Service $service
+            Set-Service -Name $service -StartupType Disabled
+        }
+    }
+}
+
+# Disable Windows Automatic tracing
+if (Test-Path $automaticTracingFilePath) {
+    $AutomaticTracers = Get-Content $automaticTracingFilePath
+    if ($AutomaticTracers.count -gt 0) {
+        Foreach ($tracer in $AutomaticTracers) {
+            Write-Log -INFO "INFO" -Message  "Disabling tracing: $($tracer)"
+            New-ItemProperty -Path "$($tracer)" -Name "Start" -PropertyType "DWORD" -Value "0" -Force
+        }
+    }
+}
 # Disable Windows Features
-foreach($feature in $winFeaturesToDisable){
+foreach ($feature in $winFeaturesToDisable) {
     Write-Log -Level "INFO" -Message "Removing $($feature)"
     Disable-WindowsOptionalFeature -Online -FeatureName $feature
 }
 
-# Don't need this with Packer
-# if (Get-Process -Name "Explorer") {
-#     Stop-Process -Name "Explorer"
-# }
-# else {
-#     "No Explorer.exe process found."
-# }
+# Network Optimization
+
+# Disk cleanup will occur post application installs
