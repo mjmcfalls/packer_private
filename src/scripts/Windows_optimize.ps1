@@ -125,9 +125,10 @@ $dismCleanupResults = Start-Process -NoNewWindow -Wait -FilePath "Dism.exe" -Arg
 # Start-Process -NoNewWindow -Wait -FilePath "Dism.exe" -ArgumentList "/online /Cleanup-Image /StartComponentCleanup /ResetBase"
 
 # Clean up tmp files from Windows
-Write-Log -Level "INFO" -Message "Removing .tmp, .dmp, .etl, .evtx, thumbcache*.db, *.log"
+Write-Log -Level "INFO" -Message "Getting .tmp, .dmp, .etl, .evtx, thumbcache*.db, *.log files for removal"
 # $filesToClean = Get-ChildItem -Path c:\* -Include (*.tmp, *.dmp, *.etl, *.evtx, thumbcache*.db, *.log) -File -Recurse -Force -ErrorAction SilentlyContinue
 $filesToClean = Get-ChildItem -Path c:\ -File -Recurse -Force -ErrorAction SilentlyContinue | Where-Object{ $_.extension -in ("*.tmp","*.dmp","*.etl","*.evtx","*.log") -or $_.Name -like "thumbcache*.db"}
+Write-Log -Level "INFO" -Message "Removing .tmp, .dmp, .etl, .evtx, thumbcache*.db, *.log"
 foreach($file in $filesToClean){
     Write-Log -Level "INFO" -Message "Removing $($file)"
     $file.Delete()
