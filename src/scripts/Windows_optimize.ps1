@@ -43,7 +43,11 @@ Function Clear-Directory {
         $tempFiles = Get-ChildItem $tpath -Recurse
         # $tempFiles
         Write-Log -Level "INFO" -Message "Removing files in $($tpath)"
-        $tempFiles | Remove-Item -Force #-ErrorAction SilentlyContinue
+        foreach($file in $tempFiles){
+            Write-Log -Level "INFO" -Message "Removing $($file.fullname)"
+            Remove-Item -Path $file.fullname -Force
+        }
+        # $tempFiles | Remove-Item -Force #-ErrorAction SilentlyContinue
 
         # Write-Log -Level "INFO" -Message "Getting files in $($tpath)"
         # $tempFiles = Get-ChildItem $tpath -Recurse -File
@@ -104,7 +108,7 @@ Start-Process -NoNewWindow -Wait -FilePath "Dism.exe" -ArgumentList "/online /Cl
 
 # Clean-up and remove all superseded versions of every component in the component store
 # Write-Log -Level "INFO" -Message "Running Dism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase"
-# Start-Process -NoNewWindow -FilePath "Dism.exe" -ArgumentList "/online /Cleanup-Image /StartComponentCleanup /ResetBase"
+# Start-Process -NoNewWindow -Wait -FilePath "Dism.exe" -ArgumentList "/online /Cleanup-Image /StartComponentCleanup /ResetBase"
 
 $tempPaths = New-Object System.Collections.Generic.List[System.Object]
 $tempPaths.Add($env:temp)
@@ -135,8 +139,10 @@ Write-Log -Level "INFO" -Message "Clearing BC Cache"
 Clear-BCCache -Force -ErrorAction SilentlyContinue
 
 # Clean free space
+Write-Log -Level "INFO" -Message "Starting sdelete"
 Start-Sdelete
 
 # Clean up after sdelete
+Write-Log -Level "INFO" -Message "Final temp path clean-up"
 Clear-Directory -patharray $tempPaths
 
