@@ -8,7 +8,8 @@ Param (
     [string]$ininame = "Firefox_install.ini",
     [switch]$public,
     [string]$appuri = "/apps/firefox/",
-    [string]$installername = "firefox_installer.exe"
+    [string]$installername = "firefox_installer.exe",
+    [switch]$cleanup
 )
 
 function New-TempFolder {
@@ -111,6 +112,15 @@ if ($install.IsPresent) {
         Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($installerPath) -ArgumentList `"$($installParams)`""
         Start-Process -NoNewWindow -FilePath $installerPath -ArgumentList "$($installParams)" -Wait    
     }
+}
 
-    
+if ($cleanup.IsPresent) {
+    Write-Log -Level "INFO" -Message "Cleaning up installer"
+    if (Test-Path (Join-Path -Path $outpath -ChildPath $installername)) {
+        Write-Log -Level "INFO" -Message "Removing $(Join-Path -Path $outpath -ChildPath $installername)"
+        (Join-Path -Path $outpath -ChildPath $installername).Delete()
+    }
+    else {
+        Write-Log -Level "INFO" -Message "Cannot find $(Join-Path -Path $outpath -ChildPath $installername)"
+    }
 }

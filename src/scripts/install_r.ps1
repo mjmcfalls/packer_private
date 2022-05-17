@@ -9,7 +9,8 @@ Param (
     [string]$installParams = "/verysilent /NORESTART /MERGETASKS=!desktopicon",
     [switch]$public,
     [string]$appuri = "/apps/R/",
-    [string]$installername
+    [string]$installername,
+    [switch]$cleanup
 )
 
 Function New-TempFolder {
@@ -82,4 +83,15 @@ if ($install.IsPresent) {
     Write-Log -Level "INFO" -Message "Installing of $($installername)"
     Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $(Join-Path -Path $outpath -ChildPath $installername) -ArgumentList `"$($installParams)`""
     Start-Process -NoNewWindow -FilePath $(Join-Path -Path $outpath -ChildPath $installername) -ArgumentList "$($installParams)" -Wait
+}
+
+if ($cleanup.IsPresent) {
+    Write-Log -Level "INFO" -Message "Cleaning up installer"
+    if (Test-Path (Join-Path -Path $outpath -ChildPath $installername)) {
+        Write-Log -Level "INFO" -Message "Removing $(Join-Path -Path $outpath -ChildPath $installername)"
+        (Join-Path -Path $outpath -ChildPath $installername).Delete()
+    }
+    else {
+        Write-Log -Level "INFO" -Message "Cannot find $(Join-Path -Path $outpath -ChildPath $installername)"
+    }
 }

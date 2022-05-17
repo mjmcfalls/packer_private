@@ -10,7 +10,8 @@ Param (
     [string]$fileFilter = "GoogleChromeStandaloneEnterprise64.msi",
     [string]$preferenceFile = "chrome_master_preferences",
     [string]$preferenceFileDest = "C:\Program Files\Google\Chrome\Application\initial_preferences",
-    [string]$preferenceFilter = "*"
+    [string]$preferenceFilter = "*",
+    [switch]$cleanup
 )
 
 function New-TempFolder {
@@ -99,5 +100,22 @@ if ($install.IsPresent) {
         Write-Log -Level "INFO" -Message "Found - $($preferenceFileState.FullName)"
         Write-Log -Level "INFO" -Message "Copy-Item -Path $($preferenceFileState.FullName) -Destination $($preferenceFileDest) -Force"
         Copy-Item -Path $preferenceFileState.FullName -Destination $preferenceFileDest -Force
+    }
+}
+
+if ($cleanup.IsPresent) {
+    Write-Log -Level "INFO" -Message "Cleaning up installer"
+    if (Test-Path (Join-Path -Path $outpath -ChildPath $installername)) {
+        Write-Log -Level "INFO" -Message "Removing $(Join-Path -Path $outpath -ChildPath $installername)"
+        (Join-Path -Path $outpath -ChildPath $installername).Delete()
+    }
+    else {
+        Write-Log -Level "INFO" -Message "Cannot find $(Join-Path -Path $outpath -ChildPath $installername)"
+    }
+
+    if ($archiveDestination) {
+        if (Test-Path $archiveDestination) {
+            $archiveDestination.Delete()
+        }
     }
 }

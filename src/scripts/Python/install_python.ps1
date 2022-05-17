@@ -8,7 +8,8 @@ Param (
     [switch]$public,
     [string]$appuri = "/apps/Python/",
     [string]$installername,
-    [string]$version
+    [string]$version,
+    [switch]$cleanup
 )
 
 function New-TempFolder {
@@ -115,4 +116,15 @@ if ($install.IsPresent) {
         Start-Process -NoNewWindow -FilePath $installerPath -ArgumentList "$($installParams)" -Wait
     }
 
+}
+
+if ($cleanup.IsPresent) {
+    Write-Log -Level "INFO" -Message "Cleaning up installer"
+    if (Test-Path (Join-Path -Path $outpath -ChildPath $installername)) {
+        Write-Log -Level "INFO" -Message "Removing $(Join-Path -Path $outpath -ChildPath $installername)"
+        (Join-Path -Path $outpath -ChildPath $installername).Delete()
+    }
+    else {
+        Write-Log -Level "INFO" -Message "Cannot find $(Join-Path -Path $outpath -ChildPath $installername)"
+    }
 }

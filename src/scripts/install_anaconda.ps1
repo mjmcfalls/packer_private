@@ -7,10 +7,11 @@ Param (
     [string]$installParams = "/S",
     [switch]$public,
     [string]$appuri = "/apps/anaconda/",
-    [string]$installername
+    [string]$installername,
+    [switch]$cleanup
 )
 
-function Create-TempFolder {
+function New-TempFolder {
     [CmdletBinding(
         SupportsShouldProcess = $True
     )]
@@ -51,8 +52,8 @@ Function Write-Log {
 $ProgressPreference = 'SilentlyContinue'
 
 Write-Log -Level "INFO" -Message "Fetch $($installername) from $($uri)"
+New-TempFolder -Path $outpath
 
-Create-TempFolder -Path $outpath
 if ($public.IsPresent) {
     Write-Log -Level "INFO" -Message "Anaconda - TO:Do fetch from source"
 }
@@ -65,4 +66,15 @@ if ($install.IsPresent) {
     Write-Log -Level "INFO" -Message "Installing of $($installername)"
     Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $(Join-Path -Path $outpath -ChildPath $installername) -ArgumentList `"$($installParams)`""
     Start-Process -NoNewWindow -FilePath $(Join-Path -Path $outpath -ChildPath $installername) -ArgumentList "$($installParams)" -Wait
+}
+
+if ($cleanup.IsPresent) {
+    Write-Log -Level "INFO" -Message "Cleaning up installer"
+    if (Test-Path (Join-Path -Path $outpath -ChildPath $installername)) {
+        Write-Log -Level "INFO" -Message "Removing $(Join-Path -Path $outpath -ChildPath $installername)"
+        (Join-Path -Path $outpath -ChildPath $installername).Delete()
+    }
+    else {
+        Write-Log -Level "INFO" -Message "Cannot find $(Join-Path -Path $outpath -ChildPath $installername)"
+    }
 }
