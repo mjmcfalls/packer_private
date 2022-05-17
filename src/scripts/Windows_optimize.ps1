@@ -56,7 +56,8 @@ Function Clear-Directory {
         # $tempFiles | Remove-Item -Force #-ErrorAction SilentlyContinue
         foreach ($file in $tempFiles) {
             Write-Log -Level "INFO" -Message "Removing $($file.fullname)"
-            Remove-Item -Path $file.fullname -Force -Recurse
+            # Remove-Item -Path $file.fullname -Force -Recurse
+            $file.Delete()
         }
     
         Write-Log -Level "INFO" -Message "Getting Directories in $($tpath)"
@@ -65,9 +66,9 @@ Function Clear-Directory {
         Write-Log -Level "INFO" -Message "Removing Directories in $($tpath)"
         foreach ($dir in $tempDirs) {
             Write-Log -Level "INFO" -Message "Removing $($dir.fullname)"
-            Remove-Item -Path $dir.fullname -Force -Recurse
+            # Remove-Item -Path $dir.fullname -Force -Recurse
+            $dir.Delete()
         }
-    
         # $tempDirs | Remove-Item -Force -Recurse #-ErrorAction SilentlyContinue
     }
 
@@ -123,12 +124,15 @@ $tempPaths = New-Object System.Collections.Generic.List[System.Object]
 $tempPaths.Add($env:temp)
 $tempPaths.Add($outPath)
 
-# Clean up from installs
-Clear-Directory -patharray $tempPaths
+
 
 # Clean up tmp files from Windows
 Write-Log -Level "INFO" -Message "Removing .tmp, .dmp, .etl, .evtx, thumbcache*.db, *.log"
 Get-ChildItem -Path c:\ -Include *.tmp, *.dmp, *.etl, *.evtx, thumbcache*.db, *.log -File -Recurse -Force -ErrorAction SilentlyContinue | Remove-Item -ErrorAction SilentlyContinue
+
+# Clean up from installs
+Clear-Directory -patharray $tempPaths
+
 
 Write-Log -Level "INFO" -Message "Removing $($env:ProgramData)\Microsoft\Windows\WER\Temp\*"
 Remove-Item -Path $env:ProgramData\Microsoft\Windows\WER\Temp\* -Recurse -Force -ErrorAction SilentlyContinue
