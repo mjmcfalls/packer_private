@@ -101,34 +101,37 @@ Function Start-DotNetRecompile {
         $dotNetPaths = @("c:\windows\microsoft.net\framework64\v4.0.30319\ngen.exe", "c:\windows\microsoft.net\framework\v4.0.30319\ngen.exe"),
         [string]$dotNetRecompileArgs = "update /force"
     )
-
+    $results = New-Object System.Collections.Generic.List[System.Object]
     foreach ($dotNetPath in $dotNetPaths) {
         Write-Log -Level "INFO" -Message "Recompiling x64 dot net"
-        Start-Process -NoNewWindow -FilePath $dotNetPath -ArgumentList $dotNetRecompileArgs -Wait
+        $results.add((Start-Process -NoNewWindow -FilePath $dotNetPath -ArgumentList $dotNetRecompileArgs -Wait))
 
     }
 }
+
+$tempPaths = New-Object System.Collections.Generic.List[System.Object]
+$tempPaths.Add($env:temp)
+$tempPaths.Add($outPath)
 
 # Recomplie Dot Net
 Start-DotNetRecompile -dotNetPaths $dotNetPaths 
 
 # Clean-up Online image
 Write-Log -Level "INFO" -Message "Running Dism.exe /online /Cleanup-Image /StartComponentCleanup"
-Start-Process -NoNewWindow -Wait -FilePath "Dism.exe" -ArgumentList "/online /Cleanup-Image /StartComponentCleanup"
+$dismCleanupResults = Start-Process -NoNewWindow -Wait -FilePath "Dism.exe" -ArgumentList "/online /Cleanup-Image /StartComponentCleanup"
 
 # Clean-up and remove all superseded versions of every component in the component store
 # Write-Log -Level "INFO" -Message "Running Dism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase"
 # Start-Process -NoNewWindow -Wait -FilePath "Dism.exe" -ArgumentList "/online /Cleanup-Image /StartComponentCleanup /ResetBase"
 
-$tempPaths = New-Object System.Collections.Generic.List[System.Object]
-$tempPaths.Add($env:temp)
-$tempPaths.Add($outPath)
-
-
-
 # Clean up tmp files from Windows
 Write-Log -Level "INFO" -Message "Removing .tmp, .dmp, .etl, .evtx, thumbcache*.db, *.log"
-Get-ChildItem -Path c:\ -Include *.tmp, *.dmp, *.etl, *.evtx, thumbcache*.db, *.log -File -Recurse -Force -ErrorAction SilentlyContinue | Remove-Item -ErrorAction SilentlyContinue
+# $filesToClean = Get-ChildItem -Path c:\* -Include (*.tmp, *.dmp, *.etl, *.evtx, thumbcache*.db, *.log) -File -Recurse -Force -ErrorAction SilentlyContinue
+$filesToClean = Get-ChildItem -Path c:\ -File -Recurse -Force -ErrorAction SilentlyContinue | Where-Object{ $_.extension -in ("*.tmp","*.dmp","*.etl","*.evtx","*.log") -or $_.Name -like "thumbcache*.db"}
+foreach($file in $filesToClean){
+    Write-Log -Level "INFO" -Message "Removing $($file)"
+    $file.Delete()
+}
 
 # Clean up from installs
 Clear-Directory -patharray $tempPaths
