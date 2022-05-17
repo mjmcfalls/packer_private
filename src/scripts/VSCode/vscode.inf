@@ -3,4 +3,4 @@ Lang=english
 Dir=C:\Program Files\Microsoft VS Code
 Group=Visual Studio Code
 NoIcons=0
-Tasks=addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath
+Tasks=addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath,!runcode
