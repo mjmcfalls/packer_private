@@ -100,7 +100,7 @@ Start-DotNetRecompile -dotNetPaths $dotNetPaths
 
 # Clean-up Online image
 Write-Log -Level "INFO" -Message "Running Dism.exe /online /Cleanup-Image /StartComponentCleanup"
-Start-Process -NoNewWindow -FilePath "Dism.exe" -ArgumentList "/online /Cleanup-Image /StartComponentCleanup"
+Start-Process -NoNewWindow -Wait -FilePath "Dism.exe" -ArgumentList "/online /Cleanup-Image /StartComponentCleanup"
 
 # Clean-up and remove all superseded versions of every component in the component store
 # Write-Log -Level "INFO" -Message "Running Dism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase"
