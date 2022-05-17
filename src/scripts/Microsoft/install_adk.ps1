@@ -7,7 +7,8 @@ Param (
     [string]$installParams = "/ceip off /norestart /quiet /features OptionId.WindowsPerformanceToolkit OptionId.DeploymentTools OptionId.ApplicationCompatibilityToolkit OptionId.WindowsAssessmentToolkit",
     [switch]$public,
     [string]$appuri = "/apps/Microsoft/",
-    [string]$installername = "adksetup.exe"
+    [string]$installername = "adksetup.exe".
+    [switch]$cleanup
 )
 
 function New-TempFolder {
@@ -83,4 +84,9 @@ if ($install.IsPresent) {
     
 }
 
+if ($cleanup.IsPresent) {
+    if (Test-Path (Join-Path -Path $outpath -ChildPath $installername)) {
+        (Join-Path -Path $outpath -ChildPath $installername).Delete()
+    }
+}
 

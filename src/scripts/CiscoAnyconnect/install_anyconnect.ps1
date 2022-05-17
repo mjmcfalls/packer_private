@@ -12,10 +12,11 @@ Param (
     [string]$installername = "anyconnect-win-4.10.05095.zip",
     [string]$xmlProfilePathDest = "C:\ProgramData\Cisco\Cisco AnyConnect Secure Mobility Client\Profile\",
     [string]$xmlProfile = "unc.xml",
-    [string]$fileFilter = "*core-vpn*"
+    [string]$fileFilter = "*core-vpn*",
+    [switch]$cleanup
 )
 
-function Create-TempFolder {
+function New-TempFolder {
     [CmdletBinding(
         SupportsShouldProcess = $True
     )]
@@ -55,7 +56,7 @@ Function Write-Log {
 
 $ProgressPreference = 'SilentlyContinue'
 
-Create-TempFolder -Path $outpath
+New-TempFolder -Path $outpath
 $installerPath = Join-Path -Path $outpath -ChildPath $installername
 
 Write-Log -Level "INFO" -Message "Getting $($uri)$($appuri)$($installername)"
@@ -77,15 +78,29 @@ if ($install.IsPresent) {
     Write-Log -Level "INFO" -Message "Searching $($outpath) for $($xmlProfile)"
     $xmlProfileSrc = Get-Childitem -Path $outpath -Filter $xmlProfile -Recurse
 
-    if($xmlProfileSrc){
-        if(-Not (Test-Path $xmlProfilePathDest)){
+    if ($xmlProfileSrc) {
+        if (-Not (Test-Path $xmlProfilePathDest)) {
             New-Item -Path $xmlProfilePathDest -ItemType Directory
         }
         Write-Log -Level "INFO" -Message  "Copying $($xmlProfileSrc.FullName) to $($xmlProfilePathDest)"
         Move-Item -Path $xmlProfileSrc.FullName -Destination $xmlProfilePathDest -Force
     }
-    else{
+    else {
         Write-Log -Level "INFO" -Message  "Not Found - $($xmlProfile) in $($outpath)"
     }
 
+}
+
+if ($cleanup.IsPresent) {
+    if (Test-Path $installerPath) {
+        $installerPath.Delete()
+    }
+
+    if ($xmlProfileSrc) {
+        Write-Log -Level "INFO" -Message "Removing $($xmlProfileSrc)"
+        $xmlProfileSrc.Delete()
+    }
+    else {
+        Write-Log -Level "INFO" -Message  "Not Found - $($xmlProfile) in $($outpath)"
+    }
 }

@@ -1,5 +1,4 @@
 [CmdletBinding()]
-
 Param (
     [string]$uri,
     [string]$outpath = $env:temp,
@@ -7,7 +6,8 @@ Param (
     [string]$installParams = "/S",
     [switch]$public,
     [string]$appuri = "/apps/7zip/",
-    [string]$installername = "7z2107-x64.exe"
+    [string]$installername = "7z2107-x64.exe",
+    [switch]$cleanup
 )
 
 function New-TempFolder {
@@ -69,7 +69,7 @@ if ($install.IsPresent) {
 
     Write-Log -Level "INFO" -Message "Extension is: $($installerExtension)"
 
-    if($installerExtension -like ".msi"){
+    if ($installerExtension -like ".msi") {
         Write-Log -Level "INFO" -Message "MSI Install of $($installerPath)"
         Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($installerPath) $($installParams)`""
         Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($installerPath) $($installParams)" -Wait
@@ -81,4 +81,10 @@ if ($install.IsPresent) {
     }
 
     
+}
+
+if ($cleanup.IsPresent) {
+    if (Test-Path (Join-Path -Path $outpath -ChildPath $installername)) {
+        (Join-Path -Path $outpath -ChildPath $installername).Delete()
+    }
 }
