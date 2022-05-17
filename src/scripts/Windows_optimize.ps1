@@ -39,26 +39,35 @@ Function Clear-Directory {
     foreach ($tpath in $tempPaths) {
         Write-Log -Level "INFO" -Message "Cleaning $($tpath)"
     
+        # Write-Log -Level "INFO" -Message "Getting files in $($tpath)"
+        # $tempFiles = Get-ChildItem $tpath -Recurse
+        # $tempFiles
+        # Write-Log -Level "INFO" -Message "Removing files in $($tpath)"
+        # foreach($file in $tempFiles){
+        #     Write-Log -Level "INFO" -Message "Removing $($file.fullname)"
+        #     Remove-Item -Path $file.fullname -Force
+        # }
+        # $tempFiles | Remove-Item -Force #-ErrorAction SilentlyContinue
+
         Write-Log -Level "INFO" -Message "Getting files in $($tpath)"
-        $tempFiles = Get-ChildItem $tpath -Recurse
+        $tempFiles = Get-ChildItem $tpath -Recurse -File
         # $tempFiles
         Write-Log -Level "INFO" -Message "Removing files in $($tpath)"
-        foreach($file in $tempFiles){
+        # $tempFiles | Remove-Item -Force #-ErrorAction SilentlyContinue
+        foreach ($file in $tempFiles) {
             Write-Log -Level "INFO" -Message "Removing $($file.fullname)"
             Remove-Item -Path $file.fullname -Force
         }
-        # $tempFiles | Remove-Item -Force #-ErrorAction SilentlyContinue
-
-        # Write-Log -Level "INFO" -Message "Getting files in $($tpath)"
-        # $tempFiles = Get-ChildItem $tpath -Recurse -File
-        # # $tempFiles
-        # Write-Log -Level "INFO" -Message "Removing files in $($tpath)"
-        # $tempFiles | Remove-Item -Force #-ErrorAction SilentlyContinue
     
-        # Write-Log -Level "INFO" -Message "Getting Directories in $($tpath)"
-        # $tempDirs = Get-ChildItem $tpath -Recurse -Directory
+        Write-Log -Level "INFO" -Message "Getting Directories in $($tpath)"
+        $tempDirs = Get-ChildItem $tpath -Recurse -Directory
         # # $tempFiles
-        # Write-Log -Level "INFO" -Message "Removing Directories in $($tpath)"
+        Write-Log -Level "INFO" -Message "Removing Directories in $($tpath)"
+        foreach ($dir in $tempDirs) {
+            Write-Log -Level "INFO" -Message "Removing $($dir.fullname)"
+            Remove-Item -Path $dir.fullname -Force
+        }
+    
         # $tempDirs | Remove-Item -Force -Recurse #-ErrorAction SilentlyContinue
     }
 
