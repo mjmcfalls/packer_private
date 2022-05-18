@@ -91,7 +91,7 @@ Function Start-Sdelete {
     Expand-Archive -Path $sdeleteZipPath -DestinationPath $outpath 
     
     Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $(Join-Path -Path $outpath -ChildPath 'sdelete.exe') -ArgumentList $($sdelete_params)"
-    Start-Process -NoNewWindow -FilePath (Join-Path -Path $outpath -ChildPath "sdelete.exe") -ArgumentList $sdelete_params -Wait
+    $sdeleteResults = Start-Process -NoNewWindow -PassThru -FilePath (Join-Path -Path $outpath -ChildPath "sdelete.exe") -ArgumentList $sdelete_params -Wait
     
 }
 
@@ -118,7 +118,7 @@ Start-DotNetRecompile -dotNetPaths $dotNetPaths
 
 # Clean-up Online image
 Write-Log -Level "INFO" -Message "Running Dism.exe /online /Cleanup-Image /StartComponentCleanup"
-$dismCleanupResults = Start-Process -NoNewWindow -Wait -FilePath "Dism.exe" -ArgumentList "/online /Cleanup-Image /StartComponentCleanup"
+$dismCleanupResults = Start-Process -NoNewWindow -Wait -PassThru -FilePath "Dism.exe" -ArgumentList "/online /Cleanup-Image /StartComponentCleanup"
 
 # Clean-up and remove all superseded versions of every component in the component store
 # Write-Log -Level "INFO" -Message "Running Dism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase"
