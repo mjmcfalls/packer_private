@@ -130,8 +130,8 @@ Write-Log -Level "INFO" -Message "Getting .tmp, .dmp, .etl, .evtx, thumbcache*.d
 $filesToClean = Get-ChildItem -Path c:\ -File -Recurse -Force -ErrorAction SilentlyContinue | Where-Object{ $_.extension -in ("*.tmp","*.dmp","*.etl","*.evtx","*.log") -or $_.Name -like "thumbcache*.db"}
 Write-Log -Level "INFO" -Message "Removing .tmp, .dmp, .etl, .evtx, thumbcache*.db, *.log"
 foreach($file in $filesToClean){
-    Write-Log -Level "INFO" -Message "Removing $($file)"
-    $file.Delete()
+    Write-Log -Level "INFO" -Message "Removing $($file.FullName)"
+    ($file.FullName).Delete()
 }
 
 # Clean up from installs
