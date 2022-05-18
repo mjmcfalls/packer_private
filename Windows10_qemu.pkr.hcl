@@ -249,7 +249,7 @@ variable "shutdown_command" {
 # https://www.packer.io/docs/templates/hcl_templates/blocks/source
 source "qemu" "Windows_10" {
   accelerator      = "kvm"
-  boot_wait        = "180s"
+  boot_wait        = "120s"
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
   disk_size        = "${var.disk_size}"
@@ -288,14 +288,13 @@ build {
     inline = ["a:/Config_Winrm.ps1"]
   }
   
-
   provisioner "file" {
     source      = "./src/scripts/"
     destination = "${var.win_temp_dir}/scripts/"
     direction   =  "upload"
   }
 
-# 40 minutess
+# # 60+ minutes with cleanup/optimize scripts
   provisioner "powershell" {
     inline = [
       "${var.win_temp_dir}\\scripts\\Windows10_cleanup.ps1",
@@ -317,7 +316,7 @@ build {
 
 
 
-# ~ 58 minutes as individual provisioners
+# ~ 58 minutes as individual provisioners w/o cleanup/optimize scripts
   # provisioner "powershell" {
   #   inline = ["${var.win_temp_dir}\\scripts\\Windows10_cleanup.ps1"]
   # }
