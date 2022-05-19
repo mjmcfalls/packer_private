@@ -139,7 +139,10 @@ $filesToClean = Get-ChildItem -Path c:\ -File -Recurse -Force -ErrorAction Silen
 Write-Log -Level "INFO" -Message "Removing .tmp, .dmp, .etl, .evtx, thumbcache*.db, *.log"
 foreach ($file in $filesToClean) {
     # Write-Log -Level "INFO" -Message "Removing $($file.FullName)"
-    [System.IO.File]::Delete($file.fullname)
+    if(Test-Path $file.FullName){
+        [System.IO.File]::Delete($file.fullname)
+    }
+    
 }
 
 # Clean up from installs

@@ -26,3 +26,5 @@ XblAuthManager
 XblGameSave
 XboxGipSvc
 XboxNetApiSvc	
+gupdate
+gpupdatem

@@ -54,5 +54,5 @@ UpdateLibrary
 Scheduled Start
 sih
 XblGameSaveTask
-GoogleUpdate
-MicrosoftEdge
+GoogleUpdate*
+MicrosoftEdge*

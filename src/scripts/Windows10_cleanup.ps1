@@ -51,7 +51,7 @@ powercfg /setactive "$($highperfguid)"
 
 # Install dot Net 3.5
 Write-Log -Level "INFO" -Message "Installing .NET 3.5"
-dism /online /Enable-Feature /FeatureName:NetFx3 /All /LimitAccess /Source:$NetFX3_Source /NoRestart
+$dismDotNetThreeFiveResults = Start-Process -NoNewWindow -Wait -PassThru -FilePath "Dism.exe" -ArgumentList "/online /Enable-Feature /FeatureName:NetFx3 /All /NoRestart"
 
 # Remove AppX Packages
 $installedAppXApps = Get-ProvisionedAppxPackage -Online
