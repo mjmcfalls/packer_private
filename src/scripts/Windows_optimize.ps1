@@ -2,7 +2,8 @@
 Param (
     [string]$outPath = "c:\temp",
     [string]$sdelete_uri = "https://download.sysinternals.com/files/SDelete.zip",
-    $dotNetPaths = @("c:\windows\microsoft.net\framework64\v4.0.30319\ngen.exe", "c:\windows\microsoft.net\framework\v4.0.30319\ngen.exe")
+    $dotNetPaths = @("c:\windows\microsoft.net\framework64\v4.0.30319\ngen.exe", "c:\windows\microsoft.net\framework\v4.0.30319\ngen.exe"),
+    $fileExtensionsToRemove = @("*.tmp","*.dmp","*.etl","*.evtx","thumbcache*.db","*.log")
 )
 
 Function Write-Log {
@@ -57,18 +58,19 @@ Function Clear-Directory {
         foreach ($file in $tempFiles) {
             Write-Log -Level "INFO" -Message "Removing $($file.fullname)"
             # Remove-Item -Path $file.fullname -Force -Recurse
-            $file.Delete()
+            # $file.Delete()
+            [System.IO.File]::Delete($file.fullname)
         }
     
         Write-Log -Level "INFO" -Message "Getting Directories in $($tpath)"
-        $tempDirs = Get-ChildItem $tpath -Recurse -Directory
+        $tempDirs = Get-ChildItem $tpath -Recurse -Directory | Sort-Object -Descending FullName
         # # $tempFiles
         Write-Log -Level "INFO" -Message "Removing Directories in $($tpath)"
         foreach ($dir in $tempDirs) {
             Write-Log -Level "INFO" -Message "Removing $($dir.fullname)"
             # Remove-Item -Path $dir.fullname -Force -Recurse
             Try {
-                $dir.Delete()
+                [io.directory]::delete($dir.fullname)
             }
             catch {
                 Remove-Item $dir -Recurse -Force
@@ -137,7 +139,7 @@ $filesToClean = Get-ChildItem -Path c:\ -File -Recurse -Force -ErrorAction Silen
 Write-Log -Level "INFO" -Message "Removing .tmp, .dmp, .etl, .evtx, thumbcache*.db, *.log"
 foreach ($file in $filesToClean) {
     # Write-Log -Level "INFO" -Message "Removing $($file.FullName)"
-    $file.Delete()
+    [System.IO.File]::Delete($file.fullname)
 }
 
 # Clean up from installs
