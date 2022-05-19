@@ -37,4 +37,5 @@ add "HKLM\Temp\Software\Microsoft\Windows\CurrentVersion\UserProfileEngagement" 
 add "HKCU\Software\Microsoft\Windows\CurrentVersion\Feeds" /v ShellFeedsTaskbarviewMode" /t REG_DWORD /d 2 /f
 add "HKLM\Temp\Software\Microsoft\Windows\CurrentVersion\Feeds" /v ShellFeedsTaskbarviewMode" /t REG_DWORD /d 2 /f
 add "HKLM\Temp\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v OneDriveSetup /f
+add "HKLM\Software\Policies\Microsoft\Edge" /v HideFirstRunExperience /t REG_DWORD /d 1 /f
 Unload HKLM\Temp
