@@ -67,7 +67,12 @@ Function Clear-Directory {
         foreach ($dir in $tempDirs) {
             Write-Log -Level "INFO" -Message "Removing $($dir.fullname)"
             # Remove-Item -Path $dir.fullname -Force -Recurse
-            $dir.Delete()
+            Try {
+                $dir.Delete()
+            }
+            catch {
+                Remove-Item $dir -Recurse -Force
+            }
         }
         # $tempDirs | Remove-Item -Force -Recurse #-ErrorAction SilentlyContinue
     }
@@ -104,7 +109,7 @@ Function Start-DotNetRecompile {
     $results = New-Object System.Collections.Generic.List[System.Object]
     foreach ($dotNetPath in $dotNetPaths) {
         Write-Log -Level "INFO" -Message "Recompiling x64 dot net"
-        $results.add((Start-Process -NoNewWindow -FilePath $dotNetPath -ArgumentList $dotNetRecompileArgs -Wait))
+        $results.add((Start-Process -NoNewWindow -Passthru -FilePath $dotNetPath -ArgumentList $dotNetRecompileArgs -Wait))
 
     }
 }
@@ -128,11 +133,11 @@ $dismCleanupResults = Start-Process -NoNewWindow -Wait -PassThru -FilePath "Dism
 Write-Log -Level "INFO" -Message "Getting .tmp, .dmp, .etl, .evtx, thumbcache*.db, *.log files for removal"
 # $filesToClean = Get-ChildItem -Path c:\* -Include (*.tmp, *.dmp, *.etl, *.evtx, thumbcache*.db, *.log) -File -Recurse -Force -ErrorAction SilentlyContinue
 # This takes way too long.  Need a faster way to look up these dfiles.
-$filesToClean = Get-ChildItem -Path c:\ -File -Recurse -Force -ErrorAction SilentlyContinue | Where-Object{ $_.extension -in ("*.tmp","*.dmp","*.etl","*.evtx","*.log") -or $_.Name -like "thumbcache*.db"}
+$filesToClean = Get-ChildItem -Path c:\ -File -Recurse -Force -ErrorAction SilentlyContinue | Where-Object { $_.extension -in ("*.tmp", "*.dmp", "*.etl", "*.evtx", "*.log") -or $_.Name -like "thumbcache*.db" }
 Write-Log -Level "INFO" -Message "Removing .tmp, .dmp, .etl, .evtx, thumbcache*.db, *.log"
-foreach($file in $filesToClean){
-    Write-Log -Level "INFO" -Message "Removing $($file.FullName)"
-    ($file.FullName).Delete()
+foreach ($file in $filesToClean) {
+    # Write-Log -Level "INFO" -Message "Removing $($file.FullName)"
+    $file.Delete()
 }
 
 # Clean up from installs
