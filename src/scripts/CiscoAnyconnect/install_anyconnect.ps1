@@ -92,8 +92,12 @@ if ($install.IsPresent) {
 }
 
 if ($cleanup.IsPresent) {
+    Write-Log -Level "INFO" -Message  "Cleaning up install files"
+
     if (Test-Path $installerPath) {
-        $installerPath.Delete()
+        Write-Log -Level "INFO" -Message  "Removing $($installerPath)"
+        # $installerPath.Delete()
+        Remove-Item -Path $installerPath -Recurse -Force
     }
 
     if ($xmlProfileSrc) {
@@ -101,6 +105,6 @@ if ($cleanup.IsPresent) {
         $xmlProfileSrc.Delete()
     }
     else {
-        Write-Log -Level "INFO" -Message  "Not Found - $($xmlProfile) in $($outpath)"
+        Write-Log -Level "INFO" -Message  "Cannot Delete; Not Found - $($xmlProfile) in $($outpath)"
     }
 }

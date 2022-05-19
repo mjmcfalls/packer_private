@@ -114,6 +114,7 @@ if ($cleanup.IsPresent) {
     }
 
     if ($archiveDestination) {
+        Write-Log -Level "INFO" -Message  "Removing $($archiveDestination)"
         if (Test-Path $archiveDestination) {
             $archiveDestination.Delete()
         }
