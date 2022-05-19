@@ -99,6 +99,7 @@ New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent' 
 # Disable Windows Feeds
 Write-Log -Level "INFO" -Message "Disabling Windows Feeds"
 New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" -Name "EnableFeeds" -PropertyType DWORD -Value "0" #| Out-Null 
+New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Feeds" -Name "ShellFeedsTaskbarviewMode" -PropertyType DWORD -Value "2"
 # reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" /v EnableFeeds /t REG_DWORD /d 0 /f
 
 Write-Log -Level "INFO" -Message "Disabling OneDrive Syncing for All users"
