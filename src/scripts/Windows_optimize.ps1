@@ -56,7 +56,7 @@ Function Clear-Directory {
         Write-Log -Level "INFO" -Message "Removing files in $($tpath)"
         # $tempFiles | Remove-Item -Force #-ErrorAction SilentlyContinue
         foreach ($file in $tempFiles) {
-            Write-Log -Level "INFO" -Message "Removing $($file.fullname)"
+            # Write-Log -Level "INFO" -Message "Removing $($file.fullname)"
             # Remove-Item -Path $file.fullname -Force -Recurse
             # $file.Delete()
             [System.IO.File]::Delete($file.fullname)
@@ -67,7 +67,7 @@ Function Clear-Directory {
         # # $tempFiles
         Write-Log -Level "INFO" -Message "Removing Directories in $($tpath)"
         foreach ($dir in $tempDirs) {
-            Write-Log -Level "INFO" -Message "Removing $($dir.fullname)"
+            # Write-Log -Level "INFO" -Message "Removing $($dir.fullname)"
             # Remove-Item -Path $dir.fullname -Force -Recurse
             Try {
                 [io.directory]::delete($dir.fullname)
