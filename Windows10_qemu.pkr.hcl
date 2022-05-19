@@ -297,7 +297,6 @@ build {
 # # 60+ minutes with cleanup/optimize scripts
   provisioner "powershell" {
     inline = [
-      "${var.win_temp_dir}\\scripts\\Windows10_cleanup.ps1",
       "${var.win_temp_dir}\\scripts\\install_7zip.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.seven_zip_installer}' -install",
       "${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install",
       "${var.win_temp_dir}\\scripts\\Chrome\\install_Chrome.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.chrome_installer}' -install",
@@ -310,6 +309,7 @@ build {
       "${var.win_temp_dir}\\scripts\\CiscoAnyconnect\\install_anyconnect.ps1 -Cleanup -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.anyconnect_installer}' -install",
       "${var.win_temp_dir}\\scripts\\install_git.ps1 -OutPath '${var.win_temp_dir}' -uri '${var.git_uri}' -public -install",
       # "${var.win_temp_dir}\\scripts\\Microsoft\\install_adk.ps1 -uri '${var.ms_adk_uri}' -OutPath '${var.win_temp_dir}' -installername '${var.ms_adk_installer}' -public -install",
+      "${var.win_temp_dir}\\scripts\\Windows10_cleanup.ps1",
       "a:\\Windows_optimize.ps1 -outpath '${var.win_temp_dir}'"
       ]
   }

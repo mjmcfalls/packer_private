@@ -84,9 +84,11 @@ takeown /F "$($oneDrivePath)" /A
 Write-Log -Level "INFO" -Message "Removing OneDrive Installer"
 Remove-Item $oneDrivePath
 
+Write-Log -Level "INFO" -Message "Removing OneDrive Start Menu Shortcuts"
 Remove-Item -Path "C:\Windows\ServiceProfiles\LocalService\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" -Force
 Remove-Item -Path "C:\Windows\ServiceProfiles\NetworkService\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" -Force
-
+Remove-Item -Path "C:\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" -Force
+Remove-Item -Path "C:\Users\Administrator\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" -Force
 
 # Registry changes
 Write-Log -Level "INFO" -Message "Disabling Consumer Features (Internet App Downloads)"
