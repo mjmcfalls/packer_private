@@ -138,7 +138,7 @@ Write-Log -Level "INFO" -Message "Getting .tmp, .dmp, .etl, .evtx, thumbcache*.d
 $filesToClean = Get-ChildItem -Path c:\ -File -Recurse -Force -ErrorAction SilentlyContinue | Where-Object { $_.extension -in ("*.tmp", "*.dmp", "*.etl", "*.evtx", "*.log") -or $_.Name -like "thumbcache*.db" }
 Write-Log -Level "INFO" -Message "Removing .tmp, .dmp, .etl, .evtx, thumbcache*.db, *.log"
 foreach ($file in $filesToClean) {
-    Write-Log -Level "INFO" -Message "Removing $($file.FullName)"
+    # Write-Log -Level "INFO" -Message "Removing $($file.FullName)"
     if (Test-Path $file.FullName) {
         [System.IO.File]::Delete($file.fullname)
     }
@@ -147,7 +147,6 @@ foreach ($file in $filesToClean) {
 
 # Clean up from installs
 Clear-Directory -patharray $tempPaths
-
 
 Write-Log -Level "INFO" -Message "Removing $($env:ProgramData)\Microsoft\Windows\WER\Temp\*"
 Remove-Item -Path $env:ProgramData\Microsoft\Windows\WER\Temp\* -Recurse -Force -ErrorAction SilentlyContinue
