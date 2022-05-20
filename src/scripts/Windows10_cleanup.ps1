@@ -115,6 +115,8 @@ New-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Edge" -Name HideFirstR
 Write-Log -Level "INFO" -Message "Disabling OOBE Experience for Current User"
 New-ItemProperty -Path "HKCU\Software\Microsoft\Windows\CurrentVersion\UserProfileEngagement" -Name ScoobeSystemSettingEnabled -PropertyType REG_DWORD -Value "0" -Force
 
+Write-Log -Level "INFO" -Message "Disabling First Run Animations"
+New-ItemProperty -Path "HKLM:\Software\Microsofot\Windows NT\CurrentVersion\Winlogon" -Name "EnableFirstLogonAnimation" -Value "0" -Force 
 
 if (Test-Path $defaultsUsersSettingsPath) {
     $DefaultUserSettings = Get-Content $defaultsUsersSettingsPath
