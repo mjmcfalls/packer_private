@@ -92,7 +92,7 @@ Remove-Item -Path "C:\Users\Administrator\AppData\Roaming\Microsoft\Windows\Star
 
 # Registry changes
 Write-Log -Level "INFO" -Message "Disabling Consumer Features (Internet App Downloads)"
-New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\' -Name 'CloudContent' | Out-Null
+New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows' -Name 'CloudContent' | Out-Null
 New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent' -Name 'DisableWindowsConsumerFeatures' -PropertyType DWORD -Value '1' #| Out-Null 
 
 Write-Log -Level "INFO" -Message "Disabling Windows tips"
@@ -100,7 +100,10 @@ New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent' 
 
 # Disable Windows Feeds
 Write-Log -Level "INFO" -Message "Disabling Windows Feeds"
+New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows" -Name "Windows Feeds" -Force
 New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" -Name "EnableFeeds" -PropertyType DWORD -Value "0" #| Out-Null 
+
+New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion" -Name "Feeds" -Force
 New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Feeds" -Name "ShellFeedsTaskbarviewMode" -PropertyType DWORD -Value "2"  -Force
 # reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" /v EnableFeeds /t REG_DWORD /d 0 /f
 
@@ -112,11 +115,11 @@ New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Skydrive' -Nam
 
 Write-Log -Level "INFO" -Message "Disabling MS Edge First Run Experience"
 New-Item -Path "HKLM:\Software\Policies\Microsoft" -Name "Edge" -Force
-New-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Edge" -Name HideFirstRunExperience -PropertyType REG_DWORD -Value "0" -Force
+New-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Edge" -Name HideFirstRunExperience -PropertyType DWORD -Value "0" -Force
 
 Write-Log -Level "INFO" -Message "Disabling OOBE Experience for Current User"
 New-Item -Path "HKLM:\Software\Policies\Microsoft" -Name "UserProfileEngagement" -Force
-New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\UserProfileEngagement" -Name ScoobeSystemSettingEnabled -PropertyType REG_DWORD -Value "0" -Force
+New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\UserProfileEngagement" -Name "ScoobeSystemSettingEnabled" -PropertyType REG_DWORD -Value "0" -Force
 
 Write-Log -Level "INFO" -Message "Disabling First Run Animations"
 New-ItemProperty -Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "EnableFirstLogonAnimation" -Value "0" -Force 
