@@ -109,14 +109,17 @@ New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\' -Name 'Skydrive' | O
 New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Skydrive' -Name 'DisableFileSync' -PropertyType DWORD -Value '1' | Out-Null
 New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Skydrive' -Name 'DisableLibrariesDefaultSaveToSkyDrive' -PropertyType DWORD -Value '1' | Out-Null 
 
+
 Write-Log -Level "INFO" -Message "Disabling MS Edge First Run Experience"
+New-Item -Path "HKLM:\Software\Policies\Microsoft" -Name "Edge" -Force
 New-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Edge" -Name HideFirstRunExperience -PropertyType REG_DWORD -Value "0" -Force
 
 Write-Log -Level "INFO" -Message "Disabling OOBE Experience for Current User"
-New-ItemProperty -Path "HKCU\Software\Microsoft\Windows\CurrentVersion\UserProfileEngagement" -Name ScoobeSystemSettingEnabled -PropertyType REG_DWORD -Value "0" -Force
+New-Item -Path "HKLM:\Software\Policies\Microsoft" -Name "UserProfileEngagement" -Force
+New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\UserProfileEngagement" -Name ScoobeSystemSettingEnabled -PropertyType REG_DWORD -Value "0" -Force
 
 Write-Log -Level "INFO" -Message "Disabling First Run Animations"
-New-ItemProperty -Path "HKLM:\Software\Microsofot\Windows NT\CurrentVersion\Winlogon" -Name "EnableFirstLogonAnimation" -Value "0" -Force 
+New-ItemProperty -Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "EnableFirstLogonAnimation" -Value "0" -Force 
 
 if (Test-Path $defaultsUsersSettingsPath) {
     $DefaultUserSettings = Get-Content $defaultsUsersSettingsPath
