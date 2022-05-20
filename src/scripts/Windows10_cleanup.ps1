@@ -115,7 +115,7 @@ New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Skydrive' -Nam
 
 Write-Log -Level "INFO" -Message "Disabling MS Edge First Run Experience"
 New-Item -Path "HKLM:\Software\Policies\Microsoft" -Name "Edge" -Force
-New-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Edge" -Name HideFirstRunExperience -PropertyType DWORD -Value "0" -Force
+New-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Edge" -Name HideFirstRunExperience -PropertyType DWORD -Value "1" -Force
 
 Write-Log -Level "INFO" -Message "Disabling OOBE Experience for Current User"
 New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion" -Name "UserProfileEngagement" -Force
