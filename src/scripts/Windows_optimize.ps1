@@ -3,7 +3,7 @@ Param (
     [string]$outPath = "c:\temp",
     [string]$sdelete_uri = "https://download.sysinternals.com/files/SDelete.zip",
     $dotNetPaths = @("c:\windows\microsoft.net\framework64\v4.0.30319\ngen.exe", "c:\windows\microsoft.net\framework\v4.0.30319\ngen.exe"),
-    $fileExtensionsToRemove = @("*.tmp","*.dmp","*.etl","*.evtx","thumbcache*.db","*.log")
+    $fileExtensionsToRemove = @("*.tmp", "*.dmp", "*.etl", "*.evtx", "thumbcache*.db", "*.log")
 )
 
 Function Write-Log {
@@ -98,7 +98,7 @@ Function Start-Sdelete {
     Expand-Archive -Path $sdeleteZipPath -DestinationPath $outpath 
     
     Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $(Join-Path -Path $outpath -ChildPath 'sdelete.exe') -ArgumentList $($sdelete_params)"
-    $sdeleteResults = Start-Process -NoNewWindow -PassThru -FilePath (Join-Path -Path $outpath -ChildPath "sdelete.exe") -ArgumentList $sdelete_params -Wait
+    Start-Process -NoNewWindow -PassThru -FilePath (Join-Path -Path $outpath -ChildPath "sdelete.exe") -ArgumentList $sdelete_params -Wait | Out-Null
     
 }
 
@@ -139,7 +139,7 @@ $filesToClean = Get-ChildItem -Path c:\ -File -Recurse -Force -ErrorAction Silen
 Write-Log -Level "INFO" -Message "Removing .tmp, .dmp, .etl, .evtx, thumbcache*.db, *.log"
 foreach ($file in $filesToClean) {
     Write-Log -Level "INFO" -Message "Removing $($file.FullName)"
-    if(Test-Path $file.FullName){
+    if (Test-Path $file.FullName) {
         [System.IO.File]::Delete($file.fullname)
     }
     

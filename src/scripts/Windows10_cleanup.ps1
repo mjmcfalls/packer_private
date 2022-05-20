@@ -118,7 +118,7 @@ New-Item -Path "HKLM:\Software\Policies\Microsoft" -Name "Edge" -Force
 New-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Edge" -Name HideFirstRunExperience -PropertyType DWORD -Value "0" -Force
 
 Write-Log -Level "INFO" -Message "Disabling OOBE Experience for Current User"
-New-Item -Path "HKLM:\Software\Policies\Microsoft" -Name "UserProfileEngagement" -Force
+New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion" -Name "UserProfileEngagement" -Force
 New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\UserProfileEngagement" -Name "ScoobeSystemSettingEnabled" -PropertyType REG_DWORD -Value "0" -Force
 
 Write-Log -Level "INFO" -Message "Disabling First Run Animations"
