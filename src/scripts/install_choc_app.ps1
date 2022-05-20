@@ -31,3 +31,4 @@ $ProgressPreference = 'SilentlyContinue'
 
 $app
 $app.GetType()
+ConvertFrom-StringDAta -StringData $app 

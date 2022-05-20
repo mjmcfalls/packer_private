@@ -296,12 +296,8 @@ build {
  
   provisioner "powershell"{
     inline = [
-      "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
-    ]
-  }
-  provisioner "powershell"{
-    inline = [
-      "a:/install_choc_app.ps1 -app '${var.apps_to_install}'"
+      "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
+       "a:/install_choc_app.ps1 -app '${var.apps_to_install}'"
     ]
   }
 }
