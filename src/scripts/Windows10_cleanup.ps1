@@ -6,7 +6,7 @@ Param (
     [string]$oneDriveUninstallParams = "/uninstall",
     $appxIgnoreList = @("microsoft.windowscommunicationsapps", "Microsoft.WindowsCalculator", "Microsoft.DesktopAppInstaller", "Microsoft.WindowsStore", "Microsoft.StorePurchaseApp", "Microsoft.Appconnector"),
     $winFeaturesToDisable = @("DirectPlay", "WindowsMediaPlayer"),
-    [string]$defaultsUsersSettings = (Join-Path -Path $outPath -ChildPath "Scripts\Microsoft\DefaultUsersSettings.txt"),
+    [string]$defaultsUserSettingsPath = (Join-Path -Path $outPath -ChildPath "Scripts\Microsoft\DefaultUsersSettings.txt"),
     [string]$ScheduledTasksListPath = (Join-Path -Path $outPath -ChildPath "Scripts\Microsoft\ScheduledTasks.txt"),
     [string] $automaticTracingFilePath = (Join-Path -Path $outPath -ChildPath "Scripts\Microsoft\AutomaticTracers.txt"),
     [string]$servicesToDisablePath = (Join-Path -Path $outPath -ChildPath "Scripts\Microsoft\ServicesToDisable.txt"),
@@ -124,18 +124,18 @@ New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\UserProf
 Write-Log -Level "INFO" -Message "Disabling First Run Animations"
 New-ItemProperty -Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "EnableFirstLogonAnimation" -Value "0" -Force 
 
-if (Test-Path $defaultsUsersSettingsPath) {
-    $DefaultUserSettings = Get-Content $defaultsUsersSettingsPath
+if (Test-Path $defaultsUserSettingsPath) {
+    $defaultUserSettings = Get-Content $defaultsUserSettingsPath
 
-    if ($DefaultUserSettings.count -gt 0) {
-        Foreach ($item in $DefaultUserSettings) {
+    if ($defaultUserSettings.count -gt 0) {
+        Foreach ($item in $defaultUserSettings) {
             Start-Process C:\Windows\System32\Reg.exe -ArgumentList "$($item)" -Wait
         }
     }
 
 }
 else {
-    Write-Log -Level "INFO" -Message  "Unable to find $($defaultsUsersSettingsPath)"
+    Write-Log -Level "INFO" -Message  "Unable to find $($defaultsUserSettingsPath)"
 }
 
 # Disable Scheduled Tasks
