@@ -110,7 +110,7 @@ New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Skydrive' -Nam
 New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Skydrive' -Name 'DisableLibrariesDefaultSaveToSkyDrive' -PropertyType DWORD -Value '1' | Out-Null 
 
 Write-Log -Level "INFO" -Message "Disabling MS Edge First Run Experience"
-New-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Edge" -Name HideFirstRunExperience -PropertyType REG_DWORD -Value" 1" -Force
+New-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Edge" -Name HideFirstRunExperience -PropertyType REG_DWORD -Value "0" -Force
 
 Write-Log -Level "INFO" -Message "Disabling OOBE Experience for Current User"
 New-ItemProperty -Path "HKCU\Software\Microsoft\Windows\CurrentVersion\UserProfileEngagement" -Name ScoobeSystemSettingEnabled -PropertyType REG_DWORD -Value "0" -Force
