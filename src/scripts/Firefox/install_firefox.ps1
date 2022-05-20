@@ -131,7 +131,7 @@ if ($install.IsPresent) {
             Write-Log -Level "INFO" -Message "Firefox installed at $($installLocation.InstallLocation)"
         }
 
-        $distributionPath = Join-Path -Path $installLocation -ChildPath "distribution"
+        $distributionPath = Join-Path -Path $installLocation.InstallLocation -ChildPath "distribution"
         Write-Log -Level "INFO" -Message "Verifying Distibution path exists - $($distributionPath)"
         if (-Not (Test-Path -Path $distributionPath)) {
             Write-Log -Level "INFO" -Message "Creating $($distributionPath)"
