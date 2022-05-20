@@ -4,3 +4,4 @@ packer_cache/*
 vars/*
 src/apps/*
 output/*
+secrets/*
