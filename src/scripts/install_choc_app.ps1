@@ -1,7 +1,7 @@
 [CmdletBinding()]
 Param (
     [string]$app,
-    [string]$args
+    [string]$params
 )
 Function Write-Log {
     [CmdletBinding()]
@@ -29,4 +29,4 @@ Function Write-Log {
 }
 
 $ProgressPreference = 'SilentlyContinue'
-"Name: $($app); Args: $($args)"
+"Name: $($app); Args: $($params)"
