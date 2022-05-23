@@ -162,9 +162,12 @@ build {
   }
  
   provisioner "powershell"{
+    elevated_user = "${var.winrm_username}"
+    elevated_password = "${var.winrm_password}"
     inline = [
       "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
-      "Start-Process -NoNewWindow -FilePath 'C:\\ProgramData\\chocolatey\\bin\\RefreshEnv.cmd' -Wait"   
+      "Start-Process -NoNewWindow -FilePath 'C:\\ProgramData\\chocolatey\\bin\\RefreshEnv.cmd' -Wait",
+      "a:/install_choc_app.ps1 -app '${var.choc_git_install["name"]}' -params '${var.choc_vscode_install["params"]}'",
     ]
   }
 
@@ -172,7 +175,7 @@ build {
 
   provisioner "powershell"{
     inline = [
-      "a:/install_choc_app.ps1 -app '${var.choc_git_install["name"]}' -params '${var.choc_vscode_install["params"]}'",
+      
       "a:/install_choc_app.ps1 -app '${var.choc_vscode_install["name"]}' -params '${var.choc_vscode_install["params"]}'"      
     ]
   }
