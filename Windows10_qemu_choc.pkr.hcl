@@ -100,7 +100,6 @@ variable "winrm_username" {
   type    = string
 }
 
-
 variable "shutdown_command" {
   type    = string
   default = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\""
@@ -116,6 +115,12 @@ variable "choc_vscode_install" {
 variable "choc_vscode_noUpdate" {
   type    = map(string)
 }
+
+variable "anyconnect_installer" {
+  type    = string
+  default = "${env("anyconnect_installer")}"
+}
+
 # source blocks are generated from your builders; a source can be referenced in
 # build blocks. A build block runs provisioner and post-processors on a
 # source. Read the documentation for source blocks here:
