@@ -87,7 +87,7 @@ variable "ssh_password" {
 
 variable "ssh_timeout" {
   type    = string
-  default = "10m"
+  default = "60m"
 }
  
 # source blocks are generated from your builders; a source can be referenced in
