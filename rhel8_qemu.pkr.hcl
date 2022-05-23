@@ -84,6 +84,12 @@ variable "ssh_password" {
   type    = string
   default = "${env("ssh_password")}"
 }
+
+variable "ssh_timeout" {
+  type    = string
+  default = "10m"
+}
+ 
 # source blocks are generated from your builders; a source can be referenced in
 # build blocks. A build block runs provisioner and post-processors on a
 # source. Read the documentation for source blocks here:
@@ -107,6 +113,7 @@ source "qemu" "rhel_8" {
   shutdown_command = "${var.shutdown_command}"
   ssh_username     = "${var.ssh_username}"
   ssh_password     = "${var.ssh_password}"
+  ssh_timeout      = "${var.ssh_timeout}"
   vm_name          = "${var.vm_name}"
   boot_command     = [
                         "<up><wait><tab><wait> text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${ var.kickstartFile }<enter><wait5>"
