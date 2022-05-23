@@ -17,7 +17,7 @@ variable "disk_type_id" {
 
 variable "headless" {
   type    = string
-   default = "${env("headless")}"
+  default = "${env("headless")}"
 }
 
 variable "http_directory"{
@@ -109,8 +109,9 @@ source "qemu" "rhel_8" {
   ssh_password     = "${var.ssh_password}"
   vm_name          = "${var.vm_name}"
   boot_command     = [
-                        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${ var.kickstartFile } ip=dhcp <enter><wait><wait><enter>"
+                        "<up><wait><tab><wait> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${ var.kickstartFile }<enter><wait5>"
                       ]
+}
 
 # a build block invokes sources and runs provisioning steps on them. The
 # documentation for build blocks can be found here:
