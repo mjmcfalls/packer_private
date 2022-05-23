@@ -109,7 +109,7 @@ source "qemu" "rhel_8" {
   ssh_password     = "${var.ssh_password}"
   vm_name          = "${var.vm_name}"
   boot_command     = [
-                        "<up><wait><tab><wait> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${ var.kickstartFile }<enter><wait5>"
+                        "<up><wait><tab><wait> text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${ var.kickstartFile }<enter><wait5>"
                       ]
 }
 
