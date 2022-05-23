@@ -27,19 +27,34 @@ Function Write-Log {
     }
 }
 
+Function Copy-ChromePreferenceFile {
+
+}
+
 # $ProgressPreference = 'SilentlyContinue'
-# "Name: $($app); Params: $($params)"
-# choco install -y "$($app)"
+$appsToInstall = New-Object System.Collections.Generic.List[System.String]
+Write-Log -Level "INFO" -Message "Found - $($packagesPath)"
 
-# choco install -y "$($packagesPath)"
-
-Write-Log -Level "INFO" -Message "Packages Path: $($packagesPath)"
-[xml]$xml = Get-Content $packagesPath
-foreach ($p in $xml.Packages) {
-    Switch -wildcard ($p.package.id) {
-        "chrome" { Write-Log -Level "INFO" -Message "Copy Preference file for Chrome" }
-        "firefox" { Write-Log -Level "INFO" -Message "Copy Preference file for Firefox" }
-        "edge" { Write-Log -Level "INFO" -Message "Copy Preference file for Edge" }
+if (Test-Path $packagesPath) {
+    [xml]$xml = Get-Content $packagesPath
+    foreach ($p in $xml.Packages) {
+        $appsToInstall.Add($p.package.id)
+    
     }
 
+    Write-Log -Level "INFO" -Message "Chocolately - Installing $($appsToInstall -Join ",")"
+    choco install -y "$($packagesPath)"
+
+
+    foreach ($p in $xml.Packages) {
+        Switch -wildcard ($p.package.id) {
+            "chrome" { Write-Log -Level "INFO" -Message "Copy Preference file for Chrome" }
+            "firefox" { Write-Log -Level "INFO" -Message "Copy Preference file for Firefox" }
+            "edge" { Write-Log -Level "INFO" -Message "Copy Preference file for Edge" }
+        }
+
+    }
+}
+else {
+    Write-Log -Level "ERROR" -Message "Cannot find $($packagesPath)"
 }
