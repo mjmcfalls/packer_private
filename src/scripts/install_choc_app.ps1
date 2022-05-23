@@ -31,5 +31,15 @@ Function Write-Log {
 # "Name: $($app); Params: $($params)"
 # choco install -y "$($app)"
 
-choco install -y "$($packagesPath)"
+# choco install -y "$($packagesPath)"
 
+Write-Log -Level "INFO" -Message "Packages Path: $($packagesPath)"
+[xml]$xml = Get-Content $packagesPath
+foreach ($p in $xml.Packages) {
+    Switch -wildcard ($p.package.id) {
+        "chrome" { Write-Log -Level "INFO" -Message "Copy Preference file for Chrome" }
+        "firefox" { Write-Log -Level "INFO" -Message "Copy Preference file for Firefox" }
+        "edge" { Write-Log -Level "INFO" -Message "Copy Preference file for Edge" }
+    }
+
+}
