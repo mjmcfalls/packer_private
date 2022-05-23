@@ -109,7 +109,7 @@ source "qemu" "rhel_8" {
   ssh_password     = "${var.ssh_password}"
   vm_name          = "${var.vm_name}"
   boot_command     = [
-                        "<tab> text ks=http:\/\/{{ .HTTPIP }}:{{ .HTTPPort }}/${ var.kickstartFile } ip=dhcp <enter><wait><wait><enter>"
+                        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${ var.kickstartFile } ip=dhcp <enter><wait><wait><enter>"
                       ]
 
 # a build block invokes sources and runs provisioning steps on them. The
