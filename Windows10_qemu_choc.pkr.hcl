@@ -170,13 +170,4 @@ build {
       "a:/install_choc_app.ps1 -app '${var.choc_git_install["name"]}' -params '${var.choc_vscode_install["params"]}'",
     ]
   }
-
-  provisioner "windows-restart" {}
-
-  provisioner "powershell"{
-    inline = [
-      
-      "a:/install_choc_app.ps1 -app '${var.choc_vscode_install["name"]}' -params '${var.choc_vscode_install["params"]}'"      
-    ]
-  }
 }

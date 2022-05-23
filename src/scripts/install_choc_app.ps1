@@ -1,7 +1,6 @@
 [CmdletBinding()]
 Param (
-    [string]$app,
-    [string]$params
+    [string]$packagesPath
 )
 Function Write-Log {
     [CmdletBinding()]
@@ -28,6 +27,8 @@ Function Write-Log {
     }
 }
 
-$ProgressPreference = 'SilentlyContinue'
-"Name: $($app); Params: $($params)"
-choc -help
+# $ProgressPreference = 'SilentlyContinue'
+# "Name: $($app); Params: $($params)"
+# choco install -y "$($app)"
+
+choco install -y "$($packagesPath)"
