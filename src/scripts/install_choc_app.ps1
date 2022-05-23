@@ -43,7 +43,7 @@ if (Test-Path $packagesPath) {
     }
 
     Write-Log -Level "INFO" -Message "Chocolately - Installing $($appsToInstall -Join ",")"
-    choco install -y "$($packagesPath)"
+    choco install -y --no-progress "$($packagesPath)"
 
 
     foreach ($p in $xml.Packages) {

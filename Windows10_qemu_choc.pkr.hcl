@@ -165,7 +165,13 @@ build {
   provisioner "powershell" {
     inline = ["a:/Config_Winrm.ps1"]
   }
- 
+
+  provisioner "file" {
+    source      = "./src/scripts/"
+    destination = "${var.win_temp_dir}/scripts/"
+    direction   =  "upload"
+  }
+
   provisioner "powershell"{
     elevated_user = "SYSTEM"
     elevated_password = ""
