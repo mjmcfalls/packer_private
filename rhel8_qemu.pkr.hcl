@@ -91,7 +91,7 @@ variable "ssh_password" {
 
 source "qemu" "rhel_8" {
   accelerator      = "kvm"
-  boot_wait        = "120s"
+  boot_wait        = "30s"
   communicator     = "ssh"
   cpus             = "${var.cpu_num}"
   disk_size        = "${var.disk_size}"
