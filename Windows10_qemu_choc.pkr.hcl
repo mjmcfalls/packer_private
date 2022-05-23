@@ -168,9 +168,7 @@ build {
     ]
   }
 
-  provisioner "windows-restart" {
-    restart_command = "${var.shutdown_command}"
-  }
+  provisioner "windows-restart" {}
 
   provisioner "powershell"{
     inline = [
