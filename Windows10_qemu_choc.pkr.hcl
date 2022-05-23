@@ -162,8 +162,8 @@ build {
   }
  
   provisioner "powershell"{
-    elevated_user = "${var.winrm_username}"
-    elevated_password = "${var.winrm_password}"
+    elevated_user = "SYSTEM"
+    elevated_password = ""
     inline = [
       "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
       "Start-Process -NoNewWindow -FilePath 'C:\\ProgramData\\chocolatey\\bin\\RefreshEnv.cmd' -Wait",
