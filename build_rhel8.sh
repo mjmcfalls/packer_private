@@ -8,4 +8,3 @@ export PACKER_LOG_PATH="/home/mmcfalls/dev/logs/$file_name"
 
 cd ~/dev/packer
 packer build -force -var-file vars/rhel8/rhel8.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl rhel8_qemu.pkr.hcl
-
