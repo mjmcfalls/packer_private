@@ -88,7 +88,8 @@ variable "ssh_password" {
 # build blocks. A build block runs provisioner and post-processors on a
 # source. Read the documentation for source blocks here:
 # https://www.packer.io/docs/templates/hcl_templates/blocks/source
-source "qemu" "Windows_10" {
+
+source "qemu" "rhel_8" {
   accelerator      = "kvm"
   boot_wait        = "120s"
   communicator     = "ssh"
@@ -101,6 +102,7 @@ source "qemu" "Windows_10" {
   iso_checksum     = "${var.iso_checksum}"
   iso_url          = "${var.iso_url}"
   memory           = "${var.memory}"
+  net_device        = "virtio-net"
   output_directory = "${var.nix_output_directory}"
   shutdown_command = "${var.shutdown_command}"
   ssh_username     = "${var.ssh_username}"
@@ -115,6 +117,5 @@ source "qemu" "Windows_10" {
 # https://www.packer.io/docs/templates/hcl_templates/blocks/build
 
 build {
-  sources = ["source.qemu.Windows_10"]
-
+  sources = ["source.qemu.rhel_8"]
 }
