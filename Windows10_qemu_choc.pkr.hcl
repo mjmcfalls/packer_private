@@ -163,15 +163,21 @@ build {
  
   provisioner "powershell"{
     inline = [
-      "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
+      "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
+      "Start-Process -NoNewWindow -FilePath 'C:\\ProgramData\\chocolatey\\bin\\RefreshEnv.cmd' -Wait",
+      "a:/install_choc_app.ps1 -app '${var.choc_git_install["name"]}' -params '${var.choc_vscode_install["params"]}'",
+      "a:/install_choc_app.ps1 -app '${var.choc_vscode_install["name"]}' -params '${var.choc_vscode_install["params"]}'"      
     ]
+  }
+
+  provisioner "windows-restart" {
+    restart_command = "${var.shutdown_command}"
   }
 
   provisioner "powershell"{
     inline = [
-       "a:/install_choc_app.ps1 -app '${var.choc_git_install["name"]}' -args '${var.choc_vscode_install["args"]}'",
-       "a:/install_choc_app.ps1 -app '${var.choc_vscode_install["name"]}' -args '${var.choc_vscode_install["args"]}'",
-       "choc /?"
+      "a:/install_choc_app.ps1 -app '${var.choc_git_install["name"]}' -params '${var.choc_vscode_install["params"]}'",
+      "a:/install_choc_app.ps1 -app '${var.choc_vscode_install["name"]}' -params '${var.choc_vscode_install["params"]}'"      
     ]
   }
 }

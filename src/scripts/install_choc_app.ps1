@@ -29,4 +29,5 @@ Function Write-Log {
 }
 
 $ProgressPreference = 'SilentlyContinue'
-"Name: $($app); Args: $($params)"
+"Name: $($app); Params: $($params)"
+"choc /?"
