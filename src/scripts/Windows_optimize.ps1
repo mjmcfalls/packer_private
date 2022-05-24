@@ -86,7 +86,7 @@ Function Start-Sdelete {
     Param (
         [string]$outPath = "c:\temp",
         [string]$sdelete_uri = "https://download.sysinternals.com/files/SDelete.zip",
-        [string]$sdelete_params = "-nobanner -z -c -p 1"
+        [string]$sdelete_params = "-nobanner -z"
     )
     
     $sdeleteZipPath = Join-Path -Path $outpath -ChildPath "sdelete.zip"
@@ -166,8 +166,8 @@ Write-Log -Level "INFO" -Message "Clearing BC Cache"
 Clear-BCCache -Force -ErrorAction SilentlyContinue
 
 # Clean free space
-Write-Log -Level "INFO" -Message "Starting sdelete"
-Start-Sdelete
+Write-Log -Level "INFO" -Message "Starting sdelete to zero disk space"
+Start-Sdelete -sdelete_params "-nobanner -z"
 
 # Clean up after sdelete
 Write-Log -Level "INFO" -Message "Final temp path clean-up"
