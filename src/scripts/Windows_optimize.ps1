@@ -167,7 +167,7 @@ Clear-BCCache -Force -ErrorAction SilentlyContinue
 
 # Clean free space
 Write-Log -Level "INFO" -Message "Starting sdelete to zero disk space"
-Start-Sdelete -sdelete_params "-nobanner -z"
+Start-Sdelete -sdelete_params "-nobanner -z /accepteula C:"
 
 # Clean up after sdelete
 Write-Log -Level "INFO" -Message "Final temp path clean-up"
