@@ -25,4 +25,4 @@ Function Write-Log {
 }
 
 Write-Log -Level "INFO" -Message "Install Windows Updates"
-Install-WindowsUpdate -MicrosoftUpdate -AcceptAll
+Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot
