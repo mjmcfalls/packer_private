@@ -24,7 +24,8 @@ Function Write-Log {
     }
 }
 Write-Log -Level "INFO" -Message "Fetching Nuget Provider info"
-$nugetProviderInfo = Find-PackageProvider Nuget
+$nugetProviderInfo = Find-PackageProvider -Name Nuget -Force
+
 if($nugetProviderInfo){
     Write-Log -Level "INFO" -Message "Nuget Package Provider Installed - Version $($nugetProviderInfo.Version)"
 }
@@ -38,6 +39,7 @@ Install-Module -Name PSWindowsUpdate -Force
 
 Write-Log -Level "INFO" -Message "Validate PSWindowsUpdate Installation"
 $pswinupdateInfo = Get-Package -Name PSWindowsUpdate
+
 if($pswinupdateInfo){
     Write-Log -Level "INFO" -Message "PSWindowsUpdate - Version: $($pswinupdateInfo.Version); Source: $($pswinupdateInfo.Source)"
 }
