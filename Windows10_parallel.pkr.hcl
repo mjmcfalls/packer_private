@@ -63,6 +63,10 @@ variable "vm_name" {
   default = "${env("vm_name")}"
 }
 
+variable "vm_choco_name" {
+  type    = string
+}
+
 variable "vmx_version" {
   type    = string
   default = "14"
@@ -102,17 +106,6 @@ variable "winrm_username" {
 variable "shutdown_command" {
   type    = string
   default = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\""
-}
-
-variable "choc_git_install" {
-   type    = map(string)
-}
-variable "choc_vscode_install" {
-  type    = map(string)
-}
-
-variable "choc_vscode_noUpdate" {
-  type    = map(string)
 }
 
 variable "anyconnect_installer" {
@@ -175,7 +168,7 @@ source "qemu" "Windows_10_choco" {
   # net_bridge      = "${var.switchname}"
   output_directory = "${var.nix_output_directory}"
   shutdown_command = "${var.shutdown_command}"
-  vm_name          = "${var.vm_name}"
+  vm_name          = "${var.vm_choco_name}"
   winrm_insecure   = "${var.winrm_insecure}"
   winrm_password   = "${var.winrm_password}"
   winrm_timeout    = "${var.winrm_timeout}"
@@ -211,22 +204,13 @@ build {
     ]
   }
 
-  provisioner "powershell"{
-    only   = ["source.qemu.Windows_10_choco"]
-    elevated_user = "SYSTEM"
-    elevated_password = ""
-    inline = [
-      "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
-      "Start-Process -NoNewWindow -FilePath 'C:\\ProgramData\\chocolatey\\bin\\RefreshEnv.cmd' -Wait",
-      "a:/install_choc_app.ps1 -packagesPath 'a:\\packages.config'",
-      "${var.win_temp_dir}\\scripts\\CiscoAnyconnect\\install_anyconnect.ps1 -Cleanup -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.anyconnect_installer}' -install"
-    ]
-  }
-
   provisioner "windows-restart" {}
+}
+
+build { 
+  sources = ["source.qemu.Windows_10"]
 
   provisioner "powershell" {
-    only   = ["source.qemu.Windows_10"]   
     inline = [
       "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -install"
       # "${var.win_temp_dir}\\scripts\\install_7zip.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.seven_zip_installer}' -install",
@@ -245,14 +229,22 @@ build {
       # "a:\\Windows_optimize.ps1 -outpath '${var.win_temp_dir}'"
       ]
   }
+}
 
-provisioner "powershell"{
+build {
+  sources = ["source.qemu.Windows_10_choco"]
+  
+  provisioner "powershell"{
     elevated_user = "SYSTEM"
     elevated_password = ""
     inline = [
+      "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
+      "Start-Process -NoNewWindow -FilePath 'C:\\ProgramData\\chocolatey\\bin\\RefreshEnv.cmd' -Wait",
+      "a:/install_choc_app.ps1 -packagesPath 'a:\\packages.config'",
+      "${var.win_temp_dir}\\scripts\\CiscoAnyconnect\\install_anyconnect.ps1 -Cleanup -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.anyconnect_installer}' -install",
+      "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -install",
       "${var.win_temp_dir}\\scripts\\Windows10_cleanup.ps1",
       "a:\\Windows_optimize.ps1 -outpath '${var.win_temp_dir}'"
     ]
   }
-
 }
