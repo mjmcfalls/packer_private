@@ -23,7 +23,7 @@ Function Write-Log {
         Write-Output $Line
     }
 }
-
+Write-Log -Level "INFO" -Message "Fetching Nuget Provider info"
 $nugetProviderInfo = Find-PackageProvider Nuget
 if($nugetProviderInfo){
     Write-Log -Level "INFO" -Message "Nuget Package Provider Installed - Version $($nugetProviderInfo.Version)"

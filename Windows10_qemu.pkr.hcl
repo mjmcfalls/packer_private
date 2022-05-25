@@ -299,8 +299,8 @@ build {
 # Manual install scripts
   provisioner "powershell" {
     inline = [
-      "a:/install_pswindowsupdate.ps1",
-      "a:/Install_windowsupdates.ps1",
+      "a:\\Install_pswindowsupdate.ps1",
+      "a:\\Install_windowsupdates.ps1",
       "${var.win_temp_dir}\\scripts\\install_7zip.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.seven_zip_installer}' -install",
       "${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install",
       "${var.win_temp_dir}\\scripts\\Chrome\\install_Chrome.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.chrome_installer}' -install",
