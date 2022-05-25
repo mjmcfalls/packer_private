@@ -77,10 +77,16 @@ if ($install.IsPresent) {
     Write-Log -Level "INFO" -Message "Searching $($outpath) for $($configFile)"
     $configSrc = Get-Childitem -Path $outpath -Filter $configFile -Recurse
 
-    if($configSrc){
+    if ($configSrc) {
         Write-Log -Level "INFO" -Message "Copy $($configSrc.FullName) to $($installDest)"
         Copy-Item -Path $configSrc.FullName -Destination $installDest -Force
     }
+
+    Write-Log -Level "INFO" -Message "Create Startup Link"
+    $WshShell = New-Object -comObject WScript.Shell
+    $Shortcut = $WshShell.CreateShortcut("$($startupLocation)\BGInfo.lnk")
+    $Shortcut.TargetPath = "$(Join-Path -Path $installDest -ChildPath $installername) /timer:0 /nolicprompt /silent '$(Join-Path -Path $installDest -ChildPath $configSrc.Name)"
+    $Shortcut.Save()
     
 }
 
