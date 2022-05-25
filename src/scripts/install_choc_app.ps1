@@ -52,7 +52,6 @@ if (Test-Path $packagesPath) {
             "firefox" { Write-Log -Level "INFO" -Message "Copy Preference file for Firefox" }
             "edge" { Write-Log -Level "INFO" -Message "Copy Preference file for Edge" }
         }
-
     }
 }
 else {
