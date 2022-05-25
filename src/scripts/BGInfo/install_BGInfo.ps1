@@ -3,11 +3,11 @@ Param (
     [string]$uri,
     [string]$outpath = $env:temp,
     [switch]$install,
-    [string]$installDest = "C:\Program Files\SysInternals\BGInfo",
+    [string]$installDest = "C:\Program Files\Sysinternals\BGInfo",
     [string]$startupLocation = "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp",
     [string]$installParams = "/S",
     [switch]$public,
-    [string]$appuri = "/apps/SysInternals/bginfo/",
+    [string]$appuri = "/apps/Sysunternals/BGInfo/",
     [string]$installername = "Bginfo.exe",
     [string]$configFile = "HomeLab_202205250940.bgi",
     [switch]$cleanup
