@@ -52,6 +52,9 @@ variable "memory" {
 variable "nix_output_directory" {
   type    = string
 }
+variable "nix_choco_output_directory" {
+  type    = string
+}
 
 variable "restart_timeout" {
   type    = string
@@ -166,7 +169,7 @@ source "qemu" "Windows_10_choco" {
   memory           = "${var.memory}"
   net_device       = "e1000"
   # net_bridge      = "${var.switchname}"
-  output_directory = "${var.nix_output_directory}"
+  output_directory = "${var.nix_choco_output_directory}"
   shutdown_command = "${var.shutdown_command}"
   vm_name          = "${var.vm_choco_name}"
   winrm_insecure   = "${var.winrm_insecure}"
@@ -181,12 +184,9 @@ source "qemu" "Windows_10_choco" {
 # documentation for build blocks can be found here:
 # https://www.packer.io/docs/templates/hcl_templates/blocks/build
 
-build {
-  sources = [
-      "source.qemu.Windows_10",
-      "source.qemu.Windows_10_choco"
-      ]
-  
+build { 
+  sources = ["source.qemu.Windows_10"]
+
   provisioner "powershell" {
     inline = ["a:/Config_Winrm.ps1"]
   }
@@ -205,10 +205,6 @@ build {
   }
 
   provisioner "windows-restart" {}
-}
-
-build { 
-  sources = ["source.qemu.Windows_10"]
 
   provisioner "powershell" {
     inline = [
@@ -233,7 +229,24 @@ build {
 
 build {
   sources = ["source.qemu.Windows_10_choco"]
-  
+    provisioner "powershell" {
+    inline = ["a:/Config_Winrm.ps1"]
+  }
+
+  provisioner "file" {
+    source      = "./src/scripts/"
+    destination = "${var.win_temp_dir}/scripts/"
+    direction   =  "upload"
+  }
+
+  provisioner "powershell" {
+    inline = [
+    "a:\\Install_pswindowsupdate.ps1",
+    "a:\\Install_windowsupdates.ps1"
+    ]
+  }
+
+  provisioner "windows-restart" {}
   provisioner "powershell"{
     elevated_user = "SYSTEM"
     elevated_password = ""
