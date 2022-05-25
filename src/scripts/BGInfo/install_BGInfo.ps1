@@ -84,10 +84,14 @@ if ($install.IsPresent) {
 
     Write-Log -Level "INFO" -Message "Create Startup Link"
     $WshShell = New-Object -comObject WScript.Shell
+
     Write-Log -Level "INFO" -Message "BGInfo.lnk path: $startupLocation\BGInfo.lnk"
     $Shortcut = $WshShell.CreateShortcut("$($startupLocation)\BGInfo.lnk")
+
     Write-Log -Level "INFO" -Message "Lnk TargetPath: $(Join-Path -Path $installDest -ChildPath $installername) /timer:0 /nolicprompt /silent '$(Join-Path -Path $installDest -ChildPath $configSrc.Name)'"
     $Shortcut.TargetPath = "$(Join-Path -Path $installDest -ChildPath $installername) /timer:0 /nolicprompt /silent '$(Join-Path -Path $installDest -ChildPath $configSrc.Name)'"
+    
+    Write-Log -Level "INFO" -Message "Creating Startup link in $startupLocation\BGInfo.lnk"
     $Shortcut.Save()
     
 }
