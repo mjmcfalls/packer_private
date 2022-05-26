@@ -1,7 +1,40 @@
-
 variable "autounattend" {
   type    = string
   default = "${env("autounattend")}"
+}
+
+variable "anaconda_install_type" {
+  type    = string
+  default = "${env("anaconda_install_type")}"
+}
+
+variable "anaconda_install_addpath" {
+  type    = string
+  default = "${env("anaconda_install_addpath")}"
+}
+
+variable "anaconda_install_registerpy" {
+  type    = string
+  default = "${env("anaconda_install_registerpy")}"
+}
+
+variable "anaconda_install_silent" {
+  type    = string
+  default = "${env("anaconda_install_silent")}"
+}
+
+variable "anaconda_install_dir" {
+  type    = string
+  default = "${env("anaconda_install_dir")}"
+}
+variable "anaconda_installer" {
+  type    = string
+  default = "${env("anaconda_installer")}"
+}
+
+variable "anyconnect_installer" {
+  type    = string
+  default = "${env("anyconnect_installer")}"
 }
 
 variable "cpu_num" {
@@ -19,6 +52,26 @@ variable "disk_type_id" {
   default = "${env("disk_type_id")}"
 }
 
+variable "chrome_installer" {
+  type    = string
+  default = "${env("chrome_installer")}"
+}
+
+variable "firefox_uri" {
+  type    = string
+  default = "${env("firefox_uri")}"
+}
+
+variable "git_installer" {
+  type    = string
+  default = "${env("git_installer")}"
+}
+
+variable "git_uri" {
+  type    = string
+  default = "${env("git_uri")}"
+}
+
 variable "headless" {
   type    = string
    default = "${env("headless")}"
@@ -27,11 +80,6 @@ variable "headless" {
 variable "http_directory"{
   type    = string
   default = "${env("http_directory")}"
-}
-
-variable "switchname" {
-  type    = string
-  default = "${env("switchname")}"
 }
 
 variable "iso_checksum" {
@@ -43,17 +91,87 @@ variable "iso_url" {
   type    = string
   default = "${env("iso_url")}"
 }
+variable "keep_registered" {
+  type    = string
+  default = "${env("keep_registered")}"
+}
 
 variable "memory" {
   type    = string
   default = "${env("memory")}"
 }
 
+variable "ms_adk_uri" {
+  type    = string
+  default = "${env("ms_adk_uri")}"
+}
+
+variable "ms_adk_installer" {
+  type    = string
+  default = "${env("ms_adk_installer")}"
+}
+
 variable "nix_output_directory" {
   type    = string
+  default = "${env("nix_output_directory")}"
 }
+
 variable "nix_choco_output_directory" {
   type    = string
+}
+
+variable "python_uri" {
+  type    = string
+  default = "${env("python_uri")}"
+}
+
+variable "seven_zip_installer" {
+  type    = string
+  default = "${env("seven_zip_installer")}"
+}
+
+variable "seven_zip_uri" {
+  type    = string
+  default = "${env("seven_zip_uri")}"
+}
+
+variable "shutdown_command" {
+  type    = string
+  default = "${env("shutdown_command")}"
+}
+
+variable "switchname" {
+  type    = string
+  default = "${env("switchname")}"
+}
+
+variable "r_download_uri" {
+  type    = string
+  default = "${env("r_download_uri")}"
+}
+
+variable "r_studio_download_uri" {
+  type    = string
+  default = "${env("r_studio_download_uri")}"
+}
+variable "r_install_path" {
+  type    = string
+  default = "${env("r_src_path")}/${env("r_version")}"
+}
+
+variable "r_installer" {
+  type    = string
+  default = "${env("r_installer")}"
+}
+
+variable "r_src_path" {
+  type    = string
+  default = "${env("r_src_path")}"
+}
+
+variable "r_studio_install" {
+  type    = string
+  default = "${env("r_studio_install")}"
 }
 
 variable "restart_timeout" {
@@ -61,11 +179,15 @@ variable "restart_timeout" {
   default = "5m"
 }
 
+variable "vscode_installer" {
+  type    = string
+  default = "${env("vscode_installer")}"
+}
+
 variable "vm_name" {
   type    = string
   default = "${env("vm_name")}"
 }
-
 variable "vm_choco_name" {
   type    = string
 }
@@ -77,43 +199,37 @@ variable "vmx_version" {
 
 variable "win_temp_dir" {
   type    = string
-  default = "c:/temp"
+  default = "${env("win_temp_dir")}"
 }
 
 variable "winrm_insecure" {
   type    = string
-
+  default = "${env("winrm_insecure")}"
 }
 
 variable "winrm_password" {
   type    = string
+  default = "${env("winrm_password")}"
 }
 
 variable "winrm_timeout" {
   type    = string
-  default = "1h"
+  default = "${env("winrm_timeout")}"
 }
 
 variable "winrm_use_ntlm" {
   type    = string
+  default = "${env("winrm_use_ntlm")}"
 }
 
 variable "winrm_use_ssl" {
   type    = string
+  default = "${env("winrm_use_ssl")}"
 }
 
 variable "winrm_username" {
   type    = string
-}
-
-variable "shutdown_command" {
-  type    = string
-  default = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\""
-}
-
-variable "anyconnect_installer" {
-  type    = string
-  default = "${env("anyconnect_installer")}"
+  default = "${env("winrm_username")}"
 }
 
 # source blocks are generated from your builders; a source can be referenced in
@@ -249,7 +365,7 @@ build {
   }
 
   provisioner "windows-restart" {}
-  
+
   provisioner "powershell"{
     elevated_user = "SYSTEM"
     elevated_password = ""
