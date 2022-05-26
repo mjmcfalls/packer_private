@@ -232,6 +232,14 @@ variable "winrm_username" {
   default = "${env("winrm_username")}"
 }
 
+packer {
+  required_plugins {
+    windows-update = {
+      version = "0.14.1"
+      source = "github.com/rgl/windows-update"
+    }
+  }
+}
 # source blocks are generated from your builders; a source can be referenced in
 # build blocks. A build block runs provisioner and post-processors on a
 # source. Read the documentation for source blocks here:
@@ -315,12 +323,17 @@ build {
 
   provisioner "powershell" {
     inline = [
-    "a:\\Install_pswindowsupdate.ps1",
-    "a:\\Install_windowsupdates.ps1"
+    "a:\\Install_pswindowsupdate.ps1"
+    # "a:\\Install_windowsupdates.ps1"
     ]
   }
 
-  provisioner "windows-restart" {}
+  provisioner "windows-update" {
+  }
+  # provisioner "windows-restart" {
+  #   timeout = "2h"
+  #   restart_timeout = "2h"
+  # }
 
   provisioner "powershell" {
     inline = [
@@ -359,12 +372,17 @@ build {
     elevated_user = "SYSTEM"
     elevated_password = ""
     inline = [
-    "a:\\Install_pswindowsupdate.ps1",
-    "a:\\Install_windowsupdates.ps1"
+    "a:\\Install_pswindowsupdate.ps1"
+    # "a:\\Install_windowsupdates.ps1"
     ]
   }
 
-  provisioner "windows-restart" {}
+  provisioner "windows-update" {
+  }
+  # provisioner "windows-restart" {
+  #   timeout = "2h"
+  #   restart_timeout = "2h"
+  # }
 
   provisioner "powershell"{
     elevated_user = "SYSTEM"
