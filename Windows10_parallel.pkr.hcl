@@ -240,6 +240,8 @@ build {
   }
 
   provisioner "powershell" {
+    elevated_user = "SYSTEM"
+    elevated_password = ""
     inline = [
     "a:\\Install_pswindowsupdate.ps1",
     "a:\\Install_windowsupdates.ps1"
