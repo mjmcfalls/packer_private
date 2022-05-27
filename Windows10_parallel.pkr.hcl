@@ -327,10 +327,6 @@ build {
     # "a:\\Install_windowsupdates.ps1"
     ]
   }
-  # provisioner "windows-restart" {
-  #   timeout = "2h"
-  #   restart_timeout = "2h"
-  # }
 
   provisioner "powershell" {
     inline = [
@@ -347,12 +343,17 @@ build {
       "${var.win_temp_dir}\\scripts\\CiscoAnyconnect\\install_anyconnect.ps1 -Cleanup -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.anyconnect_installer}' -install",
       "${var.win_temp_dir}\\scripts\\install_git.ps1 -OutPath '${var.win_temp_dir}' -uri '${var.git_uri}' -public -install",
       "${var.win_temp_dir}\\scripts\\Microsoft\\install_adk.ps1 -uri '${var.ms_adk_uri}' -OutPath '${var.win_temp_dir}' -installername '${var.ms_adk_installer}' -public -install",
-      "${var.win_temp_dir}\\scripts\\Windows10_cleanup.ps1",
-      "a:\\Windows_optimize.ps1 -outpath '${var.win_temp_dir}'"
+      "${var.win_temp_dir}\\scripts\\Windows10_cleanup.ps1"
       ]
   }
 
-    provisioner "windows-update" {
+  provisioner "windows-update" {
+  }
+
+  provisioner "powershell" {
+    inline = [
+      "a:\\Windows_optimize.ps1 -outpath '${var.win_temp_dir}'"
+      ]
   }
 
 }
@@ -378,26 +379,33 @@ build {
     ]
   }
 
-  # provisioner "windows-restart" {
-  #   timeout = "2h"
-  #   restart_timeout = "2h"
-  # }
-
   provisioner "powershell"{
     elevated_user = "SYSTEM"
     elevated_password = ""
     inline = [
       "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
       "Start-Process -NoNewWindow -FilePath 'C:\\ProgramData\\chocolatey\\bin\\RefreshEnv.cmd' -Wait",
-      "a:/install_choc_app.ps1 -packagesPath 'a:\\packages.config'",
-      "${var.win_temp_dir}\\scripts\\CiscoAnyconnect\\install_anyconnect.ps1 -Cleanup -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.anyconnect_installer}' -install",
-      "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -install",
-      "${var.win_temp_dir}\\scripts\\Windows10_cleanup.ps1",
-      "a:\\Windows_optimize.ps1 -outpath '${var.win_temp_dir}'"
     ]
   }
 
-    provisioner "windows-update" {
+  provisioner "powershell"{
+    elevated_user = "SYSTEM"
+    elevated_password = ""
+    inline = [
+      "a:/install_choc_app.ps1 -packagesPath 'a:\\packages.config'",
+      "${var.win_temp_dir}\\scripts\\CiscoAnyconnect\\install_anyconnect.ps1 -Cleanup -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.anyconnect_installer}' -install",
+      "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -install",
+      "${var.win_temp_dir}\\scripts\\Windows10_cleanup.ps1"
+    ]
+  }
+
+  provisioner "windows-update" {
+  }
+
+  provisioner "powershell"{
+    inline = [
+      "a:\\Windows_optimize.ps1 -outpath '${var.win_temp_dir}'"
+    ]
   }
 
 }
