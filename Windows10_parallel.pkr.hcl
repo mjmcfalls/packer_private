@@ -327,9 +327,6 @@ build {
     # "a:\\Install_windowsupdates.ps1"
     ]
   }
-
-  provisioner "windows-update" {
-  }
   # provisioner "windows-restart" {
   #   timeout = "2h"
   #   restart_timeout = "2h"
@@ -354,6 +351,10 @@ build {
       "a:\\Windows_optimize.ps1 -outpath '${var.win_temp_dir}'"
       ]
   }
+
+    provisioner "windows-update" {
+  }
+
 }
 
 build {
@@ -377,8 +378,6 @@ build {
     ]
   }
 
-  provisioner "windows-update" {
-  }
   # provisioner "windows-restart" {
   #   timeout = "2h"
   #   restart_timeout = "2h"
@@ -397,4 +396,8 @@ build {
       "a:\\Windows_optimize.ps1 -outpath '${var.win_temp_dir}'"
     ]
   }
+
+    provisioner "windows-update" {
+  }
+
 }
