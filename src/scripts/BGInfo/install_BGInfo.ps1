@@ -91,7 +91,7 @@ if ($install.IsPresent) {
     Write-Log -Level "INFO" -Message "Lnk TargetPath: $(Join-Path -Path $installDest -ChildPath $installername)"
     $Shortcut.TargetPath = "$(Join-Path -Path $installDest -ChildPath $installername)"
 
-    Write-Log -Level "INFO" -Message "Link Arguments:  /timer:0 /nolicprompt /silent '$(Join-Path -Path $installDest -ChildPath $configSrc.Name)'"
+    Write-Log -Level "INFO" -Message "Link Arguments:  /timer:0 /nolicprompt /silent `"$(Join-Path -Path $installDest -ChildPath $configSrc.Name)`""
     $Shortcut.Arguments = "$($installParams) '$(Join-Path -Path $installDest -ChildPath $configSrc.Name)'"
     
     Write-Log -Level "INFO" -Message "Creating Startup link in $startupLocation\BGInfo.lnk"
