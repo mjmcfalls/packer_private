@@ -5,7 +5,7 @@ Param (
     [switch]$install,
     [string]$installDest = "C:\Program Files\Sysinternals\BGInfo",
     [string]$startupLocation = "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp",
-    [string]$installParams = "/S",
+    [string]$installParams = "/timer:0 /nolicprompt /silent",
     [switch]$public,
     [string]$appuri = "/apps/SysInternals/",
     [string]$installername = "Bginfo.exe",
@@ -92,7 +92,7 @@ if ($install.IsPresent) {
     $Shortcut.TargetPath = "$(Join-Path -Path $installDest -ChildPath $installername)"
 
     Write-Log -Level "INFO" -Message "Link Arguments:  /timer:0 /nolicprompt /silent '$(Join-Path -Path $installDest -ChildPath $configSrc.Name)'"
-    $Shortcut.Arguments = "timer:0 /nolicprompt /silent '$(Join-Path -Path $installDest -ChildPath $configSrc.Name)'"
+    $Shortcut.Arguments = "$($installParams) '$(Join-Path -Path $installDest -ChildPath $configSrc.Name)'"
     
     Write-Log -Level "INFO" -Message "Creating Startup link in $startupLocation\BGInfo.lnk"
     $Shortcut.Save()   
