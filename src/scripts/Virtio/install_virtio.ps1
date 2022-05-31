@@ -70,7 +70,7 @@ if ($install.IsPresent) {
     Write-Log -Level "INFO" -Message "ISO mounted at $($isoDriveLetter)"
 
     if (-Not $installerPath) {
-        $installerObj= Get-ChildItem -Path $isoDriveLetter -Recurse -File | Where-Object { $_.Name -Like $installername }
+        $installerObj= Get-ChildItem -Path "$($isoDriveLetter):\" -Recurse -File | Where-Object { $_.Name -Like $installername }
         
         $installerPath = $installerObj.FullName
         Write-Log -Level "INFO" -Message "Installer found at $($installerPath)"
