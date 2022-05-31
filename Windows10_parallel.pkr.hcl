@@ -323,7 +323,8 @@ build {
 
   provisioner "powershell" {
     inline = [
-    "a:\\Install_pswindowsupdate.ps1"
+      "${var.win_temp_dir}\\scripts\\Virtio\\install_Virtio.ps1 -local -OutPath '${var.win_temp_dir}' -install",
+      "a:\\Install_pswindowsupdate.ps1"
     # "a:\\Install_windowsupdates.ps1"
     ]
   }
@@ -347,8 +348,8 @@ build {
       ]
   }
 
-  provisioner "windows-update" {
-  }
+  # provisioner "windows-update" {
+  # }
 
   provisioner "powershell" {
     inline = [
@@ -374,8 +375,10 @@ build {
     elevated_user = "SYSTEM"
     elevated_password = ""
     inline = [
-    "a:\\Install_pswindowsupdate.ps1"
+      "${var.win_temp_dir}\\scripts\\Virtio\\install_Virtio.ps1 -local -OutPath '${var.win_temp_dir}' -install",
+      "a:\\Install_pswindowsupdate.ps1"
     # "a:\\Install_windowsupdates.ps1"
+   
     ]
   }
 
@@ -397,8 +400,8 @@ build {
     ]
   }
 
-  provisioner "windows-update" {
-  }
+  # provisioner "windows-update" {
+  # }
 
   provisioner "powershell"{
     inline = [
