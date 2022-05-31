@@ -5,8 +5,8 @@ Param (
     [switch]$install,
     [string]$installParams = "/qn ADDLOCAL=ALL",
     [switch]$public,
-    [switch]$local,
     [string]$appuri = "/apps/Virtio/",
+    [string]$isoname = "virtio.iso",
     [string]$installername = "virtio-win-gt-x64.msi",
     [switch]$cleanup
 )
@@ -21,7 +21,6 @@ function New-TempFolder {
     if (-not (Test-Path $Path)) {
         New-Item -ItemType Directory -Path $Path
     }
-
 }
 
 Function Write-Log {
@@ -52,26 +51,28 @@ Function Write-Log {
 $ProgressPreference = 'SilentlyContinue'
 
 New-TempFolder -Path $outpath
+$isoPath = Join-Path -Path $outpath -ChildPath $isoname
 
 if ($public.IsPresent) {
     Write-Log -Level "INFO" -Message "Install from Web"
-    Invoke-WebRequest -Uri "$($uri)" -OutFile (Join-Path -Path $outpath -ChildPath $installername)  -UseBasicParsing
+    Invoke-WebRequest -Uri "$($uri)" -OutFile $isoPath -UseBasicParsing
 }
-else {
-    if ($local.IsPresent) {
-        Write-Log -Level "INFO" -Message "Searching $($outpath) for $($installername)"
-        $installerPath = (Get-Childitem -Path $outpath -Recurse -File | Where-Object { $_.name -like $installername }).FullName
-    }
-    else {
-        Write-Log -Level "INFO" -Message "Getting $($uri)$($appuri)$($installername)"
-        Invoke-WebRequest -Uri "$($uri)$($appuri)$($installername)" -OutFile (Join-Path -Path $outpath -ChildPath $installername)  -UseBasicParsing
-    }
-    
+else { 
+    Write-Log -Level "INFO" -Message "Getting $($uri)$($appuri)$($installername)"
+    Invoke-WebRequest -Uri "$($uri)$($appuri)$($installername)" -OutFile $isoPath -UseBasicParsing
 }
 
 if ($install.IsPresent) {
+    Write-Log -Level "INFO" -Message "Mounting ISO - $($isoPath)"
+    $isoMountPoint = Mount-DiskImage -ImagePath $isoPath -PassThru
+    $isoDriveLetter = ($isoDriveLetter | Get-Volume).DriveLetter
+    Write-Log -Level "INFO" -Message "ISO mounted at $($isoDriveLetter)"
+
     if (-Not $installerPath) {
-        $installerPath = Join-Path -Path $outpath -ChildPath $installername
+        $installerObj= Get-ChildItem -Path $isoDriveLetter -Recurse -File | Where-Object { $_.Name -Like $installername }
+        
+        $installerPath = $installerObj.FullName
+        Write-Log -Level "INFO" -Message "Installer found at $($installerPath)"
     }
     
 
@@ -90,8 +91,6 @@ if ($install.IsPresent) {
         Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($installerPath) -ArgumentList `"$($installParams)`""
         Start-Process -NoNewWindow -FilePath $installerPath -ArgumentList "$($installParams)" -Wait    
     }
-
-    
 }
 
 if ($cleanup.IsPresent) {
