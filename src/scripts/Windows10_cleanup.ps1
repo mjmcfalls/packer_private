@@ -99,8 +99,10 @@ Write-Log -Level "INFO" -Message "Disabling Windows tips"
 New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent' -Name 'DisableSoftLanding' -PropertyType DWORD -Value '1' | Out-Null 
 
 # Disable Windows Feeds
-Write-Log -Level "INFO" -Message "Disabling Windows Feeds"
+Write-Log -Level "INFO" -Message "Creating HKLM:\SOFTWARE\Policies\Microsoft\Windows -Name Windows Feeds"
 New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows" -Name "Windows Feeds" -Force
+
+Write-Log -Level "INFO" -Message "Disabling Windows Feeds"
 New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" -Name "EnableFeeds" -PropertyType DWORD -Value "0" | Out-Null 
 
 New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion" -Name "Feeds" -Force
