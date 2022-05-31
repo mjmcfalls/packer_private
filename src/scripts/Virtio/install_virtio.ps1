@@ -5,8 +5,8 @@ Param (
     [switch]$install,
     [string]$installParams = "/qn ADDLOCAL=ALL",
     [switch]$public,
-    [string]$appuri = "/apps/Virtio/",
-    [string]$isoname = "virtio.iso",
+    [string]$appuri = "/apps/VirtIO/",
+    [string]$isoname = "virtio-win-0.1.217.iso",
     [string]$installername = "virtio-win-gt-x64.msi",
     [switch]$cleanup
 )
@@ -59,7 +59,7 @@ if ($public.IsPresent) {
 }
 else { 
     Write-Log -Level "INFO" -Message "Getting $($uri)$($appuri)$($installername)"
-    Invoke-WebRequest -Uri "$($uri)$($appuri)$($installername)" -OutFile $isoPath -UseBasicParsing
+    Invoke-WebRequest -Uri "$($uri)$($appuri)$($isoname)" -OutFile $isoPath -UseBasicParsing
 }
 
 if ($install.IsPresent) {
@@ -84,12 +84,12 @@ if ($install.IsPresent) {
     if ($installerExtension -like ".msi") {
         Write-Log -Level "INFO" -Message "MSI Install of $($installerPath)"
         Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($installerPath) $($installParams)`""
-        Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($installerPath) $($installParams)" -Wait
+        Start-Process -NoNewWindow -Passthru -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($installerPath) $($installParams)" -Wait
     }
     elseif ($installerExtension -like ".exe") {
         Write-Log -Level "INFO" -Message "EXE Install of $($installername)"
         Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($installerPath) -ArgumentList `"$($installParams)`""
-        Start-Process -NoNewWindow -FilePath $installerPath -ArgumentList "$($installParams)" -Wait    
+        Start-Process -NoNewWindow -Passthru -FilePath $installerPath -ArgumentList "$($installParams)" -Wait    
     }
 }
 
