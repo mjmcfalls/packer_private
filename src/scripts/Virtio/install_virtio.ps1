@@ -65,7 +65,8 @@ else {
 if ($install.IsPresent) {
     Write-Log -Level "INFO" -Message "Mounting ISO - $($isoPath)"
     $isoMountPoint = Mount-DiskImage -ImagePath $isoPath -PassThru
-    $isoDriveLetter = ($isoDriveLetter | Get-Volume).DriveLetter
+
+    $isoDriveLetter = ($isoMountPoint | Get-Volume).DriveLetter
     Write-Log -Level "INFO" -Message "ISO mounted at $($isoDriveLetter)"
 
     if (-Not $installerPath) {
