@@ -42,6 +42,7 @@ Function Write-Log {
     }
 }
 
+$schTasksResults = New-Object System.Collections.Generic.List[System.Object]
 
 # Set High Performance
 $highperfguid = ((((powercfg /list | Select-String "High Performance") -Split ":")[1]) -Split "\(")[0].trim()
@@ -152,8 +153,9 @@ if (Test-Path $ScheduledTasksListPath) {
         $EnabledScheduledTasks = Get-ScheduledTask | Where-Object { $_.State -ne "Disabled" }
 
         Foreach ($item in $SchTasksList) {
-            Write-Log -Level "INFO" -Message "Disabling scheduled task: $($item)"
-            $EnabledScheduledTasks | Where-Object { $_.TaskName -like "$($item.trim())" } | Disable-ScheduledTask
+            Write-Log -Level "INFO" -Message "$($item): Disabling scheduled task"
+            $schTaskResult = $EnabledScheduledTasks | Where-Object { $_.TaskName -like "$($item.trim())" } | Disable-ScheduledTask
+            $schTasksResults.add($schTaskResult)
         }
     }
 }
@@ -168,12 +170,12 @@ if (Test-Path $servicesToDisablePath) {
         Foreach ($service in $servicesToDisable) {
             $serviceExists = Get-Service -Name W32Time -ErrorAction SilentlyContinue
             if ($null -eq $serviceExists) {
-                Write-Log -Level "INFO" -Message  "Disabling service: $($service)"
+                Write-Log -Level "INFO" -Message  "$($service): Disabling service"
                 Stop-Service $service
                 Set-Service -Name $service -StartupType Disabled
             }
-            else{
-                Write-Log -Level "INFO" -Message "Service does not exist: $($service)"
+            else {
+                Write-Log -Level "INFO" -Message "$($service): Service does not exist"
             }
         }
     }
@@ -187,8 +189,16 @@ if (Test-Path $automaticTracingFilePath) {
     $AutomaticTracers = Get-Content $automaticTracingFilePath
     if ($AutomaticTracers.count -gt 0) {
         Foreach ($tracer in $AutomaticTracers) {
-            Write-Log -Level "INFO" -Message  "Disabling tracing: $($tracer)"
-            New-ItemProperty -Path "$($tracer)" -Name "Start" -PropertyType "DWORD" -Value "0" -Force
+            Write-Log -Level "INFO" -Message "$($tracer): Starting logic to disable"
+            Write-Log -Level "INFO" -Message  "$($tracer): Testing for existance of tracing"
+            if (Test-Path "$($tracer)") {
+                Write-Log -Level "INFO" -Message  "$($tracer): Disabling tracing"
+                New-ItemProperty -Path "$($tracer)" -Name "Start" -PropertyType "DWORD" -Value "0" -Force
+            }
+            else {
+                Write-Log -Level "INFO" -Message  "$($tracer): Does not exist"
+            }
+            
         }
     }
 }
@@ -198,7 +208,7 @@ else {
 
 # Disable Windows Features
 foreach ($feature in $winFeaturesToDisable) {
-    Write-Log -Level "INFO" -Message "Removing $($feature)"
+    Write-Log -Level "INFO" -Message "Feature $($feature): Removing"
     Disable-WindowsOptionalFeature -Online -FeatureName $feature
 }
 
@@ -235,7 +245,7 @@ Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Services\LanmanWorkstatio
 Write-Log -Level "INFO" -Message "Set FileNotFoundCacheEntriesMax to $($FileNotFoundCacheEntriesMax)"
 Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Services\LanmanWorkstation\Parameters" FileNotFoundCacheEntriesMax -Value $FileNotFoundCacheEntriesMax -Force
 
-Write-Log -Level "INFO" -Message "Set DormantFileLimit to $($DormantFileLimit )"
+Write-Log -Level "INFO" -Message "Set DormantFileLimit to $($DormantFileLimit)"
 Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Services\LanmanWorkstation\Parameters" DormantFileLimit -Value $DormantFileLimit -Force
 
 # Disk cleanup will occur post application installs
