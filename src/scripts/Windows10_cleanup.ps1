@@ -119,7 +119,7 @@ New-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Edge" -Name HideFirstR
 
 Write-Log -Level "INFO" -Message "Disabling OOBE Experience for Current User"
 New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion" -Name "UserProfileEngagement" -Force
-New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\UserProfileEngagement" -Name "ScoobeSystemSettingEnabled" -PropertyType REG_DWORD -Value "0" -Force | Out-Null
+New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\UserProfileEngagement" -Name "ScoobeSystemSettingEnabled" -PropertyType DWORD -Value "0" -Force | Out-Null
 
 Write-Log -Level "INFO" -Message "Disabling First Run Animations"
 New-ItemProperty -Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "EnableFirstLogonAnimation" -Value "0" -Force | Out-Null 
@@ -164,9 +164,15 @@ if (Test-Path $servicesToDisablePath) {
     $servicesToDisable = Get-Content $servicesToDisablePath
     if ($servicesToDisable.count -gt 0) {
         Foreach ($service in $servicesToDisable) {
-            Write-Log -Level "INFO" -Message  "Disabling service: $($service)"
-            Stop-Service $service
-            Set-Service -Name $service -StartupType Disabled
+            $serviceExists = Get-Service -Name W32Time -ErrorAction SilentlyContinue
+            if ($null -eq $serviceExists) {
+                Write-Log -Level "INFO" -Message  "Disabling service: $($service)"
+                Stop-Service $service
+                Set-Service -Name $service -StartupType Disabled
+            }
+            else{
+                Write-Log -Level "INFO" -Message "Service does not exist: $($service)"
+            }
         }
     }
 }
