@@ -181,6 +181,7 @@ variable "restart_timeout" {
 
 variable "virtio_uri" {
   type    = string
+  default = "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso"
 }
 
 variable "virtio_isoname" {

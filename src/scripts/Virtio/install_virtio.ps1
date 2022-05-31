@@ -58,7 +58,7 @@ if ($public.IsPresent) {
     Invoke-WebRequest -Uri "$($uri)" -OutFile $isoPath -UseBasicParsing
 }
 else { 
-    Write-Log -Level "INFO" -Message "Getting $($uri)$($appuri)$($installername)"
+    Write-Log -Level "INFO" -Message "Getting $($uri)$($appuri)$($isoname)"
     Invoke-WebRequest -Uri "$($uri)$($appuri)$($isoname)" -OutFile $isoPath -UseBasicParsing
 }
 
