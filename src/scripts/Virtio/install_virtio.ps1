@@ -99,3 +99,5 @@ if ($cleanup.IsPresent) {
         (Join-Path -Path $outpath -ChildPath $installername).Delete()
     }
 }
+
+Dismount-DiskImage -ImagePath $isoPath
