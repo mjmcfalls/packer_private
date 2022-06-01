@@ -9,7 +9,7 @@ Param (
     [switch]$public,
     [string]$appuri = "/apps/SysInternals/",
     [string]$installername = "Bginfo.exe",
-    [string]$configFile = "HomeLab_202205250940.bgi",
+    [string]$configFile = "bginfo.bgi",
     [switch]$cleanup
 )
 
