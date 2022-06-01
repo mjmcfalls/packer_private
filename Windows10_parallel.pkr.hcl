@@ -359,14 +359,14 @@ build {
       ]
   }
 
-  # provisioner "windows-update" {
-  # }
+  provisioner "windows-update" {
+  }
 
-  # provisioner "powershell" {
-  #   inline = [
-  #     "a:\\Windows_optimize.ps1 -outpath '${var.win_temp_dir}'"
-  #     ]
-  # }
+  provisioner "powershell" {
+    inline = [
+      "a:\\Windows_optimize.ps1 -outpath '${var.win_temp_dir}'"
+      ]
+  }
 
 }
 
@@ -411,13 +411,13 @@ build {
     ]
   }
 
-  # provisioner "windows-update" {
-  # }
+  provisioner "windows-update" {
+  }
 
-  # provisioner "powershell"{
-  #   inline = [
-  #     "a:\\Windows_optimize.ps1 -outpath '${var.win_temp_dir}'"
-  #   ]
-  # }
+  provisioner "powershell"{
+    inline = [
+      "a:\\Windows_optimize.ps1 -outpath '${var.win_temp_dir}'"
+    ]
+  }
 
 }
