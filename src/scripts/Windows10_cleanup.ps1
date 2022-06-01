@@ -96,6 +96,10 @@ Write-Log -Level "INFO" -Message "Disabling Consumer Features (Internet App Down
 New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows' -Name 'CloudContent' | Out-Null
 New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent' -Name 'DisableWindowsConsumerFeatures' -PropertyType DWORD -Value '1' | Out-Null 
 
+Write-Log -Level "INFO" -Message "Disabling Windows Store Updates"
+New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsStore\WindowsUpdate" | Out-Null
+New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsStore\WindowsUpdate" -Name "AutoDownload" -PropertyType DWORD -Value "2"
+
 Write-Log -Level "INFO" -Message "Disabling Windows tips"
 New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent' -Name 'DisableSoftLanding' -PropertyType DWORD -Value '1' | Out-Null 
 
