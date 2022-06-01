@@ -232,7 +232,7 @@ Disable-ComputerRestore -Drive "C:\"
 
 # Disable Hibernate
 Write-Log -logfile $logfile -Level "INFO" -Message "Disable Hibernate"
-POWERCFG -h off
+powercfg /hibernate off
 
 # Disable Crash Dumps
 Write-Log -logfile $logfile -Level "INFO" -Message "Disable System crash dumps"
