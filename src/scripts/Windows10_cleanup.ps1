@@ -43,6 +43,7 @@ Function Write-Log {
 }
 
 $schTasksResults = New-Object System.Collections.Generic.List[System.Object]
+$regKeyResults = New-Object System.Collections.Generic.List[System.Object]
 
 # Set High Performance
 $highperfguid = ((((powercfg /list | Select-String "High Performance") -Split ":")[1]) -Split "\(")[0].trim()
@@ -137,7 +138,14 @@ if (Test-Path $defaultsUserSettingsPath) {
 
     if ($defaultUserSettings.count -gt 0) {
         Foreach ($item in $defaultUserSettings) {
-            Start-Process C:\Windows\System32\Reg.exe -ArgumentList "$($item)" -Wait
+            $regResults = Start-Process C:\Windows\System32\Reg.exe -ArgumentList "$($item)" -Wait -PassThru
+            
+            $psobj = [PSCustomObject]@{
+                Name    = $item
+                Results = $regResults
+            }
+
+            $regKeyResults.Add($psobj)
         }
     }
 
