@@ -3,10 +3,10 @@ Param (
     [string]$uri,
     [string]$outpath = $env:temp,
     [switch]$install,
-    [string]$installParams = "/S",
+    [string]$installParams = "-s",
     [switch]$public,
-    [string]$appuri = "/apps/7zip/",
-    [string]$installername = "7z2107-x64.exe",
+    [string]$appuri = "/apps/atom/",
+    [string]$installername = "AtomSetup-x64.exe",
     [switch]$cleanup
 )
 
@@ -53,7 +53,7 @@ $ProgressPreference = 'SilentlyContinue'
 New-TempFolder -Path $outpath
 
 if ($public.IsPresent) {
-    Write-Log -Level "INFO" -Message "install from Web"
+    Write-Log -Level "INFO" -Message "Install from Web"
     Invoke-WebRequest -Uri "$($uri)" -OutFile (Join-Path -Path $outpath -ChildPath $installername)  -UseBasicParsing
 }
 else {
@@ -77,7 +77,7 @@ if ($install.IsPresent) {
     elseif ($installerExtension -like ".exe") {
         Write-Log -Level "INFO" -Message "EXE Install of $($installername)"
         Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($installerPath) -ArgumentList `"$($installParams)`""
-        Start-Process -NoNewWindow -FilePath $installerPath -ArgumentList "$($installParams)" -Wait -PassThru    
+        Start-Process -NoNewWindow -FilePath $installerPath -ArgumentList "$($installParams)" -Wait    
     }
 }
 
