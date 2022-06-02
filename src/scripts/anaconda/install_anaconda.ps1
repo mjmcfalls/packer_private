@@ -72,7 +72,7 @@ if ($install.IsPresent) {
 if ($navigatorUpdate.IsPresent) {
     # Update Anaconda Navigator
     Write-Log -Level "INFO" -Message "Updating Anaconda Navigator"
-    $navigatorUpdateResults = Start-Process -NoNewWindow -PassThru -Wait "conda" -ArgumentList "update anaconda-navigator -y"
+    $navigatorUpdateResults = Start-Process -NoNewWindow -PassThru -Wait "C:\ProgramData\Anaconda3\Scripts\conda.exe" -ArgumentList "update anaconda-navigator -y"
 }
 
 if ($cleanup.IsPresent) {
