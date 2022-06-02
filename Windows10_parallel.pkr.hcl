@@ -120,6 +120,10 @@ variable "nix_choco_output_directory" {
   type    = string
 }
 
+variable "npp_uri" {
+  type    = string
+}
+
 variable "python_uri" {
   type    = string
   default = "${env("python_uri")}"
@@ -339,7 +343,7 @@ build {
     # "a:\\Install_windowsupdates.ps1"
     ]
   }
-  
+
   provisioner "windows-restart" {}
 
   provisioner "powershell" {

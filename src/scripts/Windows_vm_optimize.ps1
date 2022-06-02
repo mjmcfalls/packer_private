@@ -165,6 +165,10 @@ Clear-RecycleBin -Force -ErrorAction SilentlyContinue
 Write-Log -logfile $logfile -Level "INFO" -Message "Clearing BC Cache"
 Clear-BCCache -Force -ErrorAction SilentlyContinue
 
+# Defragment disk
+Write-Log -LogFile $logfile -Level "INFO" -Message "Defragment C:"
+Optimize-Volume -DriveLetter C -Defrag -Verbose
+
 # Clean free space
 Write-Log -logfile $logfile -Level "INFO" -Message "Starting sdelete to zero disk space"
 Start-Sdelete -sdelete_params "-nobanner -z /accepteula C:"
