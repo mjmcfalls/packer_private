@@ -8,7 +8,8 @@ Param (
     [switch]$public,
     [string]$appuri = "/apps/anaconda/",
     [string]$installername,
-    [switch]$cleanup
+    [switch]$cleanup,
+    [switch]$navigatorUpdate
 )
 
 function New-TempFolder {
@@ -68,6 +69,12 @@ if ($install.IsPresent) {
     Start-Process -NoNewWindow -FilePath $(Join-Path -Path $outpath -ChildPath $installername) -ArgumentList "$($installParams)" -Wait
 }
 
+if ($navigatorUpdate.IsPresent) {
+    # Update Anaconda Navigator
+    Write-Log -Level "INFO" -Message "Updating Anaconda Navigator"
+    $navigatorUpdateResults = Start-Process -NoNewWindow -PassThru -Wait "conda" -ArgumentList "update anaconda-navigator -y"
+}
+
 if ($cleanup.IsPresent) {
     Write-Log -Level "INFO" -Message "Cleaning up installer"
     if (Test-Path (Join-Path -Path $outpath -ChildPath $installername)) {
@@ -78,3 +85,4 @@ if ($cleanup.IsPresent) {
         Write-Log -Level "INFO" -Message "Cannot find $(Join-Path -Path $outpath -ChildPath $installername)"
     }
 }
+
