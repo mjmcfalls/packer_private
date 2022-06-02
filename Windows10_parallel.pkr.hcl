@@ -336,6 +336,7 @@ build {
     direction   =  "upload"
   }
 
+# Drivers and other potential preqs
   provisioner "powershell" {
     inline = [
       "${var.win_temp_dir}\\scripts\\Virtio\\install_Virtio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -isoname '${var.virtio_isoname}' -install",
@@ -346,6 +347,7 @@ build {
 
   provisioner "windows-restart" {}
 
+# Application installations
   provisioner "powershell" {
     inline = [
       "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -install",
@@ -362,20 +364,23 @@ build {
       "${var.win_temp_dir}\\scripts\\atom\\install_atom.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}'  -install",
       "${var.win_temp_dir}\\scripts\\notepadplusplus\\install_notepadplusplus.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}'  -install",
       "${var.win_temp_dir}\\scripts\\winmerge\\install_winmerge.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -install",
+      "${var.win_temp_dir}\\scripts\\texstudio\\install_texstudio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -install",
       "${var.win_temp_dir}\\scripts\\Microsoft\\install_adk.ps1 -uri '${var.ms_adk_uri}' -OutPath '${var.win_temp_dir}' -installername '${var.ms_adk_installer}' -public -install",
       # "${var.win_temp_dir}\\scripts\\CiscoAnyconnect\\install_anyconnect.ps1 -Cleanup -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.anyconnect_installer}' -install",
-      "${var.win_temp_dir}\\scripts\\Windows_os_optimize.ps1"
+      
       ]
   }
 
   # provisioner "windows-update" {
   # }
 
-  provisioner "powershell" {
-    inline = [
-      "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
-      ]
-  }
+  # OS and VM Optimization
+  # provisioner "powershell" {
+  #   inline = [
+  #     "${var.win_temp_dir}\\scripts\\Windows_os_optimize.ps1",
+  #     "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
+  #     ]
+  # }
 
 }
 
@@ -415,8 +420,7 @@ build {
     inline = [
       "a:/install_choc_app.ps1 -packagesPath 'a:\\packages.config'",
       # "${var.win_temp_dir}\\scripts\\CiscoAnyconnect\\install_anyconnect.ps1 -Cleanup -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.anyconnect_installer}' -install",
-      "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -install",
-      "${var.win_temp_dir}\\scripts\\Windows_os_optimize.ps1"
+      "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -install"
     ]
   }
 
@@ -425,6 +429,7 @@ build {
 
   provisioner "powershell"{
     inline = [
+      "${var.win_temp_dir}\\scripts\\Windows_os_optimize.ps1",
       "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
     ]
   }
