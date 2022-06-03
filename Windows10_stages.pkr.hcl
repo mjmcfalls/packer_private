@@ -267,7 +267,7 @@ source "qemu" "Windows10_iso" {
   cpus             = "${var.cpu_num}"
   disk_size        = "${var.disk_size}"
   disk_interface   = "virtio"
-  floppy_files     = ["${var.autounattend}"
+  floppy_files     = ["${var.autounattend}"]
   format           = "qcow2"
   headless         = "${var.headless}"
   http_directory   = "${var.http_directory}"
