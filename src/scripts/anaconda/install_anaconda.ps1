@@ -55,15 +55,14 @@ $ProgressPreference = 'SilentlyContinue'
 Write-Log -Level "INFO" -Message "Fetch $($installername) from $($uri)"
 New-TempFolder -Path $outpath
 
-if ($public.IsPresent) {
-    Write-Log -Level "INFO" -Message "Anaconda - TO:Do fetch from source"
-}
-else {
-    Write-Log -Level "INFO" -Message "Getting $($uri)$($appuri)$($installername)"
-    Invoke-WebRequest -Uri "$($uri)$($appuri)$($installername)" -OutFile (Join-Path -Path $outpath -ChildPath $installername) -UseBasicParsing
-}
-
 if ($install.IsPresent) {
+    if ($public.IsPresent) {
+        Write-Log -Level "INFO" -Message "Anaconda - TO:Do fetch from source"
+    }
+    else {
+        Write-Log -Level "INFO" -Message "Getting $($uri)$($appuri)$($installername)"
+        Invoke-WebRequest -Uri "$($uri)$($appuri)$($installername)" -OutFile (Join-Path -Path $outpath -ChildPath $installername) -UseBasicParsing
+    }
     Write-Log -Level "INFO" -Message "Installing of $($installername)"
     Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $(Join-Path -Path $outpath -ChildPath $installername) -ArgumentList `"$($installParams)`""
     Start-Process -NoNewWindow -FilePath $(Join-Path -Path $outpath -ChildPath $installername) -ArgumentList "$($installParams)" -Wait
@@ -72,8 +71,8 @@ if ($install.IsPresent) {
 if ($navigatorUpdate.IsPresent) {
     # Update Anaconda Navigator
     Write-Log -Level "INFO" -Message "Updating Anaconda Navigator"
-    Write-Log -Level "INFO" -Message "Running: Start-Process -NoNewWindow -PassThru -Wait -FilePath `"C:\ProgramData\Anaconda3\Scripts\conda.exe`" -ArgumentList `"update anaconda-navigator -y`""
-    $navigatorUpdateResults = Start-Process -NoNewWindow -PassThru -Wait -FilePath "C:\ProgramData\Anaconda3\Scripts\conda.exe" -ArgumentList "update anaconda-navigator -y"
+    Write-Log -Level "INFO" -Message "Running: Start-Process -NoNewWindow -PassThru -Wait -FilePath `"C:\ProgramData\Anaconda3\Library\bin\conda.exe`" -ArgumentList `"update anaconda-navigator -y`""
+    $navigatorUpdateResults = Start-Process -NoNewWindow -PassThru -Wait -FilePath "C:\ProgramData\Anaconda3\Library\bin\conda.exe" -ArgumentList "update anaconda-navigator -y"
 }
 
 if ($cleanup.IsPresent) {
