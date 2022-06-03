@@ -341,13 +341,13 @@ source "qemu" "Windows10_choco" {
 
 build {
   name = "build_win_iso"
-  sources = ["source.qemu.Windows_10_iso"]
+  sources = ["source.qemu.Windows10_iso"]
 }
 
 
 build { 
   name = "build_win_base"
-  sources = ["source.qemu.Windows_10_base"]
+  sources = ["source.qemu.Windows10_base"]
 
   provisioner "powershell" {
     inline = ["a:/Config_Winrm.ps1"]
