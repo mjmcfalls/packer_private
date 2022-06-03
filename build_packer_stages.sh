@@ -13,7 +13,11 @@ echo $PACKER_LOG_PATH
 echo $vm_name
 
 cd $packer_path
-# Build Base OS
+
 # packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_parallel.pkr.hcl
-packer build -timestamp-ui -only 'qemu.Windows10_iso' -var "nix_output_directory=$output_path" -var "vm_name=$vm_name" -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages.pkr.hcl
+# Build OS with no changes
+packer build -timestamp-ui -only 'win_iso.qemu.Windows10_iso' -var "keep_registered=true" -var "nix_output_directory=$output_path" -var "vm_name=$vm_name" -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages.pkr.hcl
+
+# Build Base OS
+packer build -timestamp-ui -only 'win_iso.qemu.Windows10_base' -var "keep_registered=true" -var "nix_output_directory=$output_path" -var "vm_name=$vm_name" -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages.pkr.hcl
 

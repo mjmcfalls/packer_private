@@ -270,7 +270,6 @@ source "qemu" "Windows10_iso" {
   floppy_files     = ["${var.autounattend}"]
   format           = "qcow2"
   headless         = "${var.headless}"
-  http_directory   = "${var.http_directory}"
   iso_checksum     = "${var.iso_checksum}"
   iso_url          = "${var.iso_url}"
   memory           = "${var.memory}"
@@ -340,29 +339,19 @@ source "qemu" "Windows10_choco" {
 
 
 build {
-  name = "build_win_iso"
+  name = "win_iso"
   sources = ["source.qemu.Windows10_iso"]
 }
 
 
 build { 
-  name = "build_win_base"
+  name = "win_base"
   sources = ["source.qemu.Windows10_base"]
 
   provisioner "powershell" {
-    inline = ["a:/Config_Winrm.ps1"]
-  }
-
-  provisioner "file" {
-    source      = "./src/scripts/"
-    destination = "${var.win_temp_dir}/scripts/"
-    direction   =  "upload"
-  }
-
-# Drivers and other potential preqs
-  provisioner "powershell" {
     inline = [
-      "${var.win_temp_dir}\\scripts\\Virtio\\install_Virtio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -isoname '${var.virtio_isoname}' -install",
+      "a:/Config_Winrm.ps1",
+      "a:\\Virtio\\install_Virtio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -isoname '${var.virtio_isoname}' -install",
       "a:\\Install_pswindowsupdate.ps1",
       "a:\\Windows_os_optimize.ps1"
     ]
