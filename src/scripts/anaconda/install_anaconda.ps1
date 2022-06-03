@@ -72,7 +72,7 @@ if ($navigatorUpdate.IsPresent) {
     # Update Anaconda Navigator
     Write-Log -Level "INFO" -Message "Updating Anaconda Navigator"
     Write-Log -Level "INFO" -Message "Running: Start-Process -NoNewWindow -PassThru -Wait -FilePath `"C:\ProgramData\Anaconda3\Library\bin\conda.exe`" -ArgumentList `"update anaconda-navigator -y`""
-    $navigatorUpdateResults = Start-Process -NoNewWindow -PassThru -Wait -FilePath "C:\ProgramData\Anaconda3\Library\bin\conda.exe" -ArgumentList "update anaconda-navigator -y"
+    $navigatorUpdateResults = Start-Process -NoNewWindow -PassThru -Wait -FilePath "C:\ProgramData\Anaconda3\Library\bin\conda.bat" -ArgumentList "update anaconda-navigator -y"
 }
 
 if ($cleanup.IsPresent) {
