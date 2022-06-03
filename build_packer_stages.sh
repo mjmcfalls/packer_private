@@ -18,6 +18,8 @@ cd $packer_path
 # Build OS with no changes
 packer build -timestamp-ui -only 'win_iso.qemu.Windows10_iso' -var "keep_registered=true" -var "nix_output_directory=$output_path" -var "vm_name=$vm_name" -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages.pkr.hcl
 
+# Check if VM register if so, poweron, else register and poweron
+
 # Build Base OS
-packer build -timestamp-ui -only 'win_iso.qemu.Windows10_base' -var "keep_registered=true" -var "nix_output_directory=$output_path" -var "vm_name=$vm_name" -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages.pkr.hcl
+# packer build -timestamp-ui -only 'win_iso.qemu.Windows10_base' -var "keep_registered=true" -var "nix_output_directory=$output_path" -var "vm_name=$vm_name" -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages.pkr.hcl
 
