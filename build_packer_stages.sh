@@ -31,6 +31,6 @@ else
 fi
 # set +x
 # Build Base OS
-Echo "Starting win_iso.qemu.Windows10_base"
-packer build -timestamp-ui -only 'win_iso.qemu.Windows10_base' -var "keep_registered=true" -var "nix_output_directory=$output_path" -var "vm_name=$vm_name" -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages.pkr.hcl
+Echo "Starting win_base.qemu.Windows10_base"
+packer build -timestamp-ui -only 'win_base.qemu.Windows10_base' -var "keep_registered=true" -var "nix_output_directory=$output_path" -var "vm_name=$vm_name" -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages.pkr.hcl
 
