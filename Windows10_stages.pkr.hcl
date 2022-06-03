@@ -341,6 +341,12 @@ source "qemu" "Windows10_choco" {
 build {
   name = "win_iso"
   sources = ["source.qemu.Windows10_iso"]
+
+  provisioner "powershell" {
+    inline = [
+      "a:/Config_Winrm.ps1",
+    ]
+  }
 }
 
 
@@ -377,6 +383,7 @@ build {
       "a:\\Windows_os_optimize.ps1"
     ]
   }
+}
 
 build { 
   name = "win_base_apps1"
@@ -412,6 +419,4 @@ build {
       "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
       ]
   }
-}
-
 }
