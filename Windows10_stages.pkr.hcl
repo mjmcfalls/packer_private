@@ -363,8 +363,8 @@ build {
   provisioner "powershell" {
     inline = [
       "${var.win_temp_dir}\\scripts\\Virtio\\install_Virtio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -isoname '${var.virtio_isoname}' -install",
-      "a:\\Install_pswindowsupdate.ps1"
-      "a:\\Windows_os_optimize.ps1",
+      "a:\\Install_pswindowsupdate.ps1",
+      "a:\\Windows_os_optimize.ps1"
     ]
   }
 }
