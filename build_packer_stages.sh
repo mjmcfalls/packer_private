@@ -26,10 +26,10 @@ vmstate=$(virsh list --all | grep " $vm_name " | awk '{ print $3}')
 
 if [ "$vmstate" == "x" ] || [ "$vmstate" != "running" ]
 then
-    echo "VM is shut down"
-    virsh start $vm_name
+    echo "$vm_name is shut down"
+    virsh start "$vm_name"
 else
-    echo "VM is running!"
+    echo "$vm_name is running!"
 fi
 # set +x
 # Build Base OS
