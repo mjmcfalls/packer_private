@@ -34,7 +34,7 @@ fi
 # set +x
 
 # Get SHA256 hash of VM
-base_sha=("sha256 $bare_output_path/$vm_name" | cut -d " " -f 1)
+base_sha=(sha256 "$bare_output_path/$vm_name" | cut -d " " -f 1)
 # Build Base OS
 echo "Starting win_base.qemu.Windows10_base - $base_output_path"
 echo "iso_checksum=sha256:$base_sha"
