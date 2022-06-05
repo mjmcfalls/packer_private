@@ -292,7 +292,9 @@ source "qemu" "Windows10_base" {
   cpus             = "${var.cpu_num}"
   disk_size        = "${var.disk_size}"
   disk_interface   = "virtio"
-  disk_image       = "true" 
+  disk_image       = true
+  iso_checksum     = "${var.iso_checksum}"
+  iso_url          = "${var.iso_url}"
   floppy_files     = ["./src/scripts/"]
   format           = "qcow2"
   headless         = "${var.headless}"

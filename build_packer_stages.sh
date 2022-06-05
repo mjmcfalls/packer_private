@@ -27,12 +27,18 @@ vmstate=$(virsh list --all | grep " $vm_name " | awk '{ print $3}')
 if [ "$vmstate" == "x" ] || [ "$vmstate" != "running" ]
 then
     echo "$vm_name is shut down"
-    virsh start "$vm_name"
+    # virsh start $vm_name
 else
     echo "$vm_name is running!"
 fi
 # set +x
+
+# Get SHA256 hash of VM
+base_sha=("sha256 $bare_output_path/$vm_name" | cut -d " " -f 1)
 # Build Base OS
 echo "Starting win_base.qemu.Windows10_base - $base_output_path"
-packer build -timestamp-ui -only 'win_base.qemu.Windows10_base' -var "keep_registered=true" -var "iso_url=$bare_output_path/$vm_name" -var "nix_output_directory=$base_output_path" -var "vm_name=$vm_name" -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages.pkr.hcl
+echo "iso_checksum=sha256:$base_sha"
+echo "iso_url=$bare_output_path/$vm_name"
+
+packer build -timestamp-ui -only 'win_base.qemu.Windows10_base' -var "keep_registered=true" -var "iso_checksum=sha256:$base_sha" -var iso_url=$bare_output_path/$vm_name -var "nix_output_directory=$base_output_path" -var "vm_name=$vm_name" -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages.pkr.hcl
 
