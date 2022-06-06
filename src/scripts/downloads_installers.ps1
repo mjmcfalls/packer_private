@@ -48,4 +48,22 @@ Write-Log -Level "INFO" -Message "Wget path: $($wgetPath)"
 Write-Log -Level "INFO" -Message "URI: $($uri)"
 Write-Log -Level "INFO" -Message "Output Directory: $($outpath)"
 
+$serverAddress = ($uri -Split ":")[1].trim("/")
+
+
+Write-Log -Level "INFO" -Message "ServerAddress: $($serverAddress)"
+
 Start-Process -NoNewWindow -PassThru -Wait -FilePath $wgetPath -ArgumentList "-r --no-parent --no-clobber $($uri) -P $($outpath)"
+
+Write-Log -Level "INFO" -Message "Move downloads out of subfolder"
+$dirExists = Get-ChildItem -Directory -Path $outpath | Where-Object { $_.Name -Like "$($serverAddress)*" }
+
+if ($dirExists) {
+    $topLevelDirs = Get-ChildItem -Path $dirExists.FullName 
+    
+    foreach ($dir in $topLevelDirs) {
+        Move-Item -Path $dir.FullName -Destination $outpath -Force
+    }
+
+    Remove-Item -Path $dirExists.FullName -Force
+}
