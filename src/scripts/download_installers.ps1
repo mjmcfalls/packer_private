@@ -65,5 +65,5 @@ if ($dirExists) {
         Move-Item -Path $dir.FullName -Destination $outpath -Force
     }
 
-    Remove-Item -Path $dirExists.FullName -Force
+    Remove-Item -Path $dirExists.FullName -Force -Recurse
 }
