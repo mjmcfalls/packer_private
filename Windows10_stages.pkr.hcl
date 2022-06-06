@@ -378,14 +378,15 @@ build {
   name = "win_base"
   sources = ["source.qemu.Windows10_base"]
 
-  provisioner "file" {
-    source      = "./src/scripts/"
-    destination = "${var.win_temp_dir}/scripts/"
-    direction   =  "upload"
-  }
+  # provisioner "file" {
+  #   source      = "./src/scripts/"
+  #   destination = "${var.win_temp_dir}/scripts/"
+  #   direction   =  "upload"
+  # }
 
   provisioner "powershell" {
     inline = [
+      "a:/download_installers.ps1"
       "a:/Config_Winrm.ps1",
       "a:\\Virtio\\install_Virtio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -isoname '${var.virtio_isoname}' -install",
       "a:\\Install_pswindowsupdate.ps1",
