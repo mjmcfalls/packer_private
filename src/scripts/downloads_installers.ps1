@@ -2,7 +2,8 @@
 
 Param (
     [string]$uri,
-    [string]$outpath = $env:temp
+    [string]$outpath = $env:temp,
+    [string]$wgetPath = "a:\wget.exe"
 )
 
 function New-TempFolder {
@@ -43,14 +44,8 @@ Function Write-Log {
     }
 }
 
-# enable TLS 1.2 and TLS 1.1 protocols
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12, [Net.SecurityProtocolType]::Tls11
+Write-Log -Level "INFO" -Message "Wget path: $($wgetPath)"
+Write-Log -Level "INFO" -Message "URI: $($uri)"
+Write-Log -Level "INFO" -Message "Output Directory: $($outpath)"
 
-$WebResponse = Invoke-WebRequest -Uri $uri
-# get the list of links, skip the first one ("../") and download the files
-$WebResponse.Links | Select-Object -ExpandProperty href -Skip 1 | ForEach-Object {
-    $filePath = Join-Path -Path $outpath -ChildPath $_
-    $fileUrl  = '{0}/{1}' -f $uri.TrimEnd('/'), $_
-    Write-Log -Level "INFO" -Message "Downloading file: $fileUrl to "
-    # Invoke-WebRequest -Uri $fileUrl -OutFile $filePath
-}
+Start-Process -NoNewWindow -PassThru -Wait -FilePath $wgetPath -ArgumentList "-r --no-parent --no-clobber $($uri) -P $($outpath)"
