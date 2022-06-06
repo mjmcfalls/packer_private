@@ -41,7 +41,7 @@ echo "Starting win_base.qemu.Windows10_base - $base_output_path"
 echo "iso_checksum=sha256:$base_sha"
 echo "iso_url=$bare_output_path/$vm_name"
 
-packer build -timestamp-ui -only 'win_base.qemu.Windows10_base' -var "keep_registered=false" -var "iso_checksum=sha256:$bare_sha" -var iso_url=$bare_output_path/$vm_name" -var "nix_output_directory=$base_output_path" -var "vm_name=$vm_name" -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages.pkr.hcl
+packer build -timestamp-ui -only 'win_base.qemu.Windows10_base' -var "keep_registered=false" -var "iso_checksum=sha256:$bare_sha" -var iso_url=$bare_output_path/$vm_name -var "nix_output_directory=$base_output_path" -var "vm_name=$vm_name" -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages.pkr.hcl
 
 
 base_sha=$(sha256sum "$base_output_path/$vm_name" | cut -d " " -f 1)
