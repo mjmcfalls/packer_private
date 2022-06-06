@@ -391,12 +391,11 @@ build {
   provisioner "powershell" {
     inline = [
       "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.win_temp_dir}\\wget\\wget.exe'",
-      # "a:/Config_Winrm.ps1",
       "a:\\psappdeploy\\Virtio\\install_Virtio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -isoname '${var.virtio_isoname}' -install",
       "a:\\Install_pswindowsupdate.ps1",
       # "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -install",
-      "${var.win_temp_dir}\\psappdeploy\\7zip\\Deploy-Application.ps1 -DeploymentType 'Install' -DeployMode 'NonInteractive'"
-      "${var.win_temp_dir}\\psappdeploy\\SysInternals\\Deploy-Application.ps1 -DeploymentType 'Install' -DeployMode 'NonInteractive'"
+      "${var.win_temp_dir}\\psappdeploy\\7zip\\Deploy-Application.ps1 -DeploymentType 'Install' -DeployMode 'NonInteractive'",
+      "${var.win_temp_dir}\\psappdeploy\\SysInternals\\Deploy-Application.ps1 -DeploymentType 'Install' -DeployMode 'NonInteractive'",
       # "${var.win_temp_dir}\\scripts\\7zip\\install_7zip.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.seven_zip_installer}' -install",
       # "${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install",
       # "${var.win_temp_dir}\\scripts\\Chrome\\install_Chrome.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.chrome_installer}' -install",
