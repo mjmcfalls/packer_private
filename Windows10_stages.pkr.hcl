@@ -392,8 +392,8 @@ build {
     inline = [
       "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.win_temp_dir}\\wget\\wget.exe'",
       # "a:\\psappdeploy\\Virtio\\install_Virtio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -isoname '${var.virtio_isoname}' -install",
-      "${var.win_temp_dir}\\psappdeploy\\Virtio\\Deploy-Application.ps1 -DeploymentType 'Install' -DeployMode 'NonInteractive'",
       "a:\\Install_pswindowsupdate.ps1",
+      "${var.win_temp_dir}\\psappdeploy\\VirtIO\\Deploy-Application.ps1 -DeploymentType 'Install' -DeployMode 'NonInteractive'",
       # "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -install",
       "${var.win_temp_dir}\\psappdeploy\\7zip\\Deploy-Application.ps1 -DeploymentType 'Install' -DeployMode 'NonInteractive'",
       "${var.win_temp_dir}\\psappdeploy\\SysInternals\\Deploy-Application.ps1 -DeploymentType 'Install' -DeployMode 'NonInteractive'",
