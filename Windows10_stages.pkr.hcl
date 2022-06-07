@@ -442,12 +442,6 @@ build {
   name = "win_base_optimize"
   sources = ["source.qemu.Windows10_base"]
 
-  provisioner "file" {
-    source      = "./src/scripts/"
-    destination = "${var.win_temp_dir}/scripts/"
-    direction   =  "upload"
-  }
-
   provisioner "powershell" {
     inline = [
       "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"

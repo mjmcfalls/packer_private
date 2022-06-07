@@ -51,3 +51,9 @@ echo "iso_checksum=sha256:$base_sha"
 echo "iso_url=$base_output_path/$vm_name"
 
 packer build -timestamp-ui -only 'win_base_apps1.qemu.Windows10_base' -var "keep_registered=false" -var "iso_checksum=sha256:$base_sha" -var iso_url=$base_output_path/$vm_name -var "nix_output_directory=$baseapp_output_path" -var "vm_name=$vm_name" -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages.pkr.hcl
+
+baseapp_sha=$(sha256sum "$baseapp_output_path/$vm_name" | cut -d " " -f 1)
+
+# Optimize VMs
+packer build -timestamp-ui -only 'win_base_optimize.qemu.Windows10_base' -var "keep_registered=false" -var "iso_checksum=sha256:$base_sha" -var iso_url=$base_output_path/$vm_name -var "nix_output_directory=$baseapp_output_path" -var "vm_name=$vm_name" -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages.pkr.hcl
+packer build -timestamp-ui -only 'win_base_optimize.qemu.Windows10_base' -var "keep_registered=false" -var "iso_checksum=sha256:$baseapp_sha" -var iso_url=$baseapp_output_path/$vm_name -var "nix_output_directory=$baseapp_output_path" -var "vm_name=$vm_name" -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages.pkr.hcl
