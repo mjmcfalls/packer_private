@@ -53,7 +53,7 @@ $serverAddress = ($uri -Split ":")[1].trim("/")
 
 Write-Log -Level "INFO" -Message "ServerAddress: $($serverAddress)"
 
-Start-Process -NoNewWindow -PassThru -Wait -FilePath $wgetPath -ArgumentList "-r --no-parent --no-clobber $($uri) -P $($outpath)"
+Start-Process -NoNewWindow -PassThru -Wait -FilePath $wgetPath -ArgumentList "-r --no-parent --no-verbose --no-clobber $($uri) -P $($outpath)"
 
 Write-Log -Level "INFO" -Message "Move downloads out of subfolder"
 $dirExists = Get-ChildItem -Directory -Path $outpath | Where-Object { $_.Name -Like "$($serverAddress)*" }
