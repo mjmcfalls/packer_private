@@ -6,7 +6,9 @@ vm_name=Windows10_$current_date
 bare_output_path=/home/libvirt/images/pool/Win10/Win10_bare_$current_date
 base_output_path=/home/libvirt/images/pool/Win10/Win10_base_$current_date
 base_opt_output_path=/home/libvirt/images/pool/Win10/Win10_base_opt_$current_date
+baseapp_output_path=/home/libvirt/images/pool/Win10/Win10_baseapp_$current_date
 baseapp_opt_output_path=/home/libvirt/images/pool/Win10/Win10_baseapp_opt_$current_date
+
 packer_path=/home/mmcfalls/dev/packer
 
 export PACKER_LOG="1"
