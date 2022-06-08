@@ -5,7 +5,8 @@ log_name=packer_build_$current_date.log
 vm_name=Windows10_$current_date
 bare_output_path=/home/libvirt/images/pool/Win10/Win10_bare_$current_date
 base_output_path=/home/libvirt/images/pool/Win10/Win10_base_$current_date
-baseapp_output_path=/home/libvirt/images/pool/Win10/Win10_baseapp_$current_date
+base_opt_output_path=/home/libvirt/images/pool/Win10/Win10_base_opt_$current_date
+baseapp_opt_output_path=/home/libvirt/images/pool/Win10/Win10_baseapp_opt_$current_date
 packer_path=/home/mmcfalls/dev/packer
 
 export PACKER_LOG="1"
@@ -55,5 +56,5 @@ packer build -timestamp-ui -only 'win_base_apps1.qemu.Windows10_base' -var "keep
 baseapp_sha=$(sha256sum "$baseapp_output_path/$vm_name" | cut -d " " -f 1)
 
 # Optimize VMs
-packer build -timestamp-ui -only 'win_base_optimize.qemu.Windows10_base' -var "keep_registered=false" -var "iso_checksum=sha256:$base_sha" -var iso_url=$base_output_path/$vm_name -var "nix_output_directory=$baseapp_output_path" -var "vm_name=$vm_name" -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages.pkr.hcl
-packer build -timestamp-ui -only 'win_base_optimize.qemu.Windows10_base' -var "keep_registered=false" -var "iso_checksum=sha256:$baseapp_sha" -var iso_url=$baseapp_output_path/$vm_name -var "nix_output_directory=$baseapp_output_path" -var "vm_name=$vm_name" -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages.pkr.hcl
+packer build -timestamp-ui -only 'win_base_optimize.qemu.Windows10_base' -var "keep_registered=false" -var "iso_checksum=sha256:$base_sha" -var iso_url=$base_output_path/$vm_name -var "nix_output_directory=$base_opt_output_path" -var "vm_name=$vm_name" -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages.pkr.hcl
+packer build -timestamp-ui -only 'win_base_optimize.qemu.Windows10_base' -var "keep_registered=false" -var "iso_checksum=sha256:$baseapp_sha" -var iso_url=$baseapp_output_path/$vm_name -var "nix_output_directory=$baseapp_opt_output_path" -var "vm_name=$vm_name" -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages.pkr.hcl
