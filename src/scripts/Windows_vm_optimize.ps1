@@ -3,7 +3,8 @@ Param (
     [string]$outPath = "c:\temp",
     [string]$sdelete_uri = "https://download.sysinternals.com/files/SDelete.zip",
     $dotNetPaths = @("c:\windows\microsoft.net\framework64\v4.0.30319\ngen.exe", "c:\windows\microsoft.net\framework\v4.0.30319\ngen.exe"),
-    $fileExtensionsToRemove = @("*.tmp", "*.dmp", "*.etl", "*.evtx", "thumbcache*.db", "*.log")
+    $fileExtensionsToRemove = @("*.tmp", "*.dmp", "*.etl", "*.evtx", "thumbcache*.db", "*.log"),
+    [switch]$sdelete
 )
 
 Function Write-Log {
@@ -169,9 +170,11 @@ Clear-BCCache -Force -ErrorAction SilentlyContinue
 Write-Log -LogFile $logfile -Level "INFO" -Message "Defragment C:"
 Optimize-Volume -DriveLetter C -Defrag -Verbose
 
-# Clean free space
-Write-Log -logfile $logfile -Level "INFO" -Message "Starting sdelete to zero disk space"
-Start-Sdelete -sdelete_params "-nobanner -z /accepteula C:"
+if ($sdelete.IsPresent) {
+    # Clean free space
+    Write-Log -logfile $logfile -Level "INFO" -Message "Starting sdelete to zero disk space"
+    Start-Sdelete -sdelete_params "-nobanner -z /accepteula C:"
+}
 
 # Clean up after sdelete
 Write-Log -logfile $logfile -Level "INFO" -Message "Final temp path clean-up"
