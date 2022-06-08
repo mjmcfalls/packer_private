@@ -396,15 +396,15 @@ build {
       "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.win_temp_dir}\\wget\\wget.exe'",
       # "a:\\psappdeploy\\Virtio\\install_Virtio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -isoname '${var.virtio_isoname}' -install",
       "a:\\Install_pswindowsupdate.ps1",
-      "${var.win_temp_dir}\\psappdeploy\\VirtIO\\Deploy-Application.ps1 -DeploymentType 'Install' -DeployMode 'NonInteractive'",
+      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\VirtIO\\Deploy-Application.exe' -ArgumentList 'Install NonInteractive' -Wait",
       # "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -install",
-      "${var.win_temp_dir}\\psappdeploy\\7zip\\Deploy-Application.ps1 -DeploymentType 'Install' -DeployMode 'NonInteractive'",
-      "${var.win_temp_dir}\\psappdeploy\\SysInternals\\Deploy-Application.ps1 -DeploymentType 'Install' -DeployMode 'NonInteractive'",
-      "${var.win_temp_dir}\\psappdeploy\\Chrome\\Deploy-Application.ps1 -DeploymentType 'Install' -DeployMode 'NonInteractive'",
-      "${var.win_temp_dir}\\psappdeploy\\python\\python27\\Deploy-Application.ps1 -DeploymentType 'Install' -DeployMode 'NonInteractive'",
-      "${var.win_temp_dir}\\psappdeploy\\python\\python3913\\Deploy-Application.ps1 -DeploymentType 'Install' -DeployMode 'NonInteractive'",
-      "${var.win_temp_dir}\\psappdeploy\\git\\Deploy-Application.ps1 -DeploymentType 'Install' -DeployMode 'NonInteractive'",
-      "${var.win_temp_dir}\\psappdeploy\\atom\\Deploy-Application.ps1 -DeploymentType 'Install' -DeployMode 'NonInteractive'",
+      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\7zip\\Deploy-Application.exe' -ArgumentList 'Install NonInteractive' -Wait",
+      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\SysInternals\\Deploy-Application.exe' -ArgumentList 'Install NonInteractive' -Wait",
+      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\Chrome\\Deploy-Application.exe' -ArgumentList 'Install NonInteractive' -Wait",
+      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\python\\python27\\Deploy-Application.exe' -ArgumentList 'Install NonInteractive' -Wait",
+      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\python\\python3913\\Deploy-Application.exe' -ArgumentList 'Install NonInteractive' -Wait",
+      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\git\\Deploy-Application.exe' -ArgumentList 'Install NonInteractive' -Wait",
+      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\atom\\Deploy-Application.exe' -ArgumentList 'Install NonInteractive' -Wait",
       # "${var.win_temp_dir}\\scripts\\7zip\\install_7zip.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.seven_zip_installer}' -install",
       # "${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install",
       # "${var.win_temp_dir}\\scripts\\Chrome\\install_Chrome.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.chrome_installer}' -install",
@@ -438,7 +438,7 @@ build {
   provisioner "powershell" {
     inline = [
       # "${var.win_temp_dir}\\scripts\\Microsoft\\install_adk.ps1 -uri '${var.ms_adk_uri}' -OutPath '${var.win_temp_dir}' -installername '${var.ms_adk_installer}' -public -install"
-      "${var.win_temp_dir}\\psappdeploy\\ms_adk\\Deploy-Application.ps1 -DeploymentType 'Install' -DeployMode 'NonInteractive'",
+      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\ms_adk\\Deploy-Application.exe' -ArgumentList 'Install NonInteractive' -Wait",
       # "${var.win_temp_dir}\\scripts\\CiscoAnyconnect\\install_anyconnect.ps1 -Cleanup -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.anyconnect_installer}' -install",
       "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
       ]
