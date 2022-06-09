@@ -3,40 +3,6 @@ variable "autounattend" {
   default = "${env("autounattend")}"
 }
 
-# variable "anaconda_install_type" {
-#   type    = string
-#   default = "${env("anaconda_install_type")}"
-# }
-
-# variable "anaconda_install_addpath" {
-#   type    = string
-#   default = "${env("anaconda_install_addpath")}"
-# }
-
-# variable "anaconda_install_registerpy" {
-#   type    = string
-#   default = "${env("anaconda_install_registerpy")}"
-# }
-
-# variable "anaconda_install_silent" {
-#   type    = string
-#   default = "${env("anaconda_install_silent")}"
-# }
-
-# variable "anaconda_install_dir" {
-#   type    = string
-#   default = "${env("anaconda_install_dir")}"
-# }
-# variable "anaconda_installer" {
-#   type    = string
-#   default = "${env("anaconda_installer")}"
-# }
-
-# variable "anyconnect_installer" {
-#   type    = string
-#   default = "${env("anyconnect_installer")}"
-# }
-
 variable "cpu_num" {
   type    = string
   default = "4"
@@ -51,26 +17,6 @@ variable "disk_type_id" {
   type    = string
   default = "${env("disk_type_id")}"
 }
-
-# variable "chrome_installer" {
-#   type    = string
-#   default = "${env("chrome_installer")}"
-# }
-
-# variable "firefox_uri" {
-#   type    = string
-#   default = "${env("firefox_uri")}"
-# }
-
-# variable "git_installer" {
-#   type    = string
-#   default = "${env("git_installer")}"
-# }
-
-# variable "git_uri" {
-#   type    = string
-#   default = "${env("git_uri")}"
-# }
 
 variable "headless" {
   type    = string
@@ -102,16 +48,6 @@ variable "memory" {
   default = "4192"
 }
 
-# variable "ms_adk_uri" {
-#   type    = string
-#   default = "${env("ms_adk_uri")}"
-# }
-
-# variable "ms_adk_installer" {
-#   type    = string
-#   default = "${env("ms_adk_installer")}"
-# }
-
 variable "nix_output_directory" {
   type    = string
   default = "${env("nix_output_directory")}"
@@ -120,25 +56,6 @@ variable "nix_output_directory" {
 variable "nix_choco_output_directory" {
   type    = string
 }
-
-# variable "npp_uri" {
-#   type    = string
-# }
-
-# variable "python_uri" {
-#   type    = string
-#   default = "${env("python_uri")}"
-# }
-
-# variable "seven_zip_installer" {
-#   type    = string
-#   default = "${env("seven_zip_installer")}"
-# }
-
-# variable "seven_zip_uri" {
-#   type    = string
-#   default = "${env("seven_zip_uri")}"
-# }
 
 variable "shutdown_command" {
   type    = string
@@ -150,53 +67,10 @@ variable "switchname" {
   default = "${env("switchname")}"
 }
 
-# variable "r_download_uri" {
-#   type    = string
-#   default = "${env("r_download_uri")}"
-# }
-
-# variable "r_studio_download_uri" {
-#   type    = string
-#   default = "${env("r_studio_download_uri")}"
-# }
-# variable "r_install_path" {
-#   type    = string
-#   default = "${env("r_src_path")}/${env("r_version")}"
-# }
-
-# variable "r_installer" {
-#   type    = string
-#   default = "${env("r_installer")}"
-# }
-
-# variable "r_src_path" {
-#   type    = string
-#   default = "${env("r_src_path")}"
-# }
-
-# variable "r_studio_install" {
-#   type    = string
-#   default = "${env("r_studio_install")}"
-# }
-
 variable "restart_timeout" {
   type    = string
   default = "5m"
 }
-
-# variable "virtio_uri" {
-#   type    = string
-#   default = "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso"
-# }
-
-# variable "virtio_isoname" {
-#   type    = string
-# }
-
-# variable "vscode_installer" {
-#   type    = string
-#   default = "${env("vscode_installer")}"
-# }
 
 variable "vm_name" {
   type    = string
@@ -420,7 +294,7 @@ build {
       # "${var.win_temp_dir}\\scripts\\notepadplusplus\\install_notepadplusplus.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}'  -install",
       # "${var.win_temp_dir}\\scripts\\winmerge\\install_winmerge.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -install",
       # "${var.win_temp_dir}\\scripts\\texstudio\\install_texstudio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -install",
-      "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
+      # "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
     ]
   }
 }
