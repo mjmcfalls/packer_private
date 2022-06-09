@@ -1,0 +1,36 @@
+vm_name = "Windows10_choc_{{isotime \"20060102_1504\"}}.qcow2"
+nix_output_directory = "/home/libvirt/images/pool/Win10_choc_{{isotime \"20060102_1504\"}}"
+output_directory = "D:\\Hyperv\\packer\\windows10_21h2"
+cpu_num = "4"
+disk_size = "61440"
+memory = "4096"
+iso_checksum = "sha256:5B59D528C1741E682E40145F1A18F05D27363B28D46155909FC95A94AB9EBAAC"
+iso_url = "./iso/Windows10_21H2/windows10_202205131436.iso"
+switchname = "br0"
+autounattend = "answer_files/Windows10_ltsb/autounattend.xml"
+shutdown_command = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\""
+disk_type_id = "1"
+headless = "true"
+http_directory = "./src"
+winrm_timeout = "1h"
+winrm_use_ntlm = "true"
+winrm_use_ssl = "true"
+winrm_insecure = "true"
+win_temp_dir = "c:\\temp"
+keep_registered = "false"
+sdelete_uri = "https://download.sysinternals.com/files/SDelete.zip"
+choc_git_install = {
+    "name"="git"
+    "params"="git_params"
+    }
+choc_vscode_install = { 
+        "name"="vscode"
+        "params"="/NoDesktopIcon /NoQuicklaunchIcon"
+        }
+choc_vscode_noUpdate= {
+    "name"="visualstudiocode-disableautoupdate"
+    "params"=""
+    }
+choc_chrome_install = "name=googlechrome`n params=''"
+choc_firefox_install = "name=firefox`n params=''"
+anyconnect_installer = "anyconnect-win-4.10.05095.zip"
