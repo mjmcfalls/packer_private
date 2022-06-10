@@ -257,7 +257,7 @@ source "hyperv-vmcx" "Windows_base" {
   memory           = "${var.memory}"
   output_directory = "${var.output_directory}"
   shutdown_command = "${var.shutdown_command}"
-    switch_name      = "${var.switchname}"
+  switch_name      = "${var.switchname}"
   vm_name          = "${var.vm_name}"
   winrm_insecure   = "${var.winrm_insecure}"
   winrm_password   = "${var.winrm_password}"
@@ -309,17 +309,8 @@ build {
       "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.win_temp_dir}\\wget\\wget.exe'",
       # "a:\\psappdeploy\\Virtio\\install_Virtio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -isoname '${var.virtio_isoname}' -install",
       "a:\\Install_pswindowsupdate.ps1",
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\VirtIO\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent'",
-      # "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -install",
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\7zip\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent'",
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\SysInternals\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent'",
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\Chrome\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent'",
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\python\\python27\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent'",
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\python\\python3913\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent'",
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\git\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent'",
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\atom\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent'",
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\vscode\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent'",
-      # "${var.win_temp_dir}\\scripts\\7zip\\install_7zip.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.seven_zip_installer}' -install",
+      "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -SearchPath '${var.win_temp_dir}\Apps' -app 'sysinternals'",
+      "${var.win_temp_dir}\\scripts\\7zip\\install_7zip.ps1 -SearchPath '${var.win_temp_dir}\Apps' -installername '7z2107-x64.exe' -app '7zip'",
       # "${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install",
       # "${var.win_temp_dir}\\scripts\\Chrome\\install_Chrome.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.chrome_installer}' -install",
       # "${var.win_temp_dir}\\scripts\\git\\install_git.ps1 -OutPath '${var.win_temp_dir}' -uri '${var.git_uri}' -public -install",
@@ -354,7 +345,7 @@ build {
     elevated_password = ""
     inline = [
       # "${var.win_temp_dir}\\scripts\\Microsoft\\install_adk.ps1 -uri '${var.ms_adk_uri}' -OutPath '${var.win_temp_dir}' -installername '${var.ms_adk_installer}' -public -install"
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\ms_adk\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent",
+      "'${var.win_temp_dir}\\psappdeploy\\ms_adk\\Deploy-Application.ps1 -DeploymentType Install -DeployMode Silent",
       # "${var.win_temp_dir}\\scripts\\CiscoAnyconnect\\install_anyconnect.ps1 -Cleanup -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.anyconnect_installer}' -install",
       "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
       ]

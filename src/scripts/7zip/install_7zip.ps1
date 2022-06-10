@@ -1,13 +1,9 @@
 [CmdletBinding()]
 Param (
-    [string]$uri,
-    [string]$outpath = $env:temp,
-    [switch]$install,
+    [string]$app = "7zip",
+    [string]$searchPath = $env:temp,
     [string]$installParams = "/S",
-    [switch]$public,
-    [string]$appuri = "/apps/7zip/",
-    [string]$installername = "7z2107-x64.exe",
-    [switch]$cleanup
+    [string]$installername = "7z2107-x64.exe"
 )
 
 function New-TempFolder {
@@ -50,39 +46,30 @@ Function Write-Log {
 
 $ProgressPreference = 'SilentlyContinue'
 
-New-TempFolder -Path $outpath
+$appSrcPath = Get-ChildItem -File -Path $searchPath | Where-Object { $_.name -match $installername }
+# if($appSrcPath -gt 1){
+#     Write-Log -Level "INFO" -Message "Powershell magic to find the appropriate installer"
+# }
 
-if ($public.IsPresent) {
-    Write-Log -Level "INFO" -Message "install from Web"
-    Invoke-WebRequest -Uri "$($uri)" -OutFile (Join-Path -Path $outpath -ChildPath $installername)  -UseBasicParsing
+# else{ }
+
+Write-Log -Level "INFO" -Message "Switching to Directory - $($appSrcPath)"
+Push-Location $appSrcPath 
+
+Write-Log -Level "INFO" -Message "Getting Extension of $($appSrcPath.FullName)"
+$installerExtension = [System.IO.Path]::GetExtension("$($appSrcPath.FullName)")
+
+Write-Log -Level "INFO" -Message "Extension is: $($installerExtension)"
+
+if ($installerExtension -like ".msi") {
+    Write-Log -Level "INFO" -Message "MSI Install of $($appSrcPath.FullName)"
+    Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($appSrcPath.FullName) $($installParams)`""
+    Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($appSrcPath.FullName) $($installParams)" -Wait
 }
-else {
-    Write-Log -Level "INFO" -Message "Getting $($uri)$($appuri)$($installername)"
-    Invoke-WebRequest -Uri "$($uri)$($appuri)$($installername)" -OutFile (Join-Path -Path $outpath -ChildPath $installername) -UseBasicParsing
-}
-
-if ($install.IsPresent) {
-    $installerPath = Join-Path -Path $outpath -ChildPath $installername
-
-    Write-Log -Level "INFO" -Message "Getting Extension of $($installername)"
-    $installerExtension = [System.IO.Path]::GetExtension("$($installerPath)")
-
-    Write-Log -Level "INFO" -Message "Extension is: $($installerExtension)"
-
-    if ($installerExtension -like ".msi") {
-        Write-Log -Level "INFO" -Message "MSI Install of $($installerPath)"
-        Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($installerPath) $($installParams)`""
-        Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($installerPath) $($installParams)" -Wait
-    }
-    elseif ($installerExtension -like ".exe") {
-        Write-Log -Level "INFO" -Message "EXE Install of $($installername)"
-        Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($installerPath) -ArgumentList `"$($installParams)`""
-        Start-Process -NoNewWindow -FilePath $installerPath -ArgumentList "$($installParams)" -Wait -PassThru    
-    }
+elseif ($installerExtension -like ".exe") {
+    Write-Log -Level "INFO" -Message "EXE Install of $($installername)"
+    Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($appSrcPath.FullName) -ArgumentList `"$($installParams)`""
+    Start-Process -NoNewWindow -FilePath $appSrcPath.FullName -ArgumentList "$($installParams)" -Wait -PassThru    
 }
 
-if ($cleanup.IsPresent) {
-    if (Test-Path (Join-Path -Path $outpath -ChildPath $installername)) {
-        (Join-Path -Path $outpath -ChildPath $installername).Delete()
-    }
-}
+Pop-Location

@@ -1,14 +1,10 @@
 [CmdletBinding()]
 Param (
-    [string]$uri,
-    [string]$outpath = $env:temp,
-    [switch]$install,
-    [string]$installDest = "C:\Program Files\Sysinternals\BGInfo",
+    [string]$searchPath = $env:temp,
+    [string]$app = "sysinternals",
+    [string]$installDest = "C:\Program Files\Sysinternals\",
     [string]$startupLocation = "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp",
     [string]$installParams = "/timer:0 /nolicprompt /silent",
-    [switch]$public,
-    [string]$appuri = "/apps/SysInternals/",
-    [string]$installername = "Bginfo.exe",
     [string]$configFile = "bginfo.bgi",
     [switch]$cleanup
 )
@@ -55,53 +51,46 @@ $ProgressPreference = 'SilentlyContinue'
 
 New-TempFolder -Path $outpath
 
-if ($public.IsPresent) {
-    Write-Log -Level "INFO" -Message "BGInfo install from Web"
-    Invoke-WebRequest -Uri "$($uri)" -OutFile (Join-Path -Path $outpath -ChildPath $installername)  -UseBasicParsing
-}
-else {
-    Write-Log -Level "INFO" -Message "Getting $($uri)$($appuri)$($installername)"
-    Invoke-WebRequest -Uri "$($uri)$($appuri)$($installername)" -OutFile (Join-Path -Path $outpath -ChildPath $installername)  -UseBasicParsing
-}
+# if ($public.IsPresent) {
+#     Write-Log -Level "INFO" -Message "BGInfo install from Web"
+#     Invoke-WebRequest -Uri "$($uri)" -OutFile (Join-Path -Path $outpath -ChildPath $installername)  -UseBasicParsing
+# }
+# else {
+#     Write-Log -Level "INFO" -Message "Getting $($uri)$($appuri)$($installername)"
+#     Invoke-WebRequest -Uri "$($uri)$($appuri)$($installername)" -OutFile (Join-Path -Path $outpath -ChildPath $installername)  -UseBasicParsing
+# }
+$appSrcPath = Get-ChildItem -Directory -Path $searchPath | Where-Object { $_.Name -match $app }
 
-if ($install.IsPresent) {
-    $installerPath = Join-Path -Path $outpath -ChildPath $installername
-    Write-Log -Level "INFO" -Message "Installer Path: $($installerPath)"
 
-    Write-Log -Level "INFO" -Message "Creating Directories: $($installDest)"
-    New-Item -ItemType Directory $installDest -Force
+Write-Log -Level "INFO" -Message "Installer Path: $($appSrcPath.FullName)"
 
-    Write-Log -Level "INFO" -Message "Copying $($installerPath) to $($installDest)"
-    Move-Item -Path $installerPath -Destination $installDest -Force
+Write-Log -Level "INFO" -Message "Creating Directories: $($installDest)"
+New-Item -ItemType Directory $installDest -Force
 
-    Write-Log -Level "INFO" -Message "Searching $($outpath) for $($configFile)"
-    $configSrc = Get-Childitem -Path $outpath -Filter $configFile -Recurse
+Write-Log -Level "INFO" -Message "Copying $($installerPath) to $($installDest)"
+Move-Item -Path $appSrcPath.FullName -Destination $installDest -Force
 
-    if ($configSrc) {
-        Write-Log -Level "INFO" -Message "Copy $($configSrc.FullName) to $($installDest)"
-        Copy-Item -Path $configSrc.FullName -Destination $installDest -Force
-    }
+Write-Log -Level "INFO" -Message "Searching $($searchPath) for $($configFile)"
+$configSrc = Get-Childitem -Path $searchPath -Filter $configFile -Recurse
 
-    Write-Log -Level "INFO" -Message "Create Startup Link"
-    $WshShell = New-Object -comObject WScript.Shell
-
-    Write-Log -Level "INFO" -Message "BGInfo.lnk path: $startupLocation\BGInfo.lnk"
-    $Shortcut = $WshShell.CreateShortcut("$($startupLocation)\BGInfo.lnk")
-
-    Write-Log -Level "INFO" -Message "Lnk TargetPath: $(Join-Path -Path $installDest -ChildPath $installername)"
-    $Shortcut.TargetPath = "$(Join-Path -Path $installDest -ChildPath $installername)"
-
-    $bgInfoConfigPath = Join-Path -Path $installDest -ChildPath $configSrc.Name
-    Write-Log -Level "INFO" -Message "BGInfo config located at $($bgInfoConfigPath)"
-    Write-Log -Level "INFO" -Message "Link Arguments: /timer:0 /nolicprompt /silent `"$($bgInfoConfigPath)`""
-    $Shortcut.Arguments = "$($installParams) `"$( $bgInfoConfigPath)`""
-    
-    Write-Log -Level "INFO" -Message "Creating Startup link in $startupLocation\BGInfo.lnk"
-    $Shortcut.Save()   
+if ($configSrc) {
+    Write-Log -Level "INFO" -Message "Copy $($configSrc.FullName) to $($installDest)"
+    Copy-Item -Path $configSrc.FullName -Destination $installDest -Force
 }
 
-if ($cleanup.IsPresent) {
-    if (Test-Path (Join-Path -Path $outpath -ChildPath $installername)) {
-        (Join-Path -Path $outpath -ChildPath $installername).Delete()
-    }
-}
+Write-Log -Level "INFO" -Message "Create Startup Link"
+$WshShell = New-Object -comObject WScript.Shell
+
+Write-Log -Level "INFO" -Message "BGInfo.lnk path: $startupLocation\BGInfo.lnk"
+$Shortcut = $WshShell.CreateShortcut("$($startupLocation)\BGInfo.lnk")
+
+Write-Log -Level "INFO" -Message "Lnk TargetPath: $(Join-Path -Path $installDest -ChildPath $installername)"
+$Shortcut.TargetPath = "$(Join-Path -Path $installDest -ChildPath $installername)"
+
+$bgInfoConfigPath = Join-Path -Path $installDest -ChildPath $configSrc.Name
+Write-Log -Level "INFO" -Message "BGInfo config located at $($bgInfoConfigPath)"
+Write-Log -Level "INFO" -Message "Link Arguments: /timer:0 /nolicprompt /silent `"$($bgInfoConfigPath)`""
+$Shortcut.Arguments = "$($installParams) `"$( $bgInfoConfigPath)`""
+
+Write-Log -Level "INFO" -Message "Creating Startup link in $startupLocation\BGInfo.lnk"
+$Shortcut.Save()   

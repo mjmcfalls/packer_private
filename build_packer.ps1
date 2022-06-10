@@ -42,7 +42,7 @@ Function Write-Log {
 $vm_name_postfix = "$($vm_name)_$($postfix)"
 $bare_output_path = "$($outPath)\$($vm_name)\$($vm_name)_bare_$($postfix)"
 $base_output_path = "$($outPath)\$($vm_name)\$($vm_name)_base_$($postfix)"
-$base_opt_output_path="$($outPath)\$($vm_name)\$($vm_name)_base_opt_$($postfix)"
+$base_opt_output_path = "$($outPath)\$($vm_name)\$($vm_name)_base_opt_$($postfix)"
 $baseapp_output_path = "$($outPath)\$($vm_name)\$($vm_name)_baseapp_$($postfix)"
 $baseapp_opt_output_path = "$($outPath)\$($vm_name)\$($vm_name)_baseapp_opt_$($postfix)"
 
@@ -54,7 +54,7 @@ Write-Log -Level "DEBUG" -Message "$($packerpath) build -timestamp-ui -only win_
 # .\bin\packer.exe build -force -var-file .\vars\Windows10\Windows10_vars.json .\Windows10.pkr.hcl
 Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -timestamp-ui -only win_iso.hyperv-iso.vm -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($bare_output_path)`" -var `"vm_name=$($vm_name_postfix)`" -var-file $($varsfile) -var-file $($secretsfile) $($buildfile)" -Wait
 
-Write-Log -Level "INFO" -Message "Building $($vm_name_postfix) from "
+Write-Log -Level "INFO" -Message "Building $($vm_name_postfix) from $($bare_output_path)"
 Write-Log -Level "DEBUG" -Message "$($packerpath) build -timestamp-ui -only win_base.hyperv-vmcx.Windows_base -var `"clone_from_vmcx_path=$($bare_output_path)\Virtual Hard Disks)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($base_output_path)`" -var `"vm_name=$($vm_name_postfix)`" -var-file $($varsfile) -var-file $($secretsfile) $($buildfile)" 
 # .\bin\packer.exe build -force -var-file .\vars\Windows10\Windows10_vars.json .\Windows10.pkr.hcl
-Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -timestamp-ui -only win_base.hyperv-vmcx.Windows_base -var `"clone_from_vmcx_path=$($bare_output_path)\Virtual Hard Disks`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($base_output_path)`" -var `"vm_name=$($vm_name_postfix)`" -var-file $($varsfile) -var-file $($secretsfile) $($buildfile)" -Wait
+Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -timestamp-ui -only win_base.hyperv-vmcx.Windows_base -var `"clone_from_vmcx_path=$($bare_output_path)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($base_output_path)`" -var `"vm_name=$($vm_name_postfix)`" -var-file $($varsfile) -var-file $($secretsfile) $($buildfile)" -Wait
