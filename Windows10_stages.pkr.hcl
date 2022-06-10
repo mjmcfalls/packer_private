@@ -53,7 +53,7 @@ variable "nix_output_directory" {
   default = "${env("nix_output_directory")}"
 }
 
-variable "nix_choco_output_directory" {
+variable "output_directory" {
   type    = string
 }
 
@@ -141,7 +141,7 @@ packer {
 
 source "qemu" "Windows10_iso" {
   accelerator      = "kvm"
-  boot_wait        = "120s"
+  boot_wait        = "60s"
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
   disk_size        = "${var.disk_size}"
@@ -166,7 +166,7 @@ source "qemu" "Windows10_iso" {
 
 source "qemu" "Windows10_base" {
   accelerator      = "kvm"
-  boot_wait        = "120s"
+  boot_wait        = "60s"
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
   disk_size        = "${var.disk_size}"
@@ -194,7 +194,7 @@ source "qemu" "Windows10_base" {
 
 source "qemu" "Windows10_choco" {
   accelerator      = "kvm"
-  boot_wait        = "120s"
+  boot_wait        = "60s"
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
   disk_size        = "${var.disk_size}"
@@ -218,8 +218,8 @@ source "qemu" "Windows10_choco" {
   winrm_username   = "${var.winrm_username}"
 }
 
-source "hyperv-iso" "Windows10_iso" {
-  boot_wait        = "120s"
+source "hyperv-iso" "vm" {
+  boot_wait        = "60s"
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
   disk_size        = "${var.disk_size}"
@@ -231,7 +231,7 @@ source "hyperv-iso" "Windows10_iso" {
   memory           = "${var.memory}"
   output_directory = "${var.output_directory}"
   shutdown_command = "a:/setup_restart.bat"
-  switch_name      = "${var.hyperv_switchname}"
+  switch_name      = "${var.switchname}"
   vm_name          = "${var.vm_name}"
   winrm_insecure   = "${var.winrm_insecure}"
   winrm_password   = "${var.winrm_password}"
@@ -254,6 +254,17 @@ build {
   }
 }
 
+build {
+  name = "win_iso"
+  sources = ["source.hyperv-iso.vm"]
+
+  provisioner "powershell" {
+    inline = [
+      "a:/Config_Winrm.ps1",
+      "a:\\Windows_os_optimize.ps1"
+    ]
+  }
+}
 
 build { 
   name = "win_base"
@@ -266,6 +277,8 @@ build {
   }
 
   provisioner "powershell" {
+    elevated_user = "SYSTEM"
+    elevated_password = ""
     inline = [
       "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.win_temp_dir}\\wget\\wget.exe'",
       # "a:\\psappdeploy\\Virtio\\install_Virtio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -isoname '${var.virtio_isoname}' -install",
@@ -311,6 +324,8 @@ build {
 
 # Application installations
   provisioner "powershell" {
+    elevated_user = "SYSTEM"
+    elevated_password = ""
     inline = [
       # "${var.win_temp_dir}\\scripts\\Microsoft\\install_adk.ps1 -uri '${var.ms_adk_uri}' -OutPath '${var.win_temp_dir}' -installername '${var.ms_adk_installer}' -public -install"
       "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\ms_adk\\Deploy-Application.exe' -ArgumentList 'Install NonInteractive' -Wait",
@@ -325,6 +340,8 @@ build {
   sources = ["source.qemu.Windows10_base"]
 
   provisioner "powershell" {
+    elevated_user = "SYSTEM"
+    elevated_password = ""
     inline = [
       "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}' -sdelete"
       ]
