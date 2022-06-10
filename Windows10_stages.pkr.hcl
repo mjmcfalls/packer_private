@@ -125,6 +125,10 @@ variable "use_backing_file" {
   type    = string
   default = false
 }
+variable "clone_from_vmcx_path" {
+  type    = string
+  default = ""
+}
 
 packer {
   required_plugins {
@@ -241,6 +245,29 @@ source "hyperv-iso" "vm" {
   winrm_username   = "${var.winrm_username}"
 }
 
+source "hyperv-vmcx" "Windows_base" {
+  boot_wait        = "60s"
+  communicator     = "winrm"
+  cpus             = "${var.cpu_num}"
+  disk_size        = "${var.disk_size}"
+  iso_checksum     = "${var.iso_checksum}"
+  iso_url          = "${var.iso_url}"
+  floppy_files     = ["./src/scripts/"]
+  headless         = "${var.headless}"
+  http_directory   = "${var.http_directory}"
+  memory           = "${var.memory}"
+  output_directory = "${var.output_directory}"
+  shutdown_command = "${var.shutdown_command}"
+    switch_name      = "${var.switchname}"
+  vm_name          = "${var.vm_name}"
+  winrm_insecure   = "${var.winrm_insecure}"
+  winrm_password   = "${var.winrm_password}"
+  winrm_timeout    = "${var.winrm_timeout}"
+  winrm_use_ntlm   = "${var.winrm_use_ntlm}"
+  winrm_use_ssl    = "${var.winrm_use_ssl}"
+  winrm_username   = "${var.winrm_username}"
+  clone_from_vmcx_path = "${var.clone_from_vmcx_path}"
+}
 
 build {
   name = "win_iso"
@@ -268,7 +295,7 @@ build {
 
 build { 
   name = "win_base"
-  sources = ["source.qemu.Windows10_base"]
+  sources = ["source.qemu.Windows10_base","source.hyperv-vmcx.Windows_base"]
 
   provisioner "file" {
     source      = "./src/apps/wget"
