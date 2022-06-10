@@ -249,7 +249,6 @@ source "hyperv-vmcx" "Windows_base" {
   boot_wait        = "60s"
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
-  disk_size        = "${var.disk_size}"
   iso_checksum     = "${var.iso_checksum}"
   iso_url          = "${var.iso_url}"
   floppy_files     = ["./src/scripts/"]
@@ -310,16 +309,16 @@ build {
       "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.win_temp_dir}\\wget\\wget.exe'",
       # "a:\\psappdeploy\\Virtio\\install_Virtio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -isoname '${var.virtio_isoname}' -install",
       "a:\\Install_pswindowsupdate.ps1",
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\VirtIO\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent",
+      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\VirtIO\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent'",
       # "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -install",
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\7zip\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent",
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\SysInternals\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent",
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\Chrome\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent",
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\python\\python27\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent",
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\python\\python3913\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent",
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\git\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent",
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\atom\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent",
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\vscode\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent",
+      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\7zip\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent'",
+      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\SysInternals\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent'",
+      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\Chrome\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent'",
+      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\python\\python27\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent'",
+      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\python\\python3913\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent'",
+      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\git\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent'",
+      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\atom\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent'",
+      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\vscode\\Deploy-Application.ps1' -ArgumentList '-DeploymentType Install -DeployMode Silent'",
       # "${var.win_temp_dir}\\scripts\\7zip\\install_7zip.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.seven_zip_installer}' -install",
       # "${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install",
       # "${var.win_temp_dir}\\scripts\\Chrome\\install_Chrome.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.chrome_installer}' -install",
