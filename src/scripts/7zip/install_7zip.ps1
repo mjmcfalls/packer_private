@@ -47,7 +47,10 @@ Function Write-Log {
 $ProgressPreference = 'SilentlyContinue'
 Write-Log -Level "INFO" -Message "Starting Install - $($app)"
 
-$appSrcPath = Get-ChildItem -File -Path $searchPath | Where-Object { $_.name -match $installername }
+Write-Log -Level "INFO" -Message "Search for $($installername) in $($searchPath)"
+$appSrcPath = Get-ChildItem -File -Path $searchPath -Recurse | Where-Object { $_.name -match $installername }
+
+Write-Log -Level "INFO" -Message "Found $($appSrcPath)"
 # if($appSrcPath -gt 1){
 #     Write-Log -Level "INFO" -Message "Powershell magic to find the appropriate installer"
 # }

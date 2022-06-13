@@ -1,15 +1,11 @@
 [CmdletBinding()]
 
 Param (
-    [string]$uri,
-    [string]$outpath = $env:temp,
-    [switch]$install,
+    [string]$app = "Python 2.7.18",
+    [string]$searchPath = $env:temp,
     [string]$installParams = "/quiet",
-    [switch]$public,
-    [string]$appuri = "/apps/Python/",
-    [string]$installername,
-    [string]$version,
-    [switch]$cleanup
+    [string]$installername = "python-2.7.18.amd64.msi",
+    [string]$unattendXml
 )
 
 function New-TempFolder {
@@ -52,79 +48,62 @@ Function Write-Log {
 
 $ProgressPreference = 'SilentlyContinue'
 
-New-TempFolder -Path $outpath
+Write-Log -Level "INFO" -Message "Starting Install - $($app)"
 
-if ($public.IsPresent) {
-    $installername = ($uri -Split "/")[-1]
-    
-    Write-Log -Level "INFO" -Message "Fetch from Web - $($uri)"
-    Invoke-WebRequest -Uri "$($uri)" -OutFile (Join-Path -Path $outpath -ChildPath $installername) -UseBasicParsing
+Write-Log -Level "INFO" -Message "Search for $($installername) in $($searchPath)"
+$appSrcPath = Get-ChildItem -File -Path $searchPath -Recurse | Where-Object { $_.name -match $installername }
+
+Write-Log -Level "INFO" -Message "Installer: $($appSrcPath)"
+
+# Set Version if not present or contains a period
+if (-Not $version) {
+    $version = (($appSrcPath.Name -Split "-")[-1] -Split ".")[0..1] -Join ""
+    Write-Log -Level "INFO" -Message "Version: $($version)"
 }
 else {
-    Write-Log -Level "INFO" -Message "Fetch from $($uri)$($appuri)$($installername)"
-    Invoke-WebRequest -Uri "$($uri)$($appuri)$($installername)" -OutFile (Join-Path -Path $outpath -ChildPath $installername)  -UseBasicParsing
+    if ($version.contains(".")) {
+        $version = $version.replace(".", "")
+    }
 }
-
-
-if ($install.IsPresent) {
-    $installerPath = Join-Path -Path $outpath -ChildPath $installername
-
-    Write-Log -Level "INFO" -Message "Installer Path: $($installerPath)"
-    # Set Version if not present or contains a period
-    if(-Not $version){
-        $version = (($installername -Split "-")[-1] -Split ".")[0..1] -Join ""
-        Write-Log -Level "INFO" -Message "Version: $($version)"
-    }
-    else{
-        if($version.contains(".")){
-            $version = $version.replace(".","")
-        }
-    }
     
-    # Copy unattend file to same directory as python installer
-    Write-Log -Level "INFO" -Message "Searching for Python$($version) unattend file"
-    $unattendXmlPath = Get-ChildItem -Path $outpath -Recurse -File | Where-Object {$_.Name -Like "Python$($verion)*.xml"}
-    if($unattendXmlPath){
-        Write-Log -Level "INFO" -Message "Found: $($unattendXmlPath.FullName)"
-    }
-    else{
-        Write-Log -Level "INFO" -Message "No Python$($version) unattend file found."
-    }
+# # Copy unattend file to same directory as python installer
+# if ( $unattendXml ) {
+
+# }
+# else {
+#     Write-Log -Level "INFO" -Message "Searching for Python$($version) unattend file"
+#     $unattendXmlPath = Get-ChildItem -Path $outpath -Recurse -File | Where-Object { $_.Name -Like "Python$($verion)*.xml" }
     
-    if($unattendXmlPath){
-        Write-Log -Level "INFO" -Message "Found: $($unattendXmlPath.FullName)"
-        Write-Log -Level "INFO" -Message "Copy $($unattendXmlPath.FullName) to $(Join-Path -Path $outpath -ChildPath "unattend.xml")"
-        Copy-Item -Path $unattendXmlPath.FullName -Destination (Join-Path -Path $outpath -ChildPath "unattend.xml")
-    }
-    else{
-        Write-Log -Level "ERROR" -Message "No Unattend file found!"
-    }
+#     if ($unattendXmlPath) {
+#         Write-Log -Level "INFO" -Message "Found: $($unattendXmlPath.FullName)"
+#     }
+#     else {
+#         Write-Log -Level "INFO" -Message "No Python$($version) unattend file found."
+#     }
+        
+#     if ($unattendXmlPath) {
+#         Write-Log -Level "INFO" -Message "Found: $($unattendXmlPath.FullName)"
+#         Write-Log -Level "INFO" -Message "Copy $($unattendXmlPath.FullName) to $(Join-Path -Path $outpath -ChildPath "unattend.xml")"
+#         Copy-Item -Path $unattendXmlPath.FullName -Destination (Join-Path -Path $outpath -ChildPath "unattend.xml")
+#     }
+#     else {
+#         Write-Log -Level "ERROR" -Message "No Unattend file found!"
+#     }
+# }
 
-    Write-Log -Level "INFO" -Message "Getting Extension of $($installername)"
-    $installerExtension = [System.IO.Path]::GetExtension("$($installerPath)")
 
-    Write-Log -Level "INFO" -Message "Extension is: $($installerExtension)"
+Write-Log -Level "INFO" -Message "Getting Extension of $($installername)"
+$installerExtension = [System.IO.Path]::GetExtension("$($appSrcPath.FullName)")
 
-    if($installerExtension -like ".msi"){
-        Write-Log -Level "INFO" -Message "MSI Install of $($installerPath)"
-        Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($installerPath) $($installParams)`""
-        Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($installerPath) $($installParams)" -Wait
-    }
-    elseif ($installerExtension -like ".exe") {
-        Write-Log -Level "INFO" -Message "EXE Install of $($installername)"
-        Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($installerPath) -ArgumentList `"$($installParams)`""
-        Start-Process -NoNewWindow -FilePath $installerPath -ArgumentList "$($installParams)" -Wait
-    }
+Write-Log -Level "INFO" -Message "Extension is: $($installerExtension)"
 
+if ($installerExtension -like ".msi") {
+    Write-Log -Level "INFO" -Message "MSI Install of $($appSrcPath.FullName)"
+    Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($appSrcPath.FullName) $($installParams)`""
+    Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($appSrcPath.FullName) $($installParams)" -Wait
 }
-
-if ($cleanup.IsPresent) {
-    Write-Log -Level "INFO" -Message "Cleaning up installer"
-    if (Test-Path (Join-Path -Path $outpath -ChildPath $installername)) {
-        Write-Log -Level "INFO" -Message "Removing $(Join-Path -Path $outpath -ChildPath $installername)"
-        (Join-Path -Path $outpath -ChildPath $installername).Delete()
-    }
-    else {
-        Write-Log -Level "INFO" -Message "Cannot find $(Join-Path -Path $outpath -ChildPath $installername)"
-    }
+elseif ($installerExtension -like ".exe") {
+    Write-Log -Level "INFO" -Message "EXE Install of $($installername)"
+    Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($appSrcPath.FullName) -ArgumentList `"$($installParams)`""
+    Start-Process -NoNewWindow -FilePath $appSrcPath.FullName -ArgumentList "$($installParams)" -Wait
 }

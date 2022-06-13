@@ -67,15 +67,15 @@ Write-Log -Level "INFO" -Message "Installer Path: $($appSrcPath.FullName)"
 Write-Log -Level "INFO" -Message "Creating Directories: $($installDest)"
 New-Item -ItemType Directory $installDest -Force
 
-Write-Log -Level "INFO" -Message "Copying $($installerPath) to $($installDest)"
+Write-Log -Level "INFO" -Message "Copying $($appSrcPath.FullName) to $($installDest)"
 Move-Item -Path $appSrcPath.FullName -Destination $installDest -Force
 
 Write-Log -Level "INFO" -Message "Searching $($searchPath) for $($configFile)"
-$configSrc = Get-Childitem -Path $searchPath -Filter $configFile -Recurse
+$configSrc = Get-Childitem -Path $searchPath -Recurse | Where-Object { $_.name -match $configFile }
 
 if ($configSrc) {
-    Write-Log -Level "INFO" -Message "Copy $($configSrc.FullName) to $($installDest)"
-    Copy-Item -Path $configSrc.FullName -Destination $installDest -Force
+    Write-Log -Level "INFO" -Message "Copy $($configSrc.FullName) to $(Split-Path $installDest -Parent)"
+    Copy-Item -Path $configSrc.FullName -Destination (Split-Path $installDest -Parent) -Force
 }
 
 Write-Log -Level "INFO" -Message "Create Startup Link"
@@ -90,7 +90,7 @@ $Shortcut.TargetPath = "$(Join-Path -Path $installDest -ChildPath $installername
 $bgInfoConfigPath = Join-Path -Path $installDest -ChildPath $configSrc.Name
 Write-Log -Level "INFO" -Message "BGInfo config located at $($bgInfoConfigPath)"
 Write-Log -Level "INFO" -Message "Link Arguments: /timer:0 /nolicprompt /silent `"$($bgInfoConfigPath)`""
-$Shortcut.Arguments = "$($installParams) `"$( $bgInfoConfigPath)`""
+$Shortcut.Arguments = "$($installParams) `"$($bgInfoConfigPath)`""
 
 Write-Log -Level "INFO" -Message "Creating Startup link in $startupLocation\BGInfo.lnk"
 $Shortcut.Save()   
