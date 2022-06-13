@@ -55,6 +55,9 @@ $appSrcPath = Get-ChildItem -File -Path $searchPath -Recurse | Where-Object { $_
 
 Write-Log -Level "INFO" -Message "Installer: $($appSrcPath)"
 
+Write-Log -Level "INFO" -Message "Switching to Directory - $($appSrcPath)"
+Push-Location $appSrcPath 
+
 # Set Version if not present or contains a period
 if (-Not $version) {
     $version = (($appSrcPath.Name -Split "-")[-1] -Split ".")[0..1] -Join ""
@@ -107,3 +110,5 @@ elseif ($installerExtension -like ".exe") {
     Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($appSrcPath.FullName) -ArgumentList `"$($installParams)`""
     Start-Process -NoNewWindow -FilePath $appSrcPath.FullName -ArgumentList "$($installParams)" -Wait
 }
+
+Pop-Location
