@@ -6,7 +6,8 @@ Param (
     [string]$startupLocation = "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp",
     [string]$installParams = "/timer:0 /nolicprompt /silent",
     [string]$configFile = "bginfo.bgi",
-    [switch]$cleanup
+    [string]$installername = "bginfo.exe",
+    [string]$startuplinkName = "BGInfo.lnk"
 )
 
 function New-TempFolder {
@@ -70,24 +71,27 @@ New-Item -ItemType Directory $installDest -Force
 Write-Log -Level "INFO" -Message "Copying $($appSrcPath.FullName) to $($installDest)"
 Move-Item -Path $appSrcPath.FullName -Destination $installDest -Force
 
+$configFileName, $configFileExtension = $configFile.split(".")
+Write-Log -Level "INFO" -Message "Config file Name: $($configFileName); Config File Extension: $($configFileExtension)"
+
 Write-Log -Level "INFO" -Message "Searching $($searchPath) for $($configFile)"
-$configSrc = Get-Childitem -Path $searchPath -Recurse | Where-Object { $_.name -match $configFile }
+$configSrc = Get-Childitem -Path $searchPath -Recurse | Where-Object { $_.name -match $configFileName -and $_.Extension -match $configFileExtension }
 
-if ($configSrc) {
-    Write-Log -Level "INFO" -Message "Copy $($configSrc.FullName) to $(Split-Path $installDest -Parent)"
-    Copy-Item -Path $configSrc.FullName -Destination (Split-Path $installDest -Parent) -Force
-}
+Write-Log -Level "INFO" -Message "Config Src: $($configSrc)"
 
-Write-Log -Level "INFO" -Message "Create Startup Link"
+$startupLinkPath = Join-Path -Path $startupLocation -ChildPath $startuplinkName
+$bgInfoPath = Join-Path -Path $installDest -ChildPath $installername
+$bgInfoConfigPath = Join-Path -Path $installDest -ChildPath $configSrc.Name
+
+Write-Log -Level "INFO" -Message "Creating Startup Link"
 $WshShell = New-Object -comObject WScript.Shell
 
-Write-Log -Level "INFO" -Message "BGInfo.lnk path: $startupLocation\BGInfo.lnk"
-$Shortcut = $WshShell.CreateShortcut("$($startupLocation)\BGInfo.lnk")
+Write-Log -Level "INFO" -Message "Startup Link shortcut Path: $($startupLinkPath)"
+$Shortcut = $WshShell.CreateShortcut("$($startupLinkPath)")
 
-Write-Log -Level "INFO" -Message "Lnk TargetPath: $(Join-Path -Path $installDest -ChildPath $installername)"
-$Shortcut.TargetPath = "$(Join-Path -Path $installDest -ChildPath $installername)"
+Write-Log -Level "INFO" -Message "Startup Link Target Path: $($bgInfoPath)"
+$Shortcut.TargetPath = "$($bgInfoPath)"
 
-$bgInfoConfigPath = Join-Path -Path $installDest -ChildPath $configSrc.Name
 Write-Log -Level "INFO" -Message "BGInfo config located at $($bgInfoConfigPath)"
 Write-Log -Level "INFO" -Message "Link Arguments: /timer:0 /nolicprompt /silent `"$($bgInfoConfigPath)`""
 $Shortcut.Arguments = "$($installParams) `"$($bgInfoConfigPath)`""
