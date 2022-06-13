@@ -69,7 +69,7 @@ Write-Log -Level "INFO" -Message "Creating Directories: $($installDest)"
 New-Item -ItemType Directory $installDest -Force
 
 Write-Log -Level "INFO" -Message "Copying $($appSrcPath.FullName) to $($installDest)"
-Move-Item -Path $appSrcPath.FullName -Destination $installDest -Force
+Move-Item -Path $appSrcPath.FullName -Destination $installDest -Force -Exclude "*.html"
 
 $configFileName, $configFileExtension = $configFile.split(".")
 Write-Log -Level "INFO" -Message "Config file Name: $($configFileName); Config File Extension: $($configFileExtension)"

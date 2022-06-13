@@ -3,7 +3,7 @@ Param (
     [string]$app = "7zip",
     [string]$searchPath = $env:temp,
     [string]$installParams = "/S",
-    [string]$installername = "7z2107-x64.exe"
+    [string]$installerName = "7z2107-x64.exe"
 )
 
 function New-TempFolder {
@@ -47,15 +47,12 @@ Function Write-Log {
 $ProgressPreference = 'SilentlyContinue'
 Write-Log -Level "INFO" -Message "Starting Install - $($app)"
 
-Write-Log -Level "INFO" -Message "Search for $($installername) in $($searchPath)"
-$appSrcPath = Get-ChildItem -File -Path $searchPath -Recurse | Where-Object { $_.name -match $installername }
+$installerFileName, $installerExtension = $installerName.split(".")
+Write-Log -Level "INFO" -Message "Installer file Name: $($installerFileName); Installer File Extension: $($installerExtension)"
 
+Write-Log -Level "INFO" -Message "Search for $($installerName) in $($searchPath)"
+$appSrcPath = Get-ChildItem -File -Path $searchPath -Recurse | Where-Object { $_.name -match $installerFileName -and $_.Extension -match $installerExtension }
 Write-Log -Level "INFO" -Message "Found $($appSrcPath)"
-# if($appSrcPath -gt 1){
-#     Write-Log -Level "INFO" -Message "Powershell magic to find the appropriate installer"
-# }
-
-# else{ }
 
 Write-Log -Level "INFO" -Message "Switching to Directory - $($appSrcPath)"
 Push-Location $appSrcPath 
@@ -71,7 +68,7 @@ if ($installerExtension -like ".msi") {
     Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($appSrcPath.FullName) $($installParams)" -Wait
 }
 elseif ($installerExtension -like ".exe") {
-    Write-Log -Level "INFO" -Message "EXE Install of $($installername)"
+    Write-Log -Level "INFO" -Message "EXE Install of $($installerName)"
     Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($appSrcPath.FullName) -ArgumentList `"$($installParams)`""
     Start-Process -NoNewWindow -FilePath $appSrcPath.FullName -ArgumentList "$($installParams)" -Wait -PassThru    
 }
