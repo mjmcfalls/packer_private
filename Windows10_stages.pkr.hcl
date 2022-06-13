@@ -309,8 +309,8 @@ build {
       "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.win_temp_dir}\\wget\\wget.exe'",
       # "a:\\psappdeploy\\Virtio\\install_Virtio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -isoname '${var.virtio_isoname}' -install",
       "a:\\Install_pswindowsupdate.ps1",
-      "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -SearchPath '${var.win_temp_dir}\Apps' -app 'sysinternals'",
-      "${var.win_temp_dir}\\scripts\\7zip\\install_7zip.ps1 -SearchPath '${var.win_temp_dir}\Apps' -installername '7z2107-x64.exe' -app '7zip'",
+      "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -SearchPath '${var.win_temp_dir}\\apps' -app 'sysinternals'",
+      "${var.win_temp_dir}\\scripts\\7zip\\install_7zip.ps1 -SearchPath '${var.win_temp_dir}\\apps' -installername '7z2107-x64.exe' -app '7zip'",
       # "${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install",
       # "${var.win_temp_dir}\\scripts\\Chrome\\install_Chrome.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.chrome_installer}' -install",
       # "${var.win_temp_dir}\\scripts\\git\\install_git.ps1 -OutPath '${var.win_temp_dir}' -uri '${var.git_uri}' -public -install",
@@ -341,11 +341,10 @@ build {
 
 # Application installations
   provisioner "powershell" {
-    elevated_user = "SYSTEM"
-    elevated_password = ""
     inline = [
-      # "${var.win_temp_dir}\\scripts\\Microsoft\\install_adk.ps1 -uri '${var.ms_adk_uri}' -OutPath '${var.win_temp_dir}' -installername '${var.ms_adk_installer}' -public -install"
-      "'${var.win_temp_dir}\\psappdeploy\\ms_adk\\Deploy-Application.ps1 -DeploymentType Install -DeployMode Silent",
+      "${var.win_temp_dir}\\scripts\\Microsoft\\install_adk.ps1 -SearchPath '${var.win_temp_dir}\\apps' -installername 'adksetup.exe' -app 'msadk'",
+      "${var.win_temp_dir}\\scripts\\Microsoft\\install_winpeadk.ps1 -SearchPath '${var.win_temp_dir}\\apps' -installername 'adkwinpesetup.exe' -app 'mswinpeadk'",
+      # "'${var.win_temp_dir}\\psappdeploy\\ms_adk\\Deploy-Application.ps1 -DeploymentType Install -DeployMode Silent",
       # "${var.win_temp_dir}\\scripts\\CiscoAnyconnect\\install_anyconnect.ps1 -Cleanup -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.anyconnect_installer}' -install",
       "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
       ]

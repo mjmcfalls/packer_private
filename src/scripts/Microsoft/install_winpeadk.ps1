@@ -1,10 +1,10 @@
 [CmdletBinding()]
 
 Param (
-    [string]$app = "msadk",
+    [string]$app = "adkwinpe",
     [string]$searchPath = $env:temp,
-    [string]$installParams = "/ceip off /norestart /quiet /features OptionId.WindowsPerformanceToolkit OptionId.DeploymentTools OptionId.ApplicationCompatibilityToolkit OptionId.WindowsAssessmentToolkit",
-    [string]$installername = "adksetup.exe"
+    [string]$installParams = "/ceip off /norestart /quiet",
+    [string]$installername = "adkwinpesetup.exe"
 )
 
 function New-TempFolder {

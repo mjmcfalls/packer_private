@@ -40,11 +40,11 @@ Function Write-Log {
 }
 
 $vm_name_postfix = "$($vm_name)_$($postfix)"
-$bare_output_path = "$($outPath)\$($vm_name)\$($vm_name)_bare_$($postfix)"
-$base_output_path = "$($outPath)\$($vm_name)\$($vm_name)_base_$($postfix)"
-$base_opt_output_path = "$($outPath)\$($vm_name)\$($vm_name)_base_opt_$($postfix)"
-$baseapp_output_path = "$($outPath)\$($vm_name)\$($vm_name)_baseapp_$($postfix)"
-$baseapp_opt_output_path = "$($outPath)\$($vm_name)\$($vm_name)_baseapp_opt_$($postfix)"
+$bare_output_path = "$($outPath)\$($vm_name)\bare\$($vm_name)_bare_$($postfix)"
+$base_output_path = "$($outPath)\$($vm_name)\base\$($vm_name)_base_$($postfix)"
+$base_opt_output_path = "$($outPath)\$($vm_name)\base_opt\$($vm_name)_base_opt_$($postfix)"
+$baseapp_output_path = "$($outPath)\$($vm_name)\baseapp\$($vm_name)_baseapp_$($postfix)"
+$baseapp_opt_output_path = "$($outPath)\$($vm_name)\baseapp_opt\$($vm_name)_baseapp_opt_$($postfix)"
 
 # Set ENV Variables for debugging
 $env:PACKER_LOG = $debugging

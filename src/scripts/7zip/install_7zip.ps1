@@ -45,6 +45,7 @@ Function Write-Log {
 }
 
 $ProgressPreference = 'SilentlyContinue'
+Write-Log -Level "INFO" -Message "Starting Install - $($app)"
 
 $appSrcPath = Get-ChildItem -File -Path $searchPath | Where-Object { $_.name -match $installername }
 # if($appSrcPath -gt 1){

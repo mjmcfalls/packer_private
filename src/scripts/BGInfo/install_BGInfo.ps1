@@ -49,7 +49,7 @@ Function Write-Log {
 
 $ProgressPreference = 'SilentlyContinue'
 
-New-TempFolder -Path $outpath
+# New-TempFolder -Path $outpath
 
 # if ($public.IsPresent) {
 #     Write-Log -Level "INFO" -Message "BGInfo install from Web"
