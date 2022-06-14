@@ -8,7 +8,7 @@ Param (
     $winFeaturesToDisable = @("DirectPlay", "WindowsMediaPlayer"),
     [string]$defaultsUserSettingsPath = (Join-Path -Path $outPath -ChildPath "apps\Scripts\Microsoft\DefaultUsersSettings.txt"),
     [string]$ScheduledTasksListPath = (Join-Path -Path $outPath -ChildPath "apps\Scripts\Microsoft\ScheduledTasks.txt"),
-    [string] $automaticTracingFilePath = (Join-Path -Path $outPath -ChildPath "apps\Scripts\Microsoft\AutomaticTracers.txt"),
+    [string]$automaticTracingFilePath = (Join-Path -Path $outPath -ChildPath "apps\Scripts\Microsoft\AutomaticTracers.txt"),
     [string]$servicesToDisablePath = (Join-Path -Path $outPath -ChildPath "apps\Scripts\Microsoft\ServicesToDisable.txt"),
     [int]$FileInfoCacheEntriesValue = 1024,
     [int]$DirectoryCacheEntriesMax = 1024,
