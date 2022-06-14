@@ -270,19 +270,7 @@ source "hyperv-vmcx" "Windows_base" {
 
 build {
   name = "win_iso"
-  sources = ["source.qemu.Windows10_iso"]
-
-  provisioner "powershell" {
-    inline = [
-      "a:/Config_Winrm.ps1",
-      "a:\\Windows_os_optimize.ps1"
-    ]
-  }
-}
-
-build {
-  name = "win_iso"
-  sources = ["source.hyperv-iso.vm"]
+  sources = ["source.qemu.Windows10_iso","source.hyperv-iso.vm"]
 
   provisioner "powershell" {
     inline = [
@@ -291,6 +279,18 @@ build {
     ]
   }
 }
+
+# build {
+#   name = "win_iso"
+#   sources = ["source.hyperv-iso.vm"]
+
+#   provisioner "powershell" {
+#     inline = [
+#       "a:/Config_Winrm.ps1",
+#       "a:\\Windows_os_optimize.ps1 -defaultsUserSettingsPath 'a:\\DefaultUsersSettings.txt' -ScheduledTasksListPath 'a:\\ScheduledTasks.txt' -automaticTracingFilePath 'a:\\AutomaticTracers.txt' -servicesToDisablePath 'a:\\ServicesToDisable.txt'"
+#     ]
+#   }
+# }
 
 build { 
   name = "win_base"
