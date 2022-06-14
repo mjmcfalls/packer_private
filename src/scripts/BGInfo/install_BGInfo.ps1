@@ -68,14 +68,14 @@ Write-Log -Level "INFO" -Message "Installer Path: $($appSrcPath.FullName)"
 Write-Log -Level "INFO" -Message "Creating Directories: $($installDest)"
 New-Item -ItemType Directory $installDest -Force
 
-Write-Log -Level "INFO" -Message "Copying $($appSrcPath.FullName) to $($installDest)"
+Write-Log -Level "INFO" -Message "Moving $($appSrcPath.FullName) to $($installDest)"
 Move-Item -Path $appSrcPath.FullName -Destination $installDest -Force -Exclude "*.html"
 
-$configFileName, $configFileExtension = $configFile.split(".")
-Write-Log -Level "INFO" -Message "Config file Name: $($configFileName); Config File Extension: $($configFileExtension)"
+# $configFileName, $configFileExtension = $configFile.split(".")
+# Write-Log -Level "INFO" -Message "Config file Name:$($configFileName); Config File Extension:$($configFileExtension)"
 
-Write-Log -Level "INFO" -Message "Searching $($searchPath) for $($configFile)"
-$configSrc = Get-Childitem -Path $searchPath -Recurse | Where-Object { $_.name -match $configFileName -and $_.Extension -match $configFileExtension }
+Write-Log -Level "INFO" -Message "Searching $($installDest) for $($configFile)"
+$configSrc = Get-Childitem -Path $installDest -Recurse | Where-Object { $_.name -match $configFile }
 
 Write-Log -Level "INFO" -Message "Config Src: $($configSrc)"
 

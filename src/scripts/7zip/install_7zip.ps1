@@ -51,11 +51,11 @@ $installerFileName, $installerExtension = $installerName.split(".")
 Write-Log -Level "INFO" -Message "Installer file Name: $($installerFileName); Installer File Extension: $($installerExtension)"
 
 Write-Log -Level "INFO" -Message "Search for $($installerName) in $($searchPath)"
-$appSrcPath = Get-ChildItem -File -Path $searchPath -Recurse | Where-Object { $_.name -match $installerFileName -and $_.Extension -match $installerExtension }
-Write-Log -Level "INFO" -Message "Found $($appSrcPath)"
+$appSrcPath = Get-ChildItem -File -Path $searchPath -Recurse | Where-Object { $_.name -match $installerName }
+Write-Log -Level "INFO" -Message "Found $($appSrcPath.FullName)"
 
-Write-Log -Level "INFO" -Message "Switching to Directory - $($appSrcPath)"
-Push-Location $appSrcPath 
+Write-Log -Level "INFO" -Message "Switching to Directory - $($appSrcPath.Directoryname)"
+Push-Location $appSrcPath.Directoryname 
 
 Write-Log -Level "INFO" -Message "Getting Extension of $($appSrcPath.FullName)"
 $installerExtension = [System.IO.Path]::GetExtension("$($appSrcPath.FullName)")
