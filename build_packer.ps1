@@ -12,7 +12,9 @@ Param (
     [string]$vm_name = "Windows10",
     [string]$outPath = "c:\users\mmcfall\Desktop\VMs\",
     [string]$keepregistered = "false",
-    [string]$switch = "Default Switch"
+    [string]$switch = "Default Switch",
+    [switch]$createVM,
+    $memory = 1024
 )
 
 Function Write-Log {
@@ -59,3 +61,12 @@ Write-Log -Level "INFO" -Message "Building $($vm_name_postfix) from $($bare_outp
 Write-Log -Level "DEBUG" -Message "$($packerpath) build -timestamp-ui -only win_base.hyperv-vmcx.Windows_base -var `"clone_from_vmcx_path=$($bare_output_path)\Virtual Hard Disks)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($base_output_path)`" -var `"vm_name=$($vm_name_postfix)`" -var-file $($varsfile) -var-file $($secretsfile) $($buildfile)" 
 # .\bin\packer.exe build -force -var-file .\vars\Windows10\Windows10_vars.json .\Windows10.pkr.hcl
 Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -timestamp-ui -only win_base.hyperv-vmcx.Windows_base -var `"clone_from_vmcx_path=$($bare_output_path)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($base_output_path)`" -var `"vm_name=$($vm_name_postfix)`" -var-file $($varsfile) -var-file $($secretsfile) $($buildfile)" -Wait
+
+
+if ($createVM.IsPresent) {
+    $baseVMPath = Get-ChildItem -Path $base_output_path -Recurse | Where-Object { $_.Extension -eq ".vhdx" }
+    $baseVM = New-VM -Name "$($vm_name)_base_$($postfix)" -Generation 1 -MemoryStartupBytes $memory -SwitchName $switch -VHDPath $baseVMPath.FullName
+
+    $baseappVMPath = Get-ChildItem -Path $$baseapp_output_path  -Recurse | Where-Object { $_.Extension -eq ".vhdx" }
+    $baseappVM = New-VM -Name "$($vm_name)_baseapp_$($postfix)" -Generation 1 -MemoryStartupBytes $memory -SwitchName $switch -VHDPath $baseVMPath.FullName
+}

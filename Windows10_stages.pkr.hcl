@@ -249,8 +249,6 @@ source "hyperv-vmcx" "Windows_base" {
   boot_wait        = "60s"
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
-  iso_checksum     = "${var.iso_checksum}"
-  iso_url          = "${var.iso_url}"
   floppy_files     = ["./src/scripts/"]
   headless         = "${var.headless}"
   http_directory   = "${var.http_directory}"
