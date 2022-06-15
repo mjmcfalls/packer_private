@@ -143,7 +143,7 @@ packer {
 # source. Read the documentation for source blocks here:
 # https://www.packer.io/docs/templates/hcl_templates/blocks/source
 
-source "qemu" "Windows10_iso" {
+source "qemu" "win_iso" {
   accelerator      = "kvm"
   boot_wait        = "60s"
   communicator     = "winrm"
@@ -222,7 +222,7 @@ source "qemu" "Windows10_choco" {
   winrm_username   = "${var.winrm_username}"
 }
 
-source "hyperv-iso" "vm" {
+source "hyperv-iso" "win_iso" {
   boot_wait        = "60s"
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
@@ -270,7 +270,7 @@ source "hyperv-vmcx" "Windows_base" {
 
 build {
   name = "win_iso"
-  sources = ["source.qemu.Windows10_iso","source.hyperv-iso.vm"]
+  sources = ["source.qemu.win_iso","source.hyperv-iso.win_iso"]
 
   provisioner "powershell" {
     inline = [

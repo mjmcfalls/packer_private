@@ -5,6 +5,7 @@ Param (
     $postfix = (Get-Date -format yyyyMMddhhmm),
     [string]$debugLog = "d:\temp\packerlog_$($postfix).log",
     [string]$varsfile,
+    [string]$appvarFile,
     [string]$secretsfile,
     [string]$buildfile,
     [string]$packerpath = ".\bin\packer.exe",
@@ -50,9 +51,9 @@ $baseapp_opt_output_path = "$($outPath)\$($vm_name)\baseapp_opt\$($vm_name)_base
 $env:PACKER_LOG = $debugging
 $env:PACKER_LOG_PATH = $debugLog
 Write-Log -Level "INFO" -Message "Building $($vm_name_postfix) from ISO"
-Write-Log -Level "DEBUG" -Message "$($packerpath) build -timestamp-ui -only win_iso.hyperv-iso.vm -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($bare_output_path)`" -var `"vm_name=$($vm_name_postfix)`" -var-file $($varsfile) -var-file $($secretsfile) $($buildfile)" 
+Write-Log -Level "DEBUG" -Message "$($packerpath) build -timestamp-ui -only win_iso.hyperv-iso.win_iso -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($bare_output_path)`" -var `"vm_name=$($vm_name_postfix)`" -var-file $($varsfile) -var-file $($secretsfile) $($buildfile)" 
 # .\bin\packer.exe build -force -var-file .\vars\Windows10\Windows10_vars.json .\Windows10.pkr.hcl
-Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -timestamp-ui -only win_iso.hyperv-iso.vm -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($bare_output_path)`" -var `"vm_name=$($vm_name_postfix)`" -var-file $($varsfile) -var-file $($secretsfile) $($buildfile)" -Wait
+Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -timestamp-ui -only win_iso.hyperv-iso.win_iso -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($bare_output_path)`" -var `"vm_name=$($vm_name_postfix)`" -var-file $($varsfile) -var-file $($secretsfile) $($buildfile)" -Wait
 
 Write-Log -Level "INFO" -Message "Building $($vm_name_postfix) from $($bare_output_path)"
 Write-Log -Level "DEBUG" -Message "$($packerpath) build -timestamp-ui -only win_base.hyperv-vmcx.Windows_base -var `"clone_from_vmcx_path=$($bare_output_path)\Virtual Hard Disks)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($base_output_path)`" -var `"vm_name=$($vm_name_postfix)`" -var-file $($varsfile) -var-file $($secretsfile) $($buildfile)" 
