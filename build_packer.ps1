@@ -14,6 +14,7 @@ Param (
     [string]$keepregistered = "false",
     [string]$switch = "Default Switch",
     [switch]$createVM,
+    [switch]$cleanup
     $memory = 1024
 )
 
@@ -65,8 +66,18 @@ Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -time
 
 if ($createVM.IsPresent) {
     $baseVMPath = Get-ChildItem -Path $base_output_path -Recurse | Where-Object { $_.Extension -eq ".vhdx" }
+    Write-Log -Level "INFO" -Message "Base VM Path:$($baseVMPath.FullName)"
+
     $baseVM = New-VM -Name "$($vm_name)_base_$($postfix)" -Generation 1 -MemoryStartupBytes $memory -SwitchName $switch -VHDPath $baseVMPath.FullName
+    Write-Log -Level "INFO" -Message "Base App VM: $($baseVM)"
 
     $baseappVMPath = Get-ChildItem -Path $$baseapp_output_path  -Recurse | Where-Object { $_.Extension -eq ".vhdx" }
+    Write-Log -Level "INFO" -Message "Base VM Path:$($baseappVMPath.FullName)"
+
     $baseappVM = New-VM -Name "$($vm_name)_baseapp_$($postfix)" -Generation 1 -MemoryStartupBytes $memory -SwitchName $switch -VHDPath $baseVMPath.FullName
+    Write-Log -Level "INFO" -Message "Base App VM: $($baseappVM)"
+}
+
+if ($cleanup.IsPresent) {
+    Write-Log -Level "INFO" -Message "Cleaning up Intermediate builds"
 }
