@@ -2,10 +2,7 @@
 Param (
     [string]$uri,
     [string]$outpath = $env:temp,
-    [switch]$install,
     [string]$installParams = "/qn ADDLOCAL=ALL",
-    [switch]$public,
-    [string]$appuri = "/apps/VirtIO/",
     [string]$isoname = "virtio-win-0.1.217.iso",
     [string]$installername = "virtio-win-gt-x64.msi",
     [switch]$cleanup

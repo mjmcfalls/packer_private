@@ -311,11 +311,11 @@ build {
       "a:\\Install_pswindowsupdate.ps1",
       "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -SearchPath '${var.win_temp_dir}\\apps' -app 'sysinternals'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '7zip' -installParams '/S' -installername '7z2107-x64.exe'",
-      # "${var.win_temp_dir}\\scripts\\7zip\\install_7zip.ps1 -SearchPath '${var.win_temp_dir}\\apps' -installername '7z2107-x64.exe' -app '7zip'",
-      # "${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install",
-      # "${var.win_temp_dir}\\scripts\\Chrome\\install_Chrome.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.chrome_installer}' -install",
-      # "${var.win_temp_dir}\\scripts\\git\\install_git.ps1 -OutPath '${var.win_temp_dir}' -uri '${var.git_uri}' -public -install",
-      # "${var.win_temp_dir}\\scripts\\VSCode\\install_vscode.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.vscode_installer}' -install",
+      "${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Chrome' -installParams '/quiet /norestart' -installername 'GoogleChromeStandaloneEnterprise64.msi'",
+      "${var.win_temp_dir}\\scripts\\Chrome\\install_Chrome_MasterPrefs.ps1 -SearchPath '${var.win_temp_dir}\\scripts'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Git' -installParams '/VERYSILENT /NORESTART' -installername 'Git-2.36.1-64-bit.exe'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Git LFS' -installParams '/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -installername 'git-lfs-windows-v3.2.0.exe'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'VSCode' -installParams '/VERYSILENT /loadinf=vscode.inf /MERGETASKS=!runcode' -installername 'VSCodeSetup-x64-1.67.0.exe'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Python2.7' -installParams '/quiet' -installername 'python-2.7.18.amd64.msi'",
       # "${var.win_temp_dir}\\scripts\\Firefox\\install_firefox.ps1 -OutPath '${var.win_temp_dir}' -uri '${var.firefox_uri}' -public -install",
@@ -344,8 +344,8 @@ build {
 # Application installations
   provisioner "powershell" {
     inline = [
-      "${var.win_temp_dir}\\scripts\\Microsoft\\install_adk.ps1 -SearchPath '${var.win_temp_dir}\\apps' -installername 'adksetup.exe' -app 'msadk'",
-      "${var.win_temp_dir}\\scripts\\Microsoft\\install_winpeadk.ps1 -SearchPath '${var.win_temp_dir}\\apps' -installername 'adkwinpesetup.exe' -app 'mswinpeadk'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath  '${var.win_temp_dir}' -installername 'adksetup.exe' -app 'msadk' -installParams '/ceip off /norestart /quiet /features OptionId.WindowsPerformanceToolkit OptionId.DeploymentTools OptionId.ApplicationCompatibilityToolkit OptionId.WindowsAssessmentToolkit'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -installername 'adkwinpesetup.exe' -app 'mswinpeadk' -installParams '/ceip off /norestart /quiet' ",
       # "'${var.win_temp_dir}\\psappdeploy\\ms_adk\\Deploy-Application.ps1 -DeploymentType Install -DeployMode Silent",
       # "${var.win_temp_dir}\\scripts\\CiscoAnyconnect\\install_anyconnect.ps1 -Cleanup -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.anyconnect_installer}' -install",
       "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
