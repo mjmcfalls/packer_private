@@ -3,3 +3,5 @@ packer_cache/*
 src/apps/*
 output/*
 secrets/*
+src/psappdeploy/*
+src/PsAppDeployToolkit_v3.8.4_template/*

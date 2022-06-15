@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 
+=======
+*.exe filter=lfs diff=lfs merge=lfs -text
+*.msi filter=lfs diff=lfs merge=lfs -text
+>>>>>>> 489a5ae18d197b69cf3a0c76a27bd2eb0ef49005
 

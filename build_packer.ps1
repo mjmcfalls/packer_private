@@ -50,6 +50,11 @@ $base_opt_output_path = "$($outPath)\$($vm_name)\base_opt\$($vm_name)_base_opt_$
 $baseapp_output_path = "$($outPath)\$($vm_name)\baseapp\$($vm_name)_baseapp_$($postfix)"
 $baseapp_opt_output_path = "$($outPath)\$($vm_name)\baseapp_opt\$($vm_name)_baseapp_opt_$($postfix)"
 
+# Get Default Switch IP and Subnet
+$nic = (Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex (get-netadapter | Where {$_.Name -like "*default*"}).InterfaceIndex)
+# PrefixLength
+# IPv4Address
+
 # Set ENV Variables for debugging
 $env:PACKER_LOG = $debugging
 $env:PACKER_LOG_PATH = $debugLog
