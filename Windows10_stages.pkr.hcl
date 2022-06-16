@@ -296,22 +296,20 @@ build {
     elevated_password = ""
     inline = [
       "a:/Config_Winrm.ps1",
-      "a:\\Windows_os_optimize.ps1 -defaultsUserSettingsPath 'a:\\DefaultUsersSettings.txt' -ScheduledTasksListPath 'a:\\ScheduledTasks.txt' -automaticTracingFilePath 'a:\\AutomaticTracers.txt' -servicesToDisablePath 'a:\\ServicesToDisable.txt'"
+      "a:/Windows_os_optimize.ps1 -defaultsUserSettingsPath 'a:\\DefaultUsersSettings.txt' -ScheduledTasksListPath 'a:\\ScheduledTasks.txt' -automaticTracingFilePath 'a:\\AutomaticTracers.txt' -servicesToDisablePath 'a:\\ServicesToDisable.txt'"
     ]
   }
+
+  provisioner "powershell" {
+    elevated_user = "SYSTEM"
+    elevated_password = ""
+    inline = [
+      "a:/Install_dotnet3.5.ps1"
+    ]
+  }
+
 }
 
-# build {
-#   name = "win_iso"
-#   sources = ["source.hyperv-iso.vm"]
-
-#   provisioner "powershell" {
-#     inline = [
-#       "a:/Config_Winrm.ps1",
-#       "a:\\Windows_os_optimize.ps1 -defaultsUserSettingsPath 'a:\\DefaultUsersSettings.txt' -ScheduledTasksListPath 'a:\\ScheduledTasks.txt' -automaticTracingFilePath 'a:\\AutomaticTracers.txt' -servicesToDisablePath 'a:\\ServicesToDisable.txt'"
-#     ]
-#   }
-# }
 build { 
   name = "win_base"
   sources = ["source.hyperv-vmcx.Windows_base"]
@@ -323,12 +321,11 @@ build {
   }
 
   provisioner "powershell" {
-    elevated_user = "SYSTEM"
-    elevated_password = ""
+    # elevated_user = "SYSTEM"
+    # elevated_password = ""
     inline = [
       # "a:/config_hyperv_ip.ps1 -set -IPAddress '${var.vm_ipaddress}' -prefixLength '${var.vm_prefixlength}' -SubnetMask '${var.vm_subnetmask}' -defaultGateway '${var.vm_defaultgateway}'",
       "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.win_temp_dir}\\wget\\wget.exe'",
-      # "a:\\psappdeploy\\Virtio\\install_Virtio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -isoname '${var.virtio_isoname}' -install",
       "a:\\Install_pswindowsupdate.ps1",
       "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -SearchPath '${var.win_temp_dir}\\apps' -app 'sysinternals'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '7zip' -installParams '/S' -installername '7z2107-x64.exe'",
@@ -339,10 +336,11 @@ build {
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Git LFS' -installParams '/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -installername 'git-lfs-windows-v3.2.0.exe'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'VSCode' -installParams '/VERYSILENT /loadinf=vscode.inf /MERGETASKS=!runcode' -installername 'VSCodeSetup-x64-1.67.0.exe'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Python2.7' -installParams '/quiet' -installername 'python-2.7.18.amd64.msi'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Python 3.9.13' -installParams '/quiet' -installername 'python-3.9.13-amd64.exe'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'R 4.2.0' -installParams '/verysilent /NORESTART /MERGETASKS=!desktopicon' -installername 'R-4.2.0-win.exe'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Anaconda3 2021.11' -installParams '/s' -installername 'Anaconda3-2021.11-Windows-x86_64.exe'",
       # "${var.win_temp_dir}\\scripts\\Firefox\\install_firefox.ps1 -OutPath '${var.win_temp_dir}' -uri '${var.firefox_uri}' -public -install",
-      # "${var.win_temp_dir}\\scripts\\r\\install_r.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.r_installer}' -install",
       # "${var.win_temp_dir}\\scripts\\rstudio\\install_r_studio.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.r_studio_install}' -install",
-      # "${var.win_temp_dir}\\scripts\\anaconda\\install_anaconda.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.anaconda_installer}' -installParams '${var.anaconda_install_type} ${var.anaconda_install_addpath} ${var.anaconda_install_registerpy} ${var.anaconda_install_silent} ${var.anaconda_install_dir}' -install -navigatorUpdate",
       # "${var.win_temp_dir}\\scripts\\atom\\install_atom.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}'  -install",
       # "${var.win_temp_dir}\\scripts\\notepadplusplus\\install_notepadplusplus.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}'  -install",
       # "${var.win_temp_dir}\\scripts\\winmerge\\install_winmerge.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -install",
