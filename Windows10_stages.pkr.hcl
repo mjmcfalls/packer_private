@@ -53,11 +53,7 @@ variable "nix_output_directory" {
   default = "${env("nix_output_directory")}"
 }
 
-<<<<<<< HEAD
 variable "output_directory" {
-=======
-variable "nix_choco_output_directory" {
->>>>>>> 489a5ae18d197b69cf3a0c76a27bd2eb0ef49005
   type    = string
 }
 
@@ -129,13 +125,31 @@ variable "use_backing_file" {
   type    = string
   default = false
 }
-<<<<<<< HEAD
+
 variable "clone_from_vmcx_path" {
   type    = string
   default = ""
 }
-=======
->>>>>>> 489a5ae18d197b69cf3a0c76a27bd2eb0ef49005
+
+variable "vm_ipaddress" {
+  type    = string
+  default = ""
+}
+
+variable "vm_prefixlength" {
+  type    = string
+  default = ""
+}
+
+variable "vm_subnetmask" {
+  type    = string
+  default = ""
+}
+
+variable "vm_defaultgateway" {
+  type    = string
+  default = ""
+}
 
 packer {
   required_plugins {
@@ -278,13 +292,11 @@ build {
   sources = ["source.qemu.win_iso","source.hyperv-iso.win_iso"]
 
   provisioner "powershell" {
+    elevated_user = "SYSTEM"
+    elevated_password = ""
     inline = [
       "a:/Config_Winrm.ps1",
-<<<<<<< HEAD
       "a:\\Windows_os_optimize.ps1 -defaultsUserSettingsPath 'a:\\DefaultUsersSettings.txt' -ScheduledTasksListPath 'a:\\ScheduledTasks.txt' -automaticTracingFilePath 'a:\\AutomaticTracers.txt' -servicesToDisablePath 'a:\\ServicesToDisable.txt'"
-=======
-      "a:\\Windows_os_optimize.ps1"
->>>>>>> 489a5ae18d197b69cf3a0c76a27bd2eb0ef49005
     ]
   }
 }
@@ -300,10 +312,50 @@ build {
 #     ]
 #   }
 # }
+build { 
+  name = "win_base"
+  sources = ["source.hyperv-vmcx.Windows_base"]
+
+  provisioner "file" {
+    source      = "./src/apps/wget"
+    destination = "${var.win_temp_dir}/"
+    direction   =  "upload"
+  }
+
+  provisioner "powershell" {
+    elevated_user = "SYSTEM"
+    elevated_password = ""
+    inline = [
+      # "a:/config_hyperv_ip.ps1 -set -IPAddress '${var.vm_ipaddress}' -prefixLength '${var.vm_prefixlength}' -SubnetMask '${var.vm_subnetmask}' -defaultGateway '${var.vm_defaultgateway}'",
+      "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.win_temp_dir}\\wget\\wget.exe'",
+      # "a:\\psappdeploy\\Virtio\\install_Virtio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -isoname '${var.virtio_isoname}' -install",
+      "a:\\Install_pswindowsupdate.ps1",
+      "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -SearchPath '${var.win_temp_dir}\\apps' -app 'sysinternals'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '7zip' -installParams '/S' -installername '7z2107-x64.exe'",
+      "${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Chrome' -installParams '/quiet /norestart' -installername 'GoogleChromeStandaloneEnterprise64.msi'",
+      "${var.win_temp_dir}\\scripts\\Chrome\\install_Chrome_MasterPrefs.ps1 -SearchPath '${var.win_temp_dir}\\scripts'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Git' -installParams '/VERYSILENT /NORESTART' -installername 'Git-2.36.1-64-bit.exe'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Git LFS' -installParams '/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -installername 'git-lfs-windows-v3.2.0.exe'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'VSCode' -installParams '/VERYSILENT /loadinf=vscode.inf /MERGETASKS=!runcode' -installername 'VSCodeSetup-x64-1.67.0.exe'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Python2.7' -installParams '/quiet' -installername 'python-2.7.18.amd64.msi'",
+      # "${var.win_temp_dir}\\scripts\\Firefox\\install_firefox.ps1 -OutPath '${var.win_temp_dir}' -uri '${var.firefox_uri}' -public -install",
+      # "${var.win_temp_dir}\\scripts\\r\\install_r.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.r_installer}' -install",
+      # "${var.win_temp_dir}\\scripts\\rstudio\\install_r_studio.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.r_studio_install}' -install",
+      # "${var.win_temp_dir}\\scripts\\anaconda\\install_anaconda.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.anaconda_installer}' -installParams '${var.anaconda_install_type} ${var.anaconda_install_addpath} ${var.anaconda_install_registerpy} ${var.anaconda_install_silent} ${var.anaconda_install_dir}' -install -navigatorUpdate",
+      # "${var.win_temp_dir}\\scripts\\atom\\install_atom.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}'  -install",
+      # "${var.win_temp_dir}\\scripts\\notepadplusplus\\install_notepadplusplus.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}'  -install",
+      # "${var.win_temp_dir}\\scripts\\winmerge\\install_winmerge.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -install",
+      # "${var.win_temp_dir}\\scripts\\texstudio\\install_texstudio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -install",
+      # "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
+      "a:/config_hyperv_ip.ps1 -remove -IPAddress '${var.vm_ipaddress}'",
+    ]
+  }
+}
 
 build { 
   name = "win_base"
-  sources = ["source.qemu.Windows10_base","source.hyperv-vmcx.Windows_base"]
+  sources = ["source.qemu.Windows10_base"]
 
   provisioner "file" {
     source      = "./src/apps/wget"
@@ -318,7 +370,6 @@ build {
       "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.win_temp_dir}\\wget\\wget.exe'",
       # "a:\\psappdeploy\\Virtio\\install_Virtio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -isoname '${var.virtio_isoname}' -install",
       "a:\\Install_pswindowsupdate.ps1",
-<<<<<<< HEAD
       "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -SearchPath '${var.win_temp_dir}\\apps' -app 'sysinternals'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '7zip' -installParams '/S' -installername '7z2107-x64.exe'",
       "${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install",
@@ -328,24 +379,6 @@ build {
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Git LFS' -installParams '/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -installername 'git-lfs-windows-v3.2.0.exe'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'VSCode' -installParams '/VERYSILENT /loadinf=vscode.inf /MERGETASKS=!runcode' -installername 'VSCodeSetup-x64-1.67.0.exe'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Python2.7' -installParams '/quiet' -installername 'python-2.7.18.amd64.msi'",
-=======
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\VirtIO\\Deploy-Application.exe' -ArgumentList 'Install NonInteractive' -Wait",
-      # "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -install",
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\7zip\\Deploy-Application.exe' -ArgumentList 'Install NonInteractive' -Wait",
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\SysInternals\\Deploy-Application.exe' -ArgumentList 'Install NonInteractive' -Wait",
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\Chrome\\Deploy-Application.exe' -ArgumentList 'Install NonInteractive' -Wait",
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\python\\python27\\Deploy-Application.exe' -ArgumentList 'Install NonInteractive' -Wait",
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\python\\python3913\\Deploy-Application.exe' -ArgumentList 'Install NonInteractive' -Wait",
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\git\\Deploy-Application.exe' -ArgumentList 'Install NonInteractive' -Wait",
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\atom\\Deploy-Application.exe' -ArgumentList 'Install NonInteractive' -Wait",
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\vscode\\Deploy-Application.exe' -ArgumentList 'Install NonInteractive' -Wait",
-      # "${var.win_temp_dir}\\scripts\\7zip\\install_7zip.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.seven_zip_installer}' -install",
-      # "${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install",
-      # "${var.win_temp_dir}\\scripts\\Chrome\\install_Chrome.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.chrome_installer}' -install",
-      # "${var.win_temp_dir}\\scripts\\git\\install_git.ps1 -OutPath '${var.win_temp_dir}' -uri '${var.git_uri}' -public -install",
-      # "${var.win_temp_dir}\\scripts\\VSCode\\install_vscode.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.vscode_installer}' -install",
-      # "${var.win_temp_dir}\\scripts\\Python\\install_python.ps1 -uri '${var.python_uri}' -OutPath '${var.win_temp_dir}' -public -install",
->>>>>>> 489a5ae18d197b69cf3a0c76a27bd2eb0ef49005
       # "${var.win_temp_dir}\\scripts\\Firefox\\install_firefox.ps1 -OutPath '${var.win_temp_dir}' -uri '${var.firefox_uri}' -public -install",
       # "${var.win_temp_dir}\\scripts\\r\\install_r.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.r_installer}' -install",
       # "${var.win_temp_dir}\\scripts\\rstudio\\install_r_studio.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.r_studio_install}' -install",
@@ -372,14 +405,9 @@ build {
 # Application installations
   provisioner "powershell" {
     inline = [
-<<<<<<< HEAD
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath  '${var.win_temp_dir}' -installername 'adksetup.exe' -app 'msadk' -installParams '/ceip off /norestart /quiet /features OptionId.WindowsPerformanceToolkit OptionId.DeploymentTools OptionId.ApplicationCompatibilityToolkit OptionId.WindowsAssessmentToolkit'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -installername 'adkwinpesetup.exe' -app 'mswinpeadk' -installParams '/ceip off /norestart /quiet' ",
       # "'${var.win_temp_dir}\\psappdeploy\\ms_adk\\Deploy-Application.ps1 -DeploymentType Install -DeployMode Silent",
-=======
-      # "${var.win_temp_dir}\\scripts\\Microsoft\\install_adk.ps1 -uri '${var.ms_adk_uri}' -OutPath '${var.win_temp_dir}' -installername '${var.ms_adk_installer}' -public -install"
-      "Start-Process -NoNewWindow -FilePath '${var.win_temp_dir}\\psappdeploy\\ms_adk\\Deploy-Application.exe' -ArgumentList 'Install NonInteractive' -Wait",
->>>>>>> 489a5ae18d197b69cf3a0c76a27bd2eb0ef49005
       # "${var.win_temp_dir}\\scripts\\CiscoAnyconnect\\install_anyconnect.ps1 -Cleanup -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.anyconnect_installer}' -install",
       "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
       ]
