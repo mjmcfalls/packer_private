@@ -16,6 +16,12 @@ packer build -force -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file sec
 ##### Multiple Variable files, a secrets files, and select a single build from multiple builds
 packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_parallel.pkr.hcl
 
+### To-Do
+[] Chrome Preferences broken (cannot find file - Search for preference file: initial_preferences)
+[x] Edge preferences fixed
+[] One Drive not being removed
+[] Python Not added to path (might need to manually add to path)
+[] VScode redirect for extensions
 
 ### Applications in Build
 Atom

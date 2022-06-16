@@ -13,6 +13,7 @@ Param (
     [string]$outPath = "c:\users\mmcfall\Desktop\VMs\",
     [string]$keepregistered = "false",
     [string]$switch = "Default Switch",
+    [string]$vmlocation,
     [switch]$createVM,
     [switch]$cleanup,
     $memory = 1024

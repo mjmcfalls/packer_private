@@ -1,7 +1,7 @@
 [CmdletBinding()]
 Param (
     [string]$searchPath = $env:temp,
-    [string]$preferenceFile = "initial_preferences",
+    [string]$preferenceFile = "chrome_master_preferences",
     [string]$preferenceFileDest = "C:\Program Files\Google\Chrome\Application\initial_preferences",
     [string]$preferenceFilter = "*"
 )

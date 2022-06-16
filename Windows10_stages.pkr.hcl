@@ -348,7 +348,7 @@ build {
       # "${var.win_temp_dir}\\scripts\\winmerge\\install_winmerge.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -install",
       # "${var.win_temp_dir}\\scripts\\texstudio\\install_texstudio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -install",
       # "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
-      "a:/config_hyperv_ip.ps1 -remove -IPAddress '${var.vm_ipaddress}'",
+      # "a:/config_hyperv_ip.ps1 -remove -IPAddress '${var.vm_ipaddress}'",
     ]
   }
 }
@@ -379,6 +379,9 @@ build {
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Git LFS' -installParams '/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -installername 'git-lfs-windows-v3.2.0.exe'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'VSCode' -installParams '/VERYSILENT /loadinf=vscode.inf /MERGETASKS=!runcode' -installername 'VSCodeSetup-x64-1.67.0.exe'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Python2.7' -installParams '/quiet' -installername 'python-2.7.18.amd64.msi'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Python 3.9.13' -installParams '/quiet' -installername 'python-3.9.13-amd64.exe'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'R 4.2.0' -installParams '/verysilent /NORESTART /MERGETASKS=!desktopicon' -installername 'R-4.2.0-win.exe'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Anaconda3 2021.11' -installParams '/s' -installername 'Anaconda3-2021.11-Windows-x86_64.exe'",
       # "${var.win_temp_dir}\\scripts\\Firefox\\install_firefox.ps1 -OutPath '${var.win_temp_dir}' -uri '${var.firefox_uri}' -public -install",
       # "${var.win_temp_dir}\\scripts\\r\\install_r.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.r_installer}' -install",
       # "${var.win_temp_dir}\\scripts\\rstudio\\install_r_studio.ps1 -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.r_studio_install}' -install",
