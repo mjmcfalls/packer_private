@@ -73,22 +73,6 @@ New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\' -Name 'Windows Searc
 New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search' -Name 'AllowCortana' -PropertyType DWORD -Value '0' | Out-Null
 
 
-# Uninstall OneDrive
-Write-Log -logfile $logfile -Level "INFO" -Message "Uninstalling OneDrive"
-Start-Process -NoNewWindow -FilePath $oneDrivePath -ArgumentList $oneDriveUninstallParams -Wait
-
-# Remove OneDrive Setup 
-takeown /F "$($oneDrivePath)" /A
-# Add-NTFSAccess -Path $oneDrivePath -Account "BUILTIN\Administrators" -AccessRights FullControl
-Write-Log -logfile $logfile -Level "INFO" -Message "Removing OneDrive Installer"
-Remove-Item $oneDrivePath
-
-Write-Log -logfile $logfile -Level "INFO" -Message "Removing OneDrive Start Menu Shortcuts"
-Remove-Item -Path "C:\Windows\ServiceProfiles\LocalService\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" -Force
-Remove-Item -Path "C:\Windows\ServiceProfiles\NetworkService\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" -Force
-Remove-Item -Path "C:\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" -Force
-Remove-Item -Path "C:\Users\Administrator\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" -Force
-
 # Registry changes
 Write-Log -logfile $logfile -Level "INFO" -Message "Disabling Consumer Features (Internet App Downloads)"
 New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows' -Name 'CloudContent' | Out-Null

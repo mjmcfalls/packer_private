@@ -151,6 +151,32 @@ variable "vm_defaultgateway" {
   default = ""
 }
 
+variable "anaconda_install_type" {
+  type    = string
+  default = "/InstallationType=AllUsers"
+}
+
+variable "anaconda_install_addpath" {
+  type    = string
+  default = "/AddToPath=1"
+}
+
+variable "anaconda_install_registerpy" {
+  type    = string
+  default = "/RegisterPython=1"
+}
+
+variable "anaconda_install_silent" {
+  type    = string
+  default = "/S"
+}
+
+variable "anaconda_install_dir" {
+  type    = string
+  default =  "C:\\programdata\\Anaconda3"
+}
+
+
 packer {
   required_plugins {
     windows-update = {
@@ -304,7 +330,8 @@ build {
     elevated_user = "SYSTEM"
     elevated_password = ""
     inline = [
-      "a:/Install_dotnet3.5.ps1"
+      "a:/Install_dotnet3.5.ps1",
+      "a:/OneDrive_removal.ps1"
     ]
   }
 
@@ -338,7 +365,7 @@ build {
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Python2.7' -installParams '/quiet' -installername 'python-2.7.18.amd64.msi'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Python 3.9.13' -installParams '/quiet' -installername 'python-3.9.13-amd64.exe'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'R 4.2.0' -installParams '/verysilent /NORESTART /MERGETASKS=!desktopicon' -installername 'R-4.2.0-win.exe'",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Anaconda3 2021.11' -installParams '/s' -installername 'Anaconda3-2021.11-Windows-x86_64.exe'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Anaconda3 2021.11' -installParams '${var.anaconda_install_silent} ${var.anaconda_install_registerpy} ${var.anaconda_install_addpath} ${var.anaconda_install_type}' -installername 'Anaconda3-2021.11-Windows-x86_64.exe'",
       "${var.win_temp_dir}\\scripts\\Firefox\\install_firefox.ps1 -SearchPath '${var.win_temp_dir}' -app 'Firefox' -installername 'Firefox Setup 101.0.exe'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'R Studio 2022.02.1-461' -installParams '/s' -installername 'RStudio-2022.02.1-461.exe'", 
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Atom' -installParams '-s' -installername 'AtomSetup-x64.exe'", 

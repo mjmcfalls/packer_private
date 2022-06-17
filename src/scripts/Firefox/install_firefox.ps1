@@ -1,15 +1,11 @@
 [CmdletBinding()]
 
 Param (
-    # [string]$uri,
+    [string]$app,
     [string]$searchPath = $env:temp,
-    # [switch]$install,
     [string]$installParams = "/S /INI=INIPATH",
     [string]$ininame = "Firefox_install.ini",
-    # [switch]$public,
-    # [string]$appuri = "/apps/firefox/",
     [string]$installername = "firefox_installer.exe",
-    # [switch]$cleanup,
     [string]$policyFile = "Firefox_policies.json",
     [string]$policyDestFileName = "policies.json",
     [string]$preferenceFilter = "*",

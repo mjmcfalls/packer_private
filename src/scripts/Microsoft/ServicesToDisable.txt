@@ -25,6 +25,6 @@ WerSvc
 XblAuthManager
 XblGameSave
 XboxGipSvc
-XboxNetApiSvc	
+XboxNetApiSvc
 gupdate
 gpupdatem
