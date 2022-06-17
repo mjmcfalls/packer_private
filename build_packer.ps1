@@ -45,27 +45,35 @@ Function Write-Log {
     }
 }
 
+# Virtual machine namees
 $vm_name_postfix = "$($vm_name)_$($postfix)"
-$bare_output_path = "$($outPath)\$($vm_name)\bare\$($vm_name)_bare_$($postfix)"
-$base_output_path = "$($outPath)\$($vm_name)\base\$($vm_name)_base_$($postfix)"
-$base_opt_output_path = "$($outPath)\$($vm_name)\base_opt\$($vm_name)_base_opt_$($postfix)"
-$baseapp_output_path = "$($outPath)\$($vm_name)\baseapp\$($vm_name)_baseapp_$($postfix)"
-$baseapp_opt_output_path = "$($outPath)\$($vm_name)\baseapp_opt\$($vm_name)_baseapp_opt_$($postfix)"
+$bareVMName = "$($vm_name)_bare_$($postfix)"
+$baseVMName = "$($vm_name)_base_$($postfix)"
+$baseOptVMName = "$($vm_name)_base_opt_$($postfix)"
+$baseappVMName ="$($vm_name)_baseapp_$($postfix)"
+$baseappOptVMName = "$($vm_name)_baseapp_opt_$($postfix)"
+
+# Virtual machine Output Paths
+$bare_output_path = "$($outPath)\$($vm_name)\bare\$($bareVMName)"
+$base_output_path = "$($outPath)\$($vm_name)\base\$($baseVMName)"
+$base_opt_output_path = "$($outPath)\$($vm_name)\base_opt\$($baseOptVMName)"
+$baseapp_output_path = "$($outPath)\$($vm_name)\baseapp\$($baseappVMName)"
+$baseapp_opt_output_path = "$($outPath)\$($vm_name)\baseapp_opt\$($baseappOptVMName)"
 
 # Get Default Switch IP and Subnet
-$nicAdapter = Get-NetAdapter | Where-Object {$_.Name -like "*default*"}
-$nicConfig = Get-NetIPConfiguration -InterfaceIndex ($nicAdapter.InterfaceIndex)
+# $nicAdapter = Get-NetAdapter | Where-Object {$_.Name -like "*default*"}
+# $nicConfig = Get-NetIPConfiguration -InterfaceIndex ($nicAdapter.InterfaceIndex)
 
-[ipaddress]$hostIPAddress = $nicConfig.IPv4Address.ipaddress
-$hostSubnetMask = [ipaddress]([math]::pow(2, 32) -1 -bxor [math]::pow(2, (32 - $nicConfig.IPv4Address.PrefixLength)-1))
+# [ipaddress]$hostIPAddress = $nicConfig.IPv4Address.ipaddress
+# $hostSubnetMask = [ipaddress]([math]::pow(2, 32) -1 -bxor [math]::pow(2, (32 - $nicConfig.IPv4Address.PrefixLength)-1))
 
-Write-Log -Level "INFO" -Message "Hyperv - Default Switch IP:$($hostIPAddress); Prefix Length:$($nicConfig.IPv4Address.PrefixLength); Subnet:$($hostSubnetMask); Index:$($nicAdapter.InterfaceIndex)"
+# Write-Log -Level "INFO" -Message "Hyperv - Default Switch IP:$($hostIPAddress); Prefix Length:$($nicConfig.IPv4Address.PrefixLength); Subnet:$($hostSubnetMask); Index:$($nicAdapter.InterfaceIndex)"
 
-$vmPrefixLength = $nicConfig.IPv4Address.PrefixLength
-$vmSubnetMask = $hostSubnetMask
-[ipaddress]$vmIPAddress = $hostIPAddress.Address + (1 -shl 24)
+# $vmPrefixLength = $nicConfig.IPv4Address.PrefixLength
+# $vmSubnetMask = $hostSubnetMask
+# [ipaddress]$vmIPAddress = $hostIPAddress.Address + (1 -shl 24)
 
-Write-Log -Level "INFO" -Message "VM - IP Address $($vmIPAddress); Prefix Length: $($vmPrefixLength); VM Subnet: $($vmSubnetMask); Default Gateway: $($hostIPAddress)"
+# Write-Log -Level "INFO" -Message "VM - IP Address $($vmIPAddress); Prefix Length: $($vmPrefixLength); VM Subnet: $($vmSubnetMask); Default Gateway: $($hostIPAddress)"
 
 # Set ENV Variables for debugging
 $env:PACKER_LOG = $debugging
@@ -84,28 +92,27 @@ Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -time
 
 if ($createVM.IsPresent) {
     Write-Log -Level "INFO" -Message "Creating VMs from VHDXs"
-#     $baseVMPath = Get-ChildItem -Path $base_output_path -Recurse | Where-Object { $_.Extension -eq ".vhdx" }
-#     Write-Log -Level "INFO" -Message "Base VM Path:$($baseVMPath.FullName)"
+    $baseVMPath = Get-ChildItem -Path $base_output_path -Recurse | Where-Object { $_.Extension -eq ".vhdx" }
+    Write-Log -Level "INFO" -Message "Base VM Path: $($baseVMPath.FullName)"
 
-#     $baseVM = New-VM -Name "$($vm_name)_base_$($postfix)" -Generation 1 -MemoryStartupBytes $memory -SwitchName $switch -VHDPath $baseVMPath.FullName
-#     Write-Log -Level "INFO" -Message "Base App VM: $($baseVM)"
+    $baseVM = New-VM -Name "$($baseVMName)" -Generation 1 -MemoryStartupBytes $memory -SwitchName $switch -VHDPath $baseVMPath.FullName
+    Write-Log -Level "INFO" -Message "BaseVM: $($baseVM)"
 
-    $baseappVMPath = Get-ChildItem -Path $baseapp_output_path -Recurse | Where-Object { $_.Extension -eq ".vhdx" }
-    Write-Log -Level "INFO" -Message "Base VM Path:$($baseappVMPath.FullName)"
+    Write-Log -Level "INFO" -Message "Base VM: Set CPU Count to 4"
+    Set-VMProcessor -VMName $base_output_path -Count 4 
 
-    $baseappVM = New-VM -Name "$($vm_name)_baseapp_$($postfix)" -Generation 1 -MemoryStartupBytes $memory -SwitchName $switch -VHDPath $baseVMPath.FullName
-    Write-Log -Level "INFO" -Message "Base App VM: $($baseappVM)"
-    Write-Log -Level "INFO" -Message "Base App VM: Set CPU Count to 4"
-    Set-VMProcessor -VMName "$($vm_name)_baseapp_$($postfix)" -Count 4 
+    # $baseappVMPath = Get-ChildItem -Path $baseapp_output_path -Recurse | Where-Object { $_.Extension -eq ".vhdx" }
+    # Write-Log -Level "INFO" -Message "Base VM Path:$($baseappVMPath.FullName)"
+
+    # $baseappVM = New-VM -Name "$($vm_name)_baseapp_$($postfix)" -Generation 1 -MemoryStartupBytes $memory -SwitchName $switch -VHDPath $baseVMPath.FullName
+    # Write-Log -Level "INFO" -Message "Base App VM: $($baseappVM)"
+    # Write-Log -Level "INFO" -Message "Base App VM: Set CPU Count to 4"
+    # Set-VMProcessor -VMName "$($vm_name)_baseapp_$($postfix)" -Count 4 
 
     if($startVM.IsPresent){
-        Write-Log -Level "INFO" -Message "Base App VM: Starting VM"
-        Start-VM -Name "$($vm_name)_baseapp_$($postfix)"
+        Write-Log -Level "INFO" -Message "Start VM: $($baseVMName)"
+        Start-VM -Name $baseVMName
     }
-    
-    
-
-
 }
 
 if ($cleanup.IsPresent) {
