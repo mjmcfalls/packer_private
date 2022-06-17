@@ -47,7 +47,8 @@ Function Write-Log {
 $ProgressPreference = 'SilentlyContinue'
 Write-Log -Level "INFO" -Message "Starting Install - $($app)"
 
-$installerFileName, $installerExtension = $installerName.split(".")
+$installerExtension = $installerName.split(".")[-1]
+$installerFileName = $installerName.split("$($installerExtension)")[0]
 Write-Log -Level "INFO" -Message "Installer file Name: $($installerFileName); Installer File Extension: $($installerExtension)"
 
 Write-Log -Level "INFO" -Message "Search for $($installerName) in $($searchPath)"

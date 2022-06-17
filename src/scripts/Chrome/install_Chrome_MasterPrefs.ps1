@@ -34,14 +34,14 @@ Function Write-Log {
 
 $ProgressPreference = 'SilentlyContinue'
     
-Write-Log -Level "INFO" -Message "Search for preference file: $($preferenceFile)"
-$preferenceFileState = Get-ChildItem $searchPath -Recurse | Where-Object { $_.FullName -Like "$($preferenceFilter)$($preferenceFile)" }
+Write-Log -Level "INFO" -Message "Search for preference file: $($preferenceFile) in $($searchPath)"
+$preferenceFileState = Get-ChildItem $searchPath -Recurse -File | Where-Object { $_.Name -Like "$($preferenceFilter)$($preferenceFile)" }
 
 if ($preferenceFileState) {
     Write-Log -Level "INFO" -Message "Found - $($preferenceFileState.FullName)"
 
     Write-Log -Level "INFO" -Message "Copy-Item -Path $($preferenceFileState.FullName) -Destination $(Join-Path -Path $preferenceFileDest -ChildPath "master_preferences") -Force"
-    Copy-Item -Path $preferenceFileState.FullName -Destination (Join-Path -Path $archiveDestination -ChildPath "master_preferences") -Force
+    Copy-Item -Path $preferenceFileState.FullName -Destination $preferenceFileDest -Force
 
 }
 else {

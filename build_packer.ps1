@@ -15,6 +15,7 @@ Param (
     [string]$switch = "Default Switch",
     [string]$vmlocation,
     [switch]$createVM,
+    [switch]$startVM,
     [switch]$cleanup,
     $memory = 1024
 )
@@ -89,11 +90,22 @@ if ($createVM.IsPresent) {
 #     $baseVM = New-VM -Name "$($vm_name)_base_$($postfix)" -Generation 1 -MemoryStartupBytes $memory -SwitchName $switch -VHDPath $baseVMPath.FullName
 #     Write-Log -Level "INFO" -Message "Base App VM: $($baseVM)"
 
-#     $baseappVMPath = Get-ChildItem -Path $$baseapp_output_path  -Recurse | Where-Object { $_.Extension -eq ".vhdx" }
-#     Write-Log -Level "INFO" -Message "Base VM Path:$($baseappVMPath.FullName)"
+    $baseappVMPath = Get-ChildItem -Path $baseapp_output_path -Recurse | Where-Object { $_.Extension -eq ".vhdx" }
+    Write-Log -Level "INFO" -Message "Base VM Path:$($baseappVMPath.FullName)"
 
-#     $baseappVM = New-VM -Name "$($vm_name)_baseapp_$($postfix)" -Generation 1 -MemoryStartupBytes $memory -SwitchName $switch -VHDPath $baseVMPath.FullName
-#     Write-Log -Level "INFO" -Message "Base App VM: $($baseappVM)"
+    $baseappVM = New-VM -Name "$($vm_name)_baseapp_$($postfix)" -Generation 1 -MemoryStartupBytes $memory -SwitchName $switch -VHDPath $baseVMPath.FullName
+    Write-Log -Level "INFO" -Message "Base App VM: $($baseappVM)"
+    Write-Log -Level "INFO" -Message "Base App VM: Set CPU Count to 4"
+    Set-VMProcessor -VMName "$($vm_name)_baseapp_$($postfix)" -Count 4 
+
+    if($startVM.IsPresent){
+        Write-Log -Level "INFO" -Message "Base App VM: Starting VM"
+        Start-VM -Name "$($vm_name)_baseapp_$($postfix)"
+    }
+    
+    
+
+
 }
 
 if ($cleanup.IsPresent) {
