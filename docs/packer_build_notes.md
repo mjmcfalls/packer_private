@@ -17,11 +17,15 @@ packer build -force -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file sec
 packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_parallel.pkr.hcl
 
 ### To-Do
-[] Chrome Preferences broken (cannot find file - Search for preference file: initial_preferences)
+[x] Chrome Preferences broken (cannot find file - Search for preference file: initial_preferences)
 [x] Edge preferences fixed
 [] One Drive not being removed
 [] Python Not added to path (might need to manually add to path)
 [] VScode redirect for extensions
+[] Update conda navigator
+[] Start menu customization
+[] Taskbar customization
+
 
 ### Applications in Build
 Atom
@@ -71,3 +75,6 @@ SAS
 
 #### Speedcrunch 
 Silent install: /s
+
+### Python
+Installers use an unattended.xml file in the same directory as the installer
