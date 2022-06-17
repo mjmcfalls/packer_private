@@ -367,7 +367,7 @@ build {
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'R 4.2.0' -installParams '/verysilent /NORESTART /MERGETASKS=!desktopicon' -installername 'R-4.2.0-win.exe'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Anaconda3 2021.11' -installParams '${var.anaconda_install_silent} ${var.anaconda_install_registerpy} ${var.anaconda_install_addpath} ${var.anaconda_install_type}' -installername 'Anaconda3-2021.11-Windows-x86_64.exe'",
       "${var.win_temp_dir}\\scripts\\Firefox\\install_firefox.ps1 -SearchPath '${var.win_temp_dir}' -app 'Firefox' -installername 'Firefox Setup 101.0.exe'",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'R Studio 2022.02.1-461' -installParams '/s' -installername 'RStudio-2022.02.1-461.exe'", 
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'R Studio 2022.02.1-461' -installParams '/S' -installername 'RStudio-2022.02.1-461.exe'", 
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Atom' -installParams '-s' -installername 'AtomSetup-x64.exe'", 
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Notepad++' -installParams '/s' -installername 'npp.8.4.1.Installer.x64.exe'", 
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'WinMerge' -installParams '/VERYSILENT /NORESTART /MERGETASKS=!desktopicon' -installername 'WinMerge-2.16.20-x64-Setup.exe'", 
