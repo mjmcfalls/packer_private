@@ -334,6 +334,11 @@ build {
       "a:/OneDrive_removal.ps1"
     ]
   }
+    provisioner "powershell" {
+    inline = [
+      "a:/OneDrive_removal.ps1"
+    ]
+  }
 
 }
 
