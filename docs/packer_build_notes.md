@@ -19,16 +19,20 @@ packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Wind
 ### To-Do
 - [x] Chrome Preferences broken (cannot find file - Search for preference file: initial_preferences)
 - [x] Edge preferences fixed
-- [] One Drive not being removed
+- [x] One Drive not being removed; Fix: Moved logic to Administrator from system
 - [] Python2.7 Not added to path (might need to manually add to path; unattend file look correct)
 - [] VScode redirect for extensions
 - [] Update conda navigator
 - [] Start menu customization
 - [] Taskbar customization
-- [x] NPP silent install hangs.
+- [x] NPP silent install hangs; fix: change /s to /S
 - [] BGInfo needs customization
-- [] Application install validation (Pester?)
-- [] Image validation (Pester?)
+- [] Validation: Application installs (Pester?)
+- [] Validation: Image validation (Pester?)
+- [] Join Active Directory
+- [] Update Group policy
+- [] Miktex: Script to find local repo
+- [] Miktex: Zip local repo, then uncompress on demand?  Might save time?
 ### Applications in Build
 - [x] Atom
 - [x] Notepad++
@@ -48,7 +52,6 @@ packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Wind
 - [] MS ADK
 - [x] Edge (First Run Customization)
 - [] VirtIO Drivers (Testing)
-- [] SpeedCrunch (WIP)
 - [] Java 8 Update 321 x86
 - [] Java 8 Update 321 x64
 - [] Julia 1.5.0
