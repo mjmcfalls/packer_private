@@ -17,58 +17,61 @@ packer build -force -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file sec
 packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_parallel.pkr.hcl
 
 ### To-Do
-[x] Chrome Preferences broken (cannot find file - Search for preference file: initial_preferences)
-[x] Edge preferences fixed
-[] One Drive not being removed
-[] Python Not added to path (might need to manually add to path)
-[] VScode redirect for extensions
-[] Update conda navigator
-[] Start menu customization
-[] Taskbar customization
-
-
+- [x] Chrome Preferences broken (cannot find file - Search for preference file: initial_preferences)
+- [x] Edge preferences fixed
+- [] One Drive not being removed
+- [] Python Not added to path (might need to manually add to path or install ini broken?)
+- [] VScode redirect for extensions
+- [] Update conda navigator
+- [] Start menu customization
+- [] Taskbar customization
+- [x] NPP silent install hangs.
+- [] BGInfo needs customization
+- [] Application install validation (Pester?)
+- [] Image validation (Pester?)
 ### Applications in Build
-Atom
-Notepad++
-Firefox
-Vscode (System Install)
-7zip
-Chrome
-WinMerge
-BGInfo
-Python 2.7
-git
-R
-R Studio 
-Anaconda 
-MS ADK
-Edge (First Run Customization)
-VirtIO Drivers
-SpeedCrunch (WIP)
-Java 8 Update 321 x86
-Java 8 Update 321 x64
-Julia 1.5.0
-EmEditor (Emurasoft)
-EndNote 20
-File Shredder
-Mplus v8.4
-NovaBench
-NSIS Pirana
-Nvivo
-Phoenix (Certara)
-SpeedCrunch
-Stata 15,16,17
-Sudaan 11.0.3 x64
-Vim 8.2
-VLC
-X-win32 18
-Wolfra Manager (Classic) 2.7
-Wolfram Mathematica 10
-Wolfram Extras 10
-Umetrics SIMCA 16
-SecureCRT 6.7
-Visual Studio
-SAS
+- [x] Atom
+- [x] Notepad++
+- [x] Firefox
+- [x] Vscode (System Install)
+- [x] 7zip
+- [x] Chrome
+- [x] WinMerge
+- [x] BGInfo
+- [] Python 2.7
+- [x] git
+- [x] R
+- [x] R Studio 
+- [x] Anaconda 
+- [] TexStudio 
+- [] MS ADK
+- [x] Edge (First Run Customization)
+- [] VirtIO Drivers (Testing)
+- [] SpeedCrunch (WIP)
+- [] Java 8 Update 321 x86
+- [] Java 8 Update 321 x64
+- [] Julia 1.5.0
+- [] EmEditor (Emurasoft)
+- [] EndNote 20
+- [] File Shredder
+- [] Mplus v8.4
+- [] NovaBench
+- [] NSIS Pirana
+- [] Nvivo
+- [] Phoenix (Certara)
+- [] SpeedCrunch
+- [] Stata 15,16,17
+- [] Sudaan 11.0.3 x64
+- [] Vim 8.2
+- [] VLC
+- [] X-win32 18
+- [] Wolfra Manager (Classic) 2.7
+- [] Wolfram Mathematica 10
+- [] Wolfram Extras 10
+- [] Umetrics SIMCA 16
+- [] SecureCRT 6.7
+- [] Visual Studio
+- [] SAS
 
 ### Application Specific Information
 
