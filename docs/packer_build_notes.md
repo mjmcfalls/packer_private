@@ -80,6 +80,8 @@ packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Wind
 ### Application Specific Information
 
 
+#### Fileshredder
+/SILENT - Silent install
 #### Speedcrunch 
 Silent install: /S
 

@@ -53,7 +53,17 @@ Write-Log -Level "INFO" -Message "Installer file Name: $($installerFileName); In
 
 Write-Log -Level "INFO" -Message "Search for $($installerName) in $($searchPath)"
 $appSrcPath = Get-ChildItem -File -Path $searchPath -Recurse | Where-Object { $_.name -match $installerName }
-Write-Log -Level "INFO" -Message "Found $($appSrcPath.FullName)"
+
+if ($appSrcPath -is [array]) {
+    Write-Log -Level "INFO" -Message "Found multiple installers; selecting [0]"
+    $appSrcPath = $appSrcPath[0]
+    Write-Log -Level "INFO" -Message "Using $($appSrcPath.FullName)"
+}
+else {
+    Write-Log -Level "INFO" -Message "Found $($appSrcPath.FullName)"
+}
+
+
 
 Write-Log -Level "INFO" -Message "Switching to Directory - $($appSrcPath.Directoryname)"
 Push-Location $appSrcPath.Directoryname 
