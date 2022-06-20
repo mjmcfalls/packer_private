@@ -39,11 +39,12 @@ packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Wind
 - [x] WinMerge
 - [x] BGInfo
 - [] Python 2.7
+- [] Miktex
 - [x] git
 - [x] R
 - [x] R Studio 
 - [x] Anaconda 
-- [] TexStudio 
+- [x] TexStudio (Requires MikTex to be installed)
 - [] MS ADK
 - [x] Edge (First Run Customization)
 - [] VirtIO Drivers (Testing)
@@ -77,7 +78,13 @@ packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Wind
 
 
 #### Speedcrunch 
-Silent install: /s
+Silent install: /S
 
 ### Python
-Installers use an unattended.xml file in the same directory as the installer
+Installers use an unattend.xml file in the same directory as the installer
+
+### Miktex
+Download standalone setup.
+Unzip installer
+Download installation files: miktexsetup_standalone --verbose --local-package-repository=C:\miktex-repository --package-set=complete download
+Install: miktexsetup_standalone --verbose --local-package-repository=C:\miktex-repository --shared=yes --user-config="<APPDATA>\MiKTeX" --user-data="<LOCALAPPDATA>\MiKTeX" --user-install=<APPDATA>\MiKTeX" --print-info-only install

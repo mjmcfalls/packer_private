@@ -93,7 +93,7 @@ Write-Log -Level "INFO" -Message "Startup Link Target Path: $($bgInfoPath)"
 $Shortcut.TargetPath = "$($bgInfoPath)"
 
 Write-Log -Level "INFO" -Message "BGInfo config located at $($bgInfoConfigPath)"
-Write-Log -Level "INFO" -Message "Link Arguments: /timer:0 /nolicprompt /silent `"$($bgInfoConfigPath)`""
+Write-Log -Level "INFO" -Message "Link Arguments: /timer:120 /nolicprompt /silent `"$($bgInfoConfigPath)`""
 $Shortcut.Arguments = "$($installParams) `"$($bgInfoConfigPath)`""
 
 Write-Log -Level "INFO" -Message "Creating Startup link in $startupLocation\BGInfo.lnk"
