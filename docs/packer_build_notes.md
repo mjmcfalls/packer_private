@@ -20,7 +20,7 @@ packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Wind
 - [x] Chrome Preferences broken (cannot find file - Search for preference file: initial_preferences)
 - [x] Edge preferences fixed
 - [] One Drive not being removed
-- [] Python Not added to path (might need to manually add to path or install ini broken?)
+- [] Python2.7 Not added to path (might need to manually add to path; unattend file look correct)
 - [] VScode redirect for extensions
 - [] Update conda navigator
 - [] Start menu customization
@@ -38,7 +38,7 @@ packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Wind
 - [x] Chrome
 - [x] WinMerge
 - [x] BGInfo
-- [] Python 2.7
+- [x] Python 2.7
 - [] Miktex
 - [x] git
 - [x] R
@@ -54,13 +54,13 @@ packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Wind
 - [] Julia 1.5.0
 - [] EmEditor (Emurasoft)
 - [] EndNote 20
-- [] File Shredder
+- [x] File Shredder
 - [] Mplus v8.4
 - [] NovaBench
 - [] NSIS Pirana
 - [] Nvivo
 - [] Phoenix (Certara)
-- [] SpeedCrunch
+- [x] SpeedCrunch
 - [] Stata 15,16,17
 - [] Sudaan 11.0.3 x64
 - [] Vim 8.2
