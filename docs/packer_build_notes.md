@@ -20,7 +20,7 @@ packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Wind
 - [x] Chrome Preferences broken (cannot find file - Search for preference file: initial_preferences)
 - [x] Edge preferences fixed
 - [x] One Drive not being removed; Fix: Moved logic to Administrator from system
-- [] Python2.7 Not added to path (might need to manually add to path; unattend file look correct)
+- [] Python2.7 Not added to path (might need to manually add to path; unattend file looks correct)
 - [] VScode redirect for extensions
 - [] Update conda navigator
 - [] Start menu customization
@@ -33,6 +33,9 @@ packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Wind
 - [] Update Group policy
 - [] Miktex: Script to find local repo
 - [] Miktex: Zip local repo, then uncompress on demand?  Might save time?
+- [] Import Conda Environments
+- [] Desktop Icon cleanup; Add specific desktop icons
+- [] Java Not installing
 ### Applications in Build
 - [x] Atom
 - [x] Notepad++
@@ -77,8 +80,19 @@ packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Wind
 - [] Visual Studio
 - [] SAS
 
-### Application Specific Information
+### OS Verification
+##### Path with Anaconda, Python3, Missing Python 2.7
+C:\ProgramData\Anaconda3;C:\ProgramData\Anaconda3\Library\mingw-w64\bin;C:\ProgramData\Anaconda3\Library\usr\bin;C:\ProgramData\Anaconda3\Library\bin;C:\ProgramData\Anaconda3\Scripts;C:\Program Files\Python39\Scripts\;C:\Program Files\Python39\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\Microsoft VS Code\bin;C:\Users\Administrator\AppData\Local\Microsoft\WindowsApps;C:\Users\Administrator\AppData\Local\atom\bin
+* Check for vscode, python, anaconda, atom
+#### R checks
+TBD
+#### Python Checks
+TBD
+#### Anaconda Checks
+TBD
 
+
+### Application Specific Information
 
 #### Fileshredder
 /SILENT - Silent install

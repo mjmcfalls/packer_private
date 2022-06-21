@@ -4,7 +4,7 @@ Param (
     [string]$app = "sysinternals",
     [string]$installDest = "C:\Program Files\Sysinternals\",
     [string]$startupLocation = "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp",
-    [string]$installParams = "/timer:0 /nolicprompt /silent",
+    [string]$installParams = "/timer:30 /nolicprompt /silent",
     [string]$configFile = "bginfo.bgi",
     [string]$installername = "bginfo.exe",
     [string]$startuplinkName = "BGInfo.lnk"
