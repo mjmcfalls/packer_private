@@ -76,7 +76,7 @@ Write-Log -Level "INFO" -Message "Extension is: $($installerExtension)"
 if ($installerExtension -like ".msi") {
     Write-Log -Level "INFO" -Message "MSI Install of $($appSrcPath.FullName)"
     Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($appSrcPath.FullName) $($installParams)`""
-    Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($appSrcPath.FullName) $($installParams)" -Wait
+    Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($appSrcPath.FullName) $($installParams)" -Wait -PassThru
 }
 elseif ($installerExtension -like ".exe") {
     Write-Log -Level "INFO" -Message "EXE Install of $($installerName)"
