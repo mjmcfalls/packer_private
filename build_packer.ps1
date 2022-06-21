@@ -17,7 +17,8 @@ Param (
     [switch]$createVM,
     [switch]$startVM,
     [switch]$cleanup,
-    $memory = 1GB
+    $memory = 1GB,
+    $numOfCpus = 2
 )
 
 Function Write-Log {
@@ -49,15 +50,17 @@ Function Write-Log {
 $vm_name_postfix = "$($vm_name)_$($postfix)"
 $bareVMName = "$($vm_name)_bare_$($postfix)"
 $baseVMName = "$($vm_name)_base_$($postfix)"
-$baseOptVMName = "$($vm_name)_base_opt_$($postfix)"
 $baseappVMName ="$($vm_name)_baseapp_$($postfix)"
+# Optimized VM Names
+$baseOptVMName = "$($vm_name)_base_opt_$($postfix)"
 $baseappOptVMName = "$($vm_name)_baseapp_opt_$($postfix)"
 
 # Virtual machine Output Paths
 $bare_output_path = "$($outPath)\$($vm_name)\bare\$($bareVMName)"
 $base_output_path = "$($outPath)\$($vm_name)\base\$($baseVMName)"
-$base_opt_output_path = "$($outPath)\$($vm_name)\base_opt\$($baseOptVMName)"
 $baseapp_output_path = "$($outPath)\$($vm_name)\baseapp\$($baseappVMName)"
+# Optimized VM output paths
+$base_opt_output_path = "$($outPath)\$($vm_name)\base_opt\$($baseOptVMName)"
 $baseapp_opt_output_path = "$($outPath)\$($vm_name)\baseapp_opt\$($baseappOptVMName)"
 
 # Get Default Switch IP and Subnet
@@ -85,8 +88,17 @@ Write-Log -Level "DEBUG" -Message "$($packerpath) build -timestamp-ui -only win_
 Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -timestamp-ui -only win_iso.hyperv-iso.win_iso -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($bare_output_path)`" -var `"vm_name=$($vm_name_postfix)`" -var-file $($varsfile) -var-file $($secretsfile) $($buildfile)" -Wait
 
 Write-Log -Level "INFO" -Message "Building $($vm_name_postfix) from $($bare_output_path)"
+
 Write-Log -Level "DEBUG" -Message "$($packerpath) build -timestamp-ui -only win_base.hyperv-vmcx.Windows_base -var `"clone_from_vmcx_path=$($bare_output_path)\Virtual Hard Disks)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($base_output_path)`" -var `"vm_name=$($vm_name_postfix)`" -var-file $($varsfile) -var-file $($secretsfile) $($buildfile)" 
+
 Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -timestamp-ui -only win_base.hyperv-vmcx.Windows_base -var `"clone_from_vmcx_path=$($bare_output_path)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($base_output_path)`" -var `"vm_name=$($vm_name_postfix)`" -var `"vm_ipaddress=$($vmIPAddress)`" -var `"vm_prefixlength=$($vmPrefixLength)`" -var `"vm_subnetmask=$($vmSubnetMask)`" -var `"vm_defaultgateway=$($hostIPAddress)`" -var-file $($varsfile) -var-file $($secretsfile) $($buildfile)" -Wait
+
+
+Write-Log -Level "INFO" -Message "Building $($baseappVMName) from $($base_output_path)"
+
+Write-Log -Level "DEBUG" -Message "$($packerpath) build -timestamp-ui -only win_base_apps1.hyperv-vmcx.Windows_base -var `"clone_from_vmcx_path=$($base_output_path)\Virtual Hard Disks)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($baseapp_output_path)`" -var `"vm_name=$($vm_name_postfix)`" -var-file $($varsfile) -var-file $($secretsfile) $($buildfile)" 
+
+Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -timestamp-ui -only win_base_apps1.hyperv-vmcx.Windows_base -var `"clone_from_vmcx_path=$($base_output_path)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($baseapp_output_path)`" -var `"vm_name=$($vm_name_postfix)`" -var `"vm_ipaddress=$($vmIPAddress)`" -var `"vm_prefixlength=$($vmPrefixLength)`" -var `"vm_subnetmask=$($vmSubnetMask)`" -var `"vm_defaultgateway=$($hostIPAddress)`" -var-file $($varsfile) -var-file $($secretsfile) $($buildfile)" -Wait
 
 
 
@@ -99,15 +111,15 @@ if ($createVM.IsPresent) {
     Write-Log -Level "INFO" -Message "BaseVM: $($baseVM)"
 
     Write-Log -Level "INFO" -Message "Base VM: Set CPU Count to 4"
-    Set-VMProcessor -VMName $base_output_path -Count 4 
+    Set-VMProcessor -VMName $base_output_path -Count $numOfCpus
 
-    # $baseappVMPath = Get-ChildItem -Path $baseapp_output_path -Recurse | Where-Object { $_.Extension -eq ".vhdx" }
-    # Write-Log -Level "INFO" -Message "Base VM Path:$($baseappVMPath.FullName)"
+    $baseappVMPath = Get-ChildItem -Path $baseapp_output_path -Recurse | Where-Object { $_.Extension -eq ".vhdx" }
+    Write-Log -Level "INFO" -Message "Base VM Path:$($baseappVMPath.FullName)"
 
-    # $baseappVM = New-VM -Name "$($vm_name)_baseapp_$($postfix)" -Generation 1 -MemoryStartupBytes $memory -SwitchName $switch -VHDPath $baseVMPath.FullName
-    # Write-Log -Level "INFO" -Message "Base App VM: $($baseappVM)"
-    # Write-Log -Level "INFO" -Message "Base App VM: Set CPU Count to 4"
-    # Set-VMProcessor -VMName "$($vm_name)_baseapp_$($postfix)" -Count 4 
+    $baseappVM = New-VM -Name "$($vm_name)_baseapp_$($postfix)" -Generation 1 -MemoryStartupBytes $memory -SwitchName $switch -VHDPath $baseVMPath.FullName
+    Write-Log -Level "INFO" -Message "Base App VM: $($baseappVM)"
+    Write-Log -Level "INFO" -Message "Base App VM: Set CPU Count to 4"
+    Set-VMProcessor -VMName "$($vm_name)_baseapp_$($postfix)" -Count 4 
 
     if($startVM.IsPresent){
         Write-Log -Level "INFO" -Message "Start VM: $($baseVMName)"

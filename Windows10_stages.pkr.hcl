@@ -368,7 +368,7 @@ build {
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Git LFS' -installParams '/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -installername 'git-lfs-windows-v3.2.0.exe'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'VSCode' -installParams '/VERYSILENT /loadinf=vscode.inf /MERGETASKS=!runcode' -installername 'VSCodeSetup-x64-1.67.0.exe'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Python2.7' -installParams '/quiet' -installername 'python-2.7.18.amd64.msi'",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Python 3.9.13' -installParams '/quiet' -installername 'python-3.9.13-amd64.exe'",
+      # "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Python 3.9.13' -installParams '/quiet' -installername 'python-3.9.13-amd64.exe'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'R 4.2.0' -installParams '/verysilent /NORESTART /MERGETASKS=!desktopicon' -installername 'R-4.2.0-win.exe'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Anaconda3 2021.11' -installParams '${var.anaconda_install_silent} ${var.anaconda_install_registerpy} ${var.anaconda_install_addpath} ${var.anaconda_install_type}' -installername 'Anaconda3-2021.11-Windows-x86_64.exe'",
       "${var.win_temp_dir}\\scripts\\Firefox\\install_firefox.ps1 -SearchPath '${var.win_temp_dir}' -app 'Firefox' -installername 'Firefox Setup 101.0.exe'",
@@ -380,8 +380,8 @@ build {
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Tex Studio' -installParams '/S' -installername 'texstudio-4.2.3-win-qt6.exe'", 
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'FileShredder' -installParams '/SILENT' -installername 'file_shredder_setup.exe'", 
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'SpeedCrunch' -installParams '/S' -installername 'SpeedCrunch-0.12-win32.exe'", 
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Java 8 R333 x86' -installParams '/s INSTALLCFG=java_install.config' -installername 'jre-8u333-windows-i586.exe'", 
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Java 8 R333 x64' -installParams '/s INSTALLCFG=java_install.config' -installername 'jre-8u333-windows-x64.exe'", 
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Java 8 R333 x86' -installParams 'INSTALLCFG=${var.win_temp_dir}\\apps\\java\\java_install.cfg' -installername 'jre-8u333-windows-i586.exe'", 
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Java 8 R333 x64' -installParams 'INSTALLCFG=${var.win_temp_dir}\\apps\\java\\java_install.cfg' -installername 'jre-8u333-windows-x64.exe'", 
       # Conda Navigator update
       # "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
     ]
@@ -413,30 +413,28 @@ build {
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Git' -installParams '/VERYSILENT /NORESTART' -installername 'Git-2.36.1-64-bit.exe'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Git LFS' -installParams '/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -installername 'git-lfs-windows-v3.2.0.exe'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'VSCode' -installParams '/VERYSILENT /loadinf=vscode.inf /MERGETASKS=!runcode' -installername 'VSCodeSetup-x64-1.67.0.exe'",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Python2.7' -installParams '/quiet ADDLOCAL=ALL' -installername 'python-2.7.18.amd64.msi'",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Python 3.9.13' -installParams '/quiet' -installername 'python-3.9.13-amd64.exe'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Python2.7' -installParams '/quiet' -installername 'python-2.7.18.amd64.msi'",
+      # "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Python 3.9.13' -installParams '/quiet' -installername 'python-3.9.13-amd64.exe'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'R 4.2.0' -installParams '/verysilent /NORESTART /MERGETASKS=!desktopicon' -installername 'R-4.2.0-win.exe'",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Anaconda3 2021.11' -installParams '/s' -installername 'Anaconda3-2021.11-Windows-x86_64.exe'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Anaconda3 2021.11' -installParams '${var.anaconda_install_silent} ${var.anaconda_install_registerpy} ${var.anaconda_install_addpath} ${var.anaconda_install_type}' -installername 'Anaconda3-2021.11-Windows-x86_64.exe'",
       "${var.win_temp_dir}\\scripts\\Firefox\\install_firefox.ps1 -SearchPath '${var.win_temp_dir}' -app 'Firefox' -installername 'Firefox Setup 101.0.exe'",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'R Studio 2022.02.1-461' -installParams '/s' -installername 'RStudio-2022.02.1-461.exe'", 
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'R Studio 2022.02.1-461' -installParams '/S' -installername 'RStudio-2022.02.1-461.exe'", 
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Atom' -installParams '-s' -installername 'AtomSetup-x64.exe'", 
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Notepad++' -installParams '/s' -installername 'npp.8.4.1.Installer.x64.exe'", 
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Notepad++' -installParams '/S' -installername 'npp.8.4.1.Installer.x64.exe'", 
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'WinMerge' -installParams '/VERYSILENT /NORESTART /MERGETASKS=!desktopicon' -installername 'WinMerge-2.16.20-x64-Setup.exe'", 
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'MikTex' -installParams '--verbose --local-package-repository=C:\\temp\\apps\\miktex\\repo --shared=yes --print-info-only install' -installername 'miktexsetup_standalone.exe'", 
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Tex Studio' -installParams '/S' -installername 'texstudio-4.2.3-win-qt6.exe'", 
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'FileShredder' -installParams '/SILENT' -installername 'file_shredder_setup.exe'", 
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'SpeedCrunch' -installParams '/S' -installername 'SpeedCrunch-0.12-win32.exe'", 
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Java 8 R333 x86' -installParams '/s INSTALLCFG=java_install.config' -installername 'jre-8u333-windows-i586.exe'", 
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Java 8 R333 x64' -installParams '/s INSTALLCFG=java_install.config' -installername 'jre-8u333-windows-x64.exe'", 
-      # Conda Navigator update
-      # "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Java 8 R333 x86' -installParams 'INSTALLCFG=${var.win_temp_dir}\\apps\\java\\java_install.cfg' -installername 'jre-8u333-windows-i586.exe'", 
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Java 8 R333 x64' -installParams 'INSTALLCFG=${var.win_temp_dir}\\apps\\java\\java_install.cfg' -installername 'jre-8u333-windows-x64.exe'", 
     ]
   }
 }
 
 build { 
   name = "win_base_apps1"
-  sources = ["source.qemu.Windows10_base"]
+  sources = ["source.qemu.Windows10_base","source.hyperv-vmcx.Windows_base"]
 
   provisioner "file" {
     source      = "./src/scripts/"
