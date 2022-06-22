@@ -17,6 +17,11 @@ virtio_isoname = "virtio-win-0.1.217.iso"
 r_src_path = "./src/R"
 r_installer = "R-4.2.0-win.exe"
 r_studio_install = "RStudio-2022.02.1-461.exe"
+r_studio = {
+    "name"=""
+    "installer"=""
+    "parameters"=""
+}
 r = {
     "name"="R 4.2.0"
     "installer"="R-4.2.0-win.exe"
