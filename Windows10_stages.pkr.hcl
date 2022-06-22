@@ -436,15 +436,16 @@ build {
   name = "win_base_apps1"
   sources = ["source.qemu.Windows10_base","source.hyperv-vmcx.Windows_base"]
 
-  provisioner "file" {
-    source      = "./src/scripts/"
-    destination = "${var.win_temp_dir}/scripts/"
-    direction   =  "upload"
-  }
+  # provisioner "file" {
+  #   source      = "./src/scripts/"
+  #   destination = "${var.win_temp_dir}/scripts/"
+  #   direction   =  "upload"
+  # }
 
 # Application installations
   provisioner "powershell" {
     inline = [
+      "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.win_temp_dir}\\wget\\wget.exe'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath  '${var.win_temp_dir}' -installername 'adksetup.exe' -app 'msadk' -installParams '/ceip off /norestart /quiet /features OptionId.WindowsPerformanceToolkit OptionId.DeploymentTools OptionId.ApplicationCompatibilityToolkit OptionId.WindowsAssessmentToolkit'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -installername 'adkwinpesetup.exe' -app 'mswinpeadk' -installParams '/ceip off /norestart /quiet' ",
       # "'${var.win_temp_dir}\\psappdeploy\\ms_adk\\Deploy-Application.ps1 -DeploymentType Install -DeployMode Silent",
