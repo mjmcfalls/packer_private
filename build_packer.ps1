@@ -111,7 +111,7 @@ if ($createVM.IsPresent) {
     Write-Log -Level "INFO" -Message "BaseVM: $($baseVM)"
 
     Write-Log -Level "INFO" -Message "Base VM: Set CPU Count to 4"
-    Set-VMProcessor -VMName $base_output_path -Count $numOfCpus
+    Set-VMProcessor -VMName $baseVMName -Count $numOfCpus
 
     $baseappVMPath = Get-ChildItem -Path $baseapp_output_path -Recurse | Where-Object { $_.Extension -eq ".vhdx" }
     Write-Log -Level "INFO" -Message "Base VM Path:$($baseappVMPath.FullName)"
