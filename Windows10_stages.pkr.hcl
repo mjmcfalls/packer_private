@@ -334,6 +334,7 @@ build {
       "a:/OneDrive_removal.ps1"
     ]
   }
+  
     provisioner "powershell" {
     inline = [
       "a:/OneDrive_removal.ps1"
@@ -403,7 +404,7 @@ build {
     elevated_password = ""
     inline = [
       "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.win_temp_dir}\\wget\\wget.exe'",
-      # "a:\\psappdeploy\\Virtio\\install_Virtio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -isoname '${var.virtio_isoname}' -install",
+      "a:\\psappdeploy\\Virtio\\install_Virtio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -isoname '${var.virtio_isoname}' -install",
       "a:\\Install_pswindowsupdate.ps1",
       "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -SearchPath '${var.win_temp_dir}\\apps' -app 'sysinternals'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '7zip' -installParams '/S' -installername '7z2107-x64.exe'",
