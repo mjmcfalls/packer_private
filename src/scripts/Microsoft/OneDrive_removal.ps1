@@ -68,7 +68,7 @@ If (Test-Path -Path HKU:) {
     $userRegKeys = Get-ChildItem HKU:
 
     Foreach ($userKey in $userRegKeys) {
-        $userkey | Select *
+        # $userkey | Select *
         $oneDriveUserRunPath = Join-Path -Path $userKey.PSPath -ChildPath $oneDriveRunStub
         #$oneDriveUserRunPath
         $oneDriveSetupState = Get-ItemProperty -Path $oneDriveUserRunPath -Name $oneDriveRunStubKey -ErrorAction SilentlyContinue
@@ -96,6 +96,7 @@ if (Test-Path "HKLM:\DEFAULT\$($oneDriveRunStub)") {
     Remove-ItemProperty -Path "HKLM:\DEFAULT\$($oneDriveRunStub)" -Name $oneDriveRunStubKey -Force
     
 }
+
 Write-Log -logfile $logfile -Level "INFO" -Message "Running Garbage collection to commit registry changes"
 [gc]::Collect() 
 
