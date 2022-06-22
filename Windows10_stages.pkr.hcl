@@ -331,10 +331,9 @@ build {
     elevated_password = ""
     inline = [
       "a:/Install_dotnet3.5.ps1",
-      "a:/OneDrive_removal.ps1"
     ]
   }
-  
+
     provisioner "powershell" {
     inline = [
       "a:/OneDrive_removal.ps1"

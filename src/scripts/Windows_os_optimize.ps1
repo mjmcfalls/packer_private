@@ -163,12 +163,14 @@ if (Test-Path $servicesToDisablePath) {
         Foreach ($service in $servicesToDisable) {
             $serviceExists = Get-Service -Name W32Time -ErrorAction SilentlyContinue
             if ($null -eq $serviceExists) {
-                Write-Log -logfile $logfile -Level "INFO" -Message  "$($service): Disabling service"
+                Write-Log -logfile $logfile -Level "INFO" -Message  "$($service): Found Service"
+                Write-Log -logfile $logfile -Level "INFO" -Message  "$($service): Stopping Service"
                 Stop-Service $service
+                Write-Log -logfile $logfile -Level "INFO" -Message  "$($service): Setting StartupType to Disabled"
                 Set-Service -Name $service -StartupType Disabled
             }
             else {
-                Write-Log -logfile $logfile -Level "INFO" -Message "$($service): Service does not exist"
+                Write-Log -logfile $logfile -Level "INFO" -Message "$($service): Service not found"
             }
         }
     }
@@ -182,14 +184,14 @@ if (Test-Path $automaticTracingFilePath) {
     $AutomaticTracers = Get-Content $automaticTracingFilePath
     if ($AutomaticTracers.count -gt 0) {
         Foreach ($tracer in $AutomaticTracers) {
-            Write-Log -logfile $logfile -Level "INFO" -Message "$($tracer): Starting logic to disable"
-            Write-Log -logfile $logfile -Level "INFO" -Message  "$($tracer): Testing for existance of tracing"
+            Write-Log -logfile $logfile -Level "INFO" -Message "$($tracer): Starting logic to disable tracer"
+            Write-Log -logfile $logfile -Level "INFO" -Message  "$($tracer): Testing for existance of tracer"
             if (Test-Path "$($tracer)") {
-                Write-Log -logfile $logfile -Level "INFO" -Message  "$($tracer): Disabling tracing"
+                Write-Log -logfile $logfile -Level "INFO" -Message  "$($tracer): Disabling tracer"
                 New-ItemProperty -Path "$($tracer)" -Name "Start" -PropertyType "DWORD" -Value "0" -Force
             }
             else {
-                Write-Log -logfile $logfile -Level "INFO" -Message  "$($tracer): Does not exist"
+                Write-Log -logfile $logfile -Level "INFO" -Message  "$($tracer): Unable to find"
             }
             
         }
@@ -201,20 +203,20 @@ else {
 
 # Disable Windows Features
 foreach ($feature in $winFeaturesToDisable) {
-    Write-Log -logfile $logfile -Level "INFO" -Message "Feature $($feature): Removing"
+    Write-Log -logfile $logfile -Level "INFO" -Message "$($feature): Disabling Windows Feature"
     Disable-WindowsOptionalFeature -Online -FeatureName $feature
 }
 
 # Disable System Restore
-Write-Log -logfile $logfile -Level "INFO" -Message "Disable System Restore for C:"
+Write-Log -logfile $logfile -Level "INFO" -Message "Disabling System Restore for C:"
 Disable-ComputerRestore -Drive "C:\"
 
 # Disable Hibernate
-Write-Log -logfile $logfile -Level "INFO" -Message "Disable Hibernate"
+Write-Log -logfile $logfile -Level "INFO" -Message "Disabling Hibernate"
 powercfg /hibernate off
 
 # Disable Crash Dumps
-Write-Log -logfile $logfile -Level "INFO" -Message "Disable System crash dumps"
+Write-Log -logfile $logfile -Level "INFO" -Message "Disabling System crash dumps"
 Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\CrashControl' -Name 'CrashDumpEnabled' -Value '1'
 Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\CrashControl' -Name 'LogEvent' -Value '0'
 Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\CrashControl' -Name 'SendAlert' -Value '0'
