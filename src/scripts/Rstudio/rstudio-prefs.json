@@ -1,0 +1,5 @@
+{
+    "check_for_updates": false,
+    "initial_working_directory": "~",
+    "windows_terminal_shell": "win-git-bash"
+}

@@ -36,6 +36,9 @@ packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Wind
 - [] Import Conda Environments
 - [] Desktop Icon cleanup; Add specific desktop icons
 - [x] Java Not installing
+- [] R Studio: Disable crash reporting
+- [] R Studio: Customize user prefs (Disable update checks)
+- [] Notepad++: Disable auto-update (Rename "C:\Program Files\Notepad++\updater\")
 ### Applications in Build
 - [x] Atom
 - [x] Notepad++
@@ -99,11 +102,24 @@ TBD
 #### Speedcrunch 
 Silent install: /S
 
-### Python
+#### Python
 Installers use an unattend.xml file in the same directory as the installer
 
-### Miktex
+#### Miktex
 Download standalone setup.
 Unzip installer
 Download installation files: miktexsetup_standalone --verbose --local-package-repository=C:\miktex-repository --package-set=complete download
 Install: miktexsetup_standalone --verbose --local-package-repository=C:\miktex-repository --shared=yes --user-config="<APPDATA>\MiKTeX" --user-data="<LOCALAPPDATA>\MiKTeX" --user-install=<APPDATA>\MiKTeX" --print-info-only install
+
+
+#### R Studio
+Disable Crash reporting: 
+Create "C:\Program Files\RStudio\crash-handler.conf"
+Contents: crash-handling-enabled=0
+Notes: Can be set under rstudio-prefs.json
+
+Set global user preferences:
+Directory: C:\ProgramData\Rstudio
+File: rstudio-prefs.json
+Available settings can be found at: "C:\Program Files\RStudio\resources\schema\user-prefs-schema.json"
+Create and copy rstudio-prefs.json to c:\ProgramData\Rstudio

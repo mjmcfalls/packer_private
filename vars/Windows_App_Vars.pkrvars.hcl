@@ -14,13 +14,10 @@
 # ms_adk_installer = "adksetup.exe"
 # sdelete_uri = "https://download.sysinternals.com/files/SDelete.zip"
 # virtio_isoname = "virtio-win-0.1.217.iso"
-# r_src_path = "./src/R"
-# r_installer = "R-4.2.0-win.exe"
-# r_studio_install = "RStudio-2022.02.1-461.exe"
 r_studio = {
-    "name"=""
-    "installer"=""
-    "parameters"=""
+    "name" = "RStudio-2022.02.1-461"
+    "installer" = "RStudio-2022.02.1-461.exe"
+    "parameters" = "/S"
 }
 
 r = {
