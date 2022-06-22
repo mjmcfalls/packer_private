@@ -50,18 +50,18 @@ Function Write-Log {
 $vm_name_postfix = "$($vm_name)_$($postfix)"
 $bareVMName = "$($vm_name)_bare_$($postfix)"
 $baseVMName = "$($vm_name)_base_$($postfix)"
-$baseappVMName ="$($vm_name)_baseapp_$($postfix)"
+$baseappVMName ="$($vm_name)_baseapp1_$($postfix)"
 # Optimized VM Names
 $baseOptVMName = "$($vm_name)_base_opt_$($postfix)"
-$baseappOptVMName = "$($vm_name)_baseapp_opt_$($postfix)"
+$baseappOptVMName = "$($vm_name)_baseapp1_opt_$($postfix)"
 
 # Virtual machine Output Paths
 $bare_output_path = "$($outPath)\$($vm_name)\bare\$($bareVMName)"
 $base_output_path = "$($outPath)\$($vm_name)\base\$($baseVMName)"
-$baseapp_output_path = "$($outPath)\$($vm_name)\baseapp\$($baseappVMName)"
+$baseapp_output_path = "$($outPath)\$($vm_name)\baseapp1\$($baseappVMName)"
 # Optimized VM output paths
 $base_opt_output_path = "$($outPath)\$($vm_name)\base_opt\$($baseOptVMName)"
-$baseapp_opt_output_path = "$($outPath)\$($vm_name)\baseapp_opt\$($baseappOptVMName)"
+$baseapp_opt_output_path = "$($outPath)\$($vm_name)\baseapp1_opt\$($baseappOptVMName)"
 
 # Get Default Switch IP and Subnet
 # $nicAdapter = Get-NetAdapter | Where-Object {$_.Name -like "*default*"}
@@ -116,14 +116,18 @@ if ($createVM.IsPresent) {
     $baseappVMPath = Get-ChildItem -Path $baseapp_output_path -Recurse | Where-Object { $_.Extension -eq ".vhdx" }
     Write-Log -Level "INFO" -Message "Base VM Path:$($baseappVMPath.FullName)"
 
-    $baseappVM = New-VM -Name "$($vm_name)_baseapp_$($postfix)" -Generation 1 -MemoryStartupBytes $memory -SwitchName $switch -VHDPath $baseVMPath.FullName
+    $baseappVM = New-VM -Name "$($baseappVMName)" -Generation 1 -MemoryStartupBytes $memory -SwitchName $switch -VHDPath $baseappVMPath.FullName
     Write-Log -Level "INFO" -Message "Base App VM: $($baseappVM)"
     Write-Log -Level "INFO" -Message "Base App VM: Set CPU Count to 4"
     Set-VMProcessor -VMName "$($vm_name)_baseapp_$($postfix)" -Count 4 
 
+    
     if($startVM.IsPresent){
         Write-Log -Level "INFO" -Message "Start VM: $($baseVMName)"
         Start-VM -Name $baseVMName
+
+        Write-Log -Level "INFO" -Message "Start VM: $($baseappVMName)"
+        Start-VM -Name $baseappVMName
     }
 }
 

@@ -8,7 +8,7 @@ packer build -timestamp-ui -only 'win_base.qemu.Windows10_base' -var "keep_regis
 
 packer build -timestamp-ui -only 'win_base.qemu.Windows10_base' -var iso_url=/home/libvirt/images/pool/Win10/Win10_bare_20220604091933/Windows10_20220604091933 -var "vm_name=Test" -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages.pkr.hcl
 
-
+.\build_packer.ps1 -outpath d:\temp\packer_test -buildfile Windows10_stages.pkr.hcl -secretsfile secrets\secrets.pkrvars.hcl -varsfile vars\Windows10\Windows10.pkrvars.hcl -appvarfile vars\Windows_App_Vars.pkrvars.hcl -cleanup -createvm
 
 ##### Multiple Variable files
 packer build -force -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_qemu.pkr.hcl
@@ -35,7 +35,7 @@ packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Wind
 - [] Miktex: Zip local repo, then uncompress on demand?  Might save time?
 - [] Import Conda Environments
 - [] Desktop Icon cleanup; Add specific desktop icons
-- [] Java Not installing
+- [x] Java Not installing
 ### Applications in Build
 - [x] Atom
 - [x] Notepad++
