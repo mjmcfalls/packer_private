@@ -35,7 +35,6 @@ Function Write-Log {
 
 $programDirectories = @($env:ProgramFiles, ${env:ProgramFiles(x86)})
 
-
 Write-Log -Level "INFO" -Message  "Copying R Studio Config files"
 
 Write-Log -Level "INFO" -Message "Search for $($crashHandlerFile) in $($searchPath)"
