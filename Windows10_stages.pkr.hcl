@@ -384,6 +384,7 @@ build {
       "${var.win_temp_dir}\\scripts\\Rstudio\\copy_rstudio_confs.ps1 -SearchPath '${var.win_temp_dir}' -crashHandlerFile 'crash-handler.conf' -preferenceFile 'rstudio-prefs.json' -preferencesDestination 'C:\\ProgramData\\Rstudio' -crashHandlerDestination 'C:\\Program Files\\RStudio'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Atom' -installParams '-s' -installername 'AtomSetup-x64.exe'", 
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Notepad++' -installParams '/S' -installername 'npp.8.4.1.Installer.x64.exe'", 
+      "${var.win_temp_dir}\\scripts\\notepadplusplus\\npp_disable_updates.ps1",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'WinMerge' -installParams '/VERYSILENT /NORESTART /MERGETASKS=!desktopicon' -installername 'WinMerge-2.16.20-x64-Setup.exe'", 
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'MikTex' -installParams '--verbose --local-package-repository=C:\\temp\\apps\\miktex\\repo --shared=yes install' -installername 'miktexsetup_standalone.exe'", 
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Tex Studio' -installParams '/S' -installername 'texstudio-4.2.3-win-qt6.exe'", 
