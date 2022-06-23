@@ -45,6 +45,7 @@ if ($crashHandlerPaths) {
     if ($crashHandlerDestination) {
         if (Test-Path $crashHandlerDestination) {
             Write-Log -Level "INFO" -Message "Copying $($crashHandlerPaths.FullName) to $($crashHandlerDestination)"
+            Copy-Item -Path $crashHandlerPaths.FullName -Destination $crashHandlerDestination -Force
         }
         else {
             Write-Log -Level "INFO" -Message "Cannot Find $($crashHandlerDestination)"
@@ -78,7 +79,7 @@ else {
 
 
 Write-Log -Level "INFO" -Message "Searching for $($preferenceFile) in $($searchPath)"
-$preferenceFilePaths = Get-ChildItem -File -Path $searchPath -Recurse | Where-Object { $_.name -match $crashHandlerFile }
+$preferenceFilePaths = Get-ChildItem -File -Path $searchPath -Recurse | Where-Object { $_.name -match $preferenceFile }
 
 if ($preferenceFilePaths) {
     if (!(Test-Path -Path $preferencesDestination)) {

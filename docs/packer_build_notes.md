@@ -36,8 +36,8 @@ packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Wind
 - [] Import Conda Environments
 - [] Desktop Icon cleanup; Add specific desktop icons
 - [x] Java Not installing
-- [] R Studio: Disable crash reporting
-- [] R Studio: Customize user prefs (Disable update checks)
+- [x] R Studio: Disable crash reporting
+- [x] R Studio: Customize user prefs (Disable update checks)
 - [] Notepad++: Disable auto-update (Rename "C:\Program Files\Notepad++\updater\")
 ### Applications in Build
 - [x] Atom
