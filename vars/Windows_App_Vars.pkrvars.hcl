@@ -25,3 +25,117 @@ r = {
     "installer"="R-4.2.0-win.exe"
     "parameters"="/verysilent /NORESTART /MERGETASKS=!desktopicon"
 }
+
+seven_zip = {
+    "name" = "7zip"
+    "installer" = "7z2107-x64.exe"
+    "parameters" = "/S"
+}
+
+chrome = {
+    "name" = "Chrome"
+    "installer" = "GoogleChromeStandaloneEnterprise64.msi"
+    "parameters" = "/quiet /norestart"
+}
+
+git = {
+    "name" = "Git"
+    "installer" = "Git-2.36.1-64-bit.exe"
+    "parameters" = "/VERYSILENT /NORESTART"
+}
+
+git_lfs = {
+    "name" = "Git LFS"
+    "installer" = "git-lfs-windows-v3.2.0.exe"
+    "parameters" = "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART"
+}
+
+vscode = {
+    "name" = "VSCode"
+    "installer" = "VSCodeSetup-x64-1.67.0.exe"
+    "parameters" = "/VERYSILENT /loadinf=vscode.inf /MERGETASKS=!runcode"
+}
+
+python_27 = {
+    "name" = "Python2.7"
+    "installer" = "python-2.7.18.amd64.msi"
+    "parameters" = "/quiet"
+}
+
+python_39 = {
+    "name" = "Python 3.9.13"
+    "installer" = "python-3.9.13-amd64.exe"
+    "parameters" = "/quiet"
+}
+
+conda = {
+    "name" = "Anaconda3 2021.11"
+    "installer" = "Anaconda3-2021.11-Windows-x86_64.exe"
+    "parameters" = "/S /RegisterPython=1 /AddToPath=1 /InstallationType=AllUsers"
+}
+
+firefox = {
+    "name" = "Firefox"
+    "installer" = "Firefox Setup 101.0.exe"
+    "parameters" = ""
+}
+
+atom = {
+    "name" = "Atom"
+    "installer" = "AtomSetup-x64.exe"
+    "parameters" = "-s"
+}
+
+npp = {
+    "name" = "Notepad++"
+    "installer" = "npp.8.4.1.Installer.x64.exe"
+    "parameters" = "/S"
+}
+
+winmerge = {
+    "name" = "WinMerge"
+    "installer" = "WinMerge-2.16.20-x64-Setup.exe"
+    "parameters" = "/VERYSILENT /NORESTART /MERGETASKS=!desktopicon"
+}
+
+miktex = {
+    "name" = "MikTex"
+    "installer" = "miktexsetup_standalone.exe"
+    "parameters" = "--verbose --local-package-repository=C:\\temp\\apps\\miktex\\repo --shared=yes install"
+}
+
+texstudio = {
+    "name" = "TexStudio"
+    "installer" = "texstudio-4.2.3-win-qt6.exe"
+    "parameters" = "/S"
+}
+
+fileshredder = {
+    "name" = "FileShredder"
+    "installer" = "file_shredder_setup.exe"
+    "parameters" = "/SILENT"
+}
+
+speedcrunch = {
+    "name" = "SpeedCrunch"
+    "installer" = "SpeedCrunch-0.12-win32.exe"
+    "parameters" = "/S"
+}
+
+java_x86 = {
+    "name" = "Java 8 R333 x86"
+    "installer" = "jre-8u333-windows-i586.exe"
+    "parameters" = "INSTALLCFG=c:\\temp\\apps\\java\\java_install.cfg"
+}
+
+java_x64 = {
+    "name" = "Java 8 R333 x64"
+    "installer" = "jre-8u333-windows-x64.exe"
+    "parameters" = "INSTALLCFG=c:\\temp\\apps\\java\\java_install.cfg"
+}
+
+julia = {
+    "name" = "Julia 1.7.3 x86"
+    "installer" = "julia-1.7.3-win32.exe"
+    "parameters" = "/SP /verysilent /allusers"
+}

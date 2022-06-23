@@ -123,3 +123,7 @@ Directory: C:\ProgramData\Rstudio
 File: rstudio-prefs.json
 Available settings can be found at: "C:\Program Files\RStudio\resources\schema\user-prefs-schema.json"
 Create and copy rstudio-prefs.json to c:\ProgramData\Rstudio
+
+#### Julia
+Uses INNO Setup
+Flags: /SP /verysilent /allusers

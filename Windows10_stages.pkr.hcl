@@ -177,11 +177,85 @@ variable "anaconda_install_dir" {
 }
 
 variable "r" {
-  type  = map(string)
+  type = map(string)
 }
 
 variable "r_studio" {
+  type = map(string)
+}
+variable "seven_zip" {
+  type = map(string)
+}
+
+variable "chrome" {
+  type = map(string)
+}
+
+variable "git" {
+  type = map(string)
+}
+
+variable "git_lfs" {
+  type = map(string)
+}
+
+variable "vscode" {
+  type = map(string)
+}
+
+variable "python_27" {
+  type = map(string)
+}
+
+variable "python_39" {
+  type = map(string)
+}
+
+variable "conda" {
+  type = map(string)
+}
+
+variable "firefox" {
+  type = map(string)
+}
+
+variable "atom" {
+  type = map(string)
+}
+
+variable "npp" {
+  type = map(string)
+}
+
+variable "winmerge" {
+  type = map(string)
+}
+
+variable "miktex" {
+  type = map(string)
+}
+
+variable "texstudio" {
+  type = map(string)
+}
+
+variable "fileshredder" {
   type  = map(string)
+}
+
+variable "speedcrunch" {
+  type = map(string)
+}
+
+variable "java_x86" {
+  type = map(string)
+}
+
+variable "java_x64" {
+  type = map(string)
+}
+variable "julia" {
+  type = map(string)
 }
 
 
@@ -366,32 +440,43 @@ build {
     inline = [
       "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.win_temp_dir}\\wget\\wget.exe'",
       # "a:\\psappdeploy\\Virtio\\install_Virtio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -isoname '${var.virtio_isoname}' -install",
+      # Utilities
       "a:\\Install_pswindowsupdate.ps1",
       "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -SearchPath '${var.win_temp_dir}\\apps' -app 'sysinternals'",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '7zip' -installParams '/S' -installername '7z2107-x64.exe'",
-      "${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Chrome' -installParams '/quiet /norestart' -installername 'GoogleChromeStandaloneEnterprise64.msi'",
-      "${var.win_temp_dir}\\scripts\\Chrome\\install_Chrome_MasterPrefs.ps1 -SearchPath '${var.win_temp_dir}\\scripts'",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Git' -installParams '/VERYSILENT /NORESTART' -installername 'Git-2.36.1-64-bit.exe'",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Git LFS' -installParams '/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -installername 'git-lfs-windows-v3.2.0.exe'",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'VSCode' -installParams '/VERYSILENT /loadinf=vscode.inf /MERGETASKS=!runcode' -installername 'VSCodeSetup-x64-1.67.0.exe'",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Python2.7' -installParams '/quiet' -installername 'python-2.7.18.amd64.msi'",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Python 3.9.13' -installParams '/quiet' -installername 'python-3.9.13-amd64.exe'",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.r, "name", "R")}' -installParams '${lookup(var.r, "parameters", "/verysilent /NORESTART /MERGETASKS=!desktopicon")}' -installername '${lookup(var.r,"installer","R-4.2.0-win.exe")}'",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Anaconda3 2021.11' -installParams '${var.anaconda_install_silent} ${var.anaconda_install_registerpy} ${var.anaconda_install_addpath} ${var.anaconda_install_type}' -installername 'Anaconda3-2021.11-Windows-x86_64.exe'",
-      "${var.win_temp_dir}\\scripts\\Firefox\\install_firefox.ps1 -SearchPath '${var.win_temp_dir}' -app 'Firefox' -installername 'Firefox Setup 101.0.exe'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.seven_zip, "name", "7zip")}' -installParams '${lookup(var.seven_zip, "parameters", "/S")}' -installername '${lookup(var.seven_zip, "installer", "7z2107-x64.exe")}'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.fileshredder, "name", "FileShredder")}' -installParams '${lookup(var.fileshredder, "parameters", "/SILENT")}' -installername '${lookup(var.fileshredder, "installer", "file_shredder_setup.exe")}'", 
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.speedcrunch, "name", "SpeedCrunch")}' -installParams '${lookup(var.speedcrunch, "parameters", "/S")}' -installername '${lookup(var.speedcrunch,"installer", "SpeedCrunch-0.12-win32.exe")}'", 
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.winmerge, "name", "WinMerge")}' -installParams '${lookup(var.winmerge, "parameters", "/VERYSILENT /NORESTART /MERGETASKS=!desktopicon")}' -installername '${lookup(var.winmerge,"installer", "WinMerge-2.16.20-x64-Setup.exe")}'", 
+      # Web Browsers
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.chrome, "name", "Chrome")}' -installParams '${lookup(var.chrome, "parameters", "/quiet /norestart")}' -installername '${lookup(var.chrome,"installer","GoogleChromeStandaloneEnterprise64.msi")}'",
+      "${var.win_temp_dir}\\scripts\\Firefox\\install_firefox.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.firefox, "name", "Firefox")}' -installername '${lookup(var.firefox,"installer","Firefox Setup 101.0.exe")}'",
+      # Git and Git LFS
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.git, "name", "Git")}' -installParams '${lookup(var.git, "parameters", "/VERYSILENT /NORESTART")}' -installername '${lookup(var.git, "installer", "Git-2.36.1-64-bit.exe")}'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.git_lfs, "name", "Git LFS")}' -installParams '${lookup(var.git_lfs, "parameters", "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART")}' -installername '${lookup(var.git_lfs ,"installer", "git-lfs-windows-v3.2.0.exe")}'",
+      # Text and Code Editors
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.vscode, "name", "VSCode")}' -installParams '${lookup(var.vscode, "parameters", "/VERYSILENT /loadinf=vscode.inf /MERGETASKS=!runcode")}' -installername '${lookup(var.vscode, "installer", "VSCodeSetup-x64-1.67.0.exe")}'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.atom, "name", "Atom")}' -installParams '${lookup(var.atom, "parameters", "-s")}' -installername '${lookup(var.atom,"installer", "AtomSetup-x64.exe")}'", 
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.npp, "name", "Notepad++")}' -installParams '${lookup(var.npp, "parameters", "/S")}' -installername '${lookup(var.npp,"installer", "npp.8.4.1.Installer.x64.exe")}'",
+      # Python and Conda
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.python_27, "name", "Python2.7")}' -installParams '${lookup(var.python_27, "parameters", "/quiet")}' -installername '${lookup(var.python_27, "installer", "python-2.7.18.amd64.msi")}'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.python_39, "name", "Python 3.9.13")}' -installParams '${lookup(var.python_39, "parameters", "/quiet")}' -installername '${lookup(var.python_39, "installer", "python-3.9.13-amd64.exe")}'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.conda, "name", "Anaconda3 2021.11")}' -installParams '${lookup(var.conda, "parameters", "/S /RegisterPython=1 /AddToPath=1 /InstallationType=AllUsers")}' -installername '${lookup(var.conda, "installer", "Anaconda3-2021.11-Windows-x86_64.exe")}'",
+      # R and R Studio
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.r, "name", "R")}' -installParams '${lookup(var.r, "parameters", "/verysilent /NORESTART /MERGETASKS=!desktopicon")}' -installername '${lookup(var.r, "installer", "R-4.2.0-win.exe")}'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.r_studio, "name","R Studio 2022.02.1-461")}' -installParams '${lookup(var.r_studio, "parameters","/S")}' -installername '${lookup(var.r_studio,"installer","RStudio-2022.02.1-461.exe")}'", 
+      # TexStudio and Miktex
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.miktex, "name", "MikTex")}' -installParams '${lookup(var.miktex, "parameters", "--verbose --local-package-repository=C:\\temp\\apps\\miktex\\repo --shared=yes install")}' -installername '${lookup(var.miktex,"installer", "miktexsetup_standalone.exe")}'", 
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.texstudio, "name", "TexStudio")}' -installParams '${lookup(var.texstudio, "parameters", "/S")}' -installername '${lookup(var.texstudio,"installer", "texstudio-4.2.3-win-qt6.exe")}'", 
+      # Java
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.java_x86, "name", "Java 8 R333 x86")}' -installParams '${lookup(var.java_x86, "parameters", "INSTALLCFG=${var.win_temp_dir}\\apps\\java\\java_install.cfg")}' -installername '${lookup(var.java_x86, "installer", "jre-8u333-windows-i586.exe")}'", 
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.java_x64, "name","Java 8 R333 x64")}' -installParams '${lookup(var.java_x64, "parameters", "INSTALLCFG=${var.win_temp_dir}\\apps\\java\\java_install.cfg")}' -installername '${lookup(var.java_x64, "installer", "jre-8u333-windows-x64.exe")}'", 
+      # Julia
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.julia, "name","Julia")}' -installParams '${lookup(var.julia, "parameters", "/SP /verysilent /allusers")}' -installername '${lookup(var.julia, "installer", "julia-1.7.3-win32.exe")}'", 
+      # App Customization
+      "${var.win_temp_dir}\\scripts\\Chrome\\install_Chrome_MasterPrefs.ps1 -SearchPath '${var.win_temp_dir}\\scripts'",
+      "${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install",
       "${var.win_temp_dir}\\scripts\\Rstudio\\copy_rstudio_confs.ps1 -SearchPath '${var.win_temp_dir}' -crashHandlerFile 'crash-handler.conf' -preferenceFile 'rstudio-prefs.json' -preferencesDestination 'C:\\ProgramData\\Rstudio' -crashHandlerDestination 'C:\\Program Files\\RStudio'",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Atom' -installParams '-s' -installername 'AtomSetup-x64.exe'", 
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Notepad++' -installParams '/S' -installername 'npp.8.4.1.Installer.x64.exe'", 
       "${var.win_temp_dir}\\scripts\\notepadplusplus\\npp_disable_updates.ps1",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'WinMerge' -installParams '/VERYSILENT /NORESTART /MERGETASKS=!desktopicon' -installername 'WinMerge-2.16.20-x64-Setup.exe'", 
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'MikTex' -installParams '--verbose --local-package-repository=C:\\temp\\apps\\miktex\\repo --shared=yes install' -installername 'miktexsetup_standalone.exe'", 
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Tex Studio' -installParams '/S' -installername 'texstudio-4.2.3-win-qt6.exe'", 
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'FileShredder' -installParams '/SILENT' -installername 'file_shredder_setup.exe'", 
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'SpeedCrunch' -installParams '/S' -installername 'SpeedCrunch-0.12-win32.exe'", 
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Java 8 R333 x86' -installParams 'INSTALLCFG=${var.win_temp_dir}\\apps\\java\\java_install.cfg' -installername 'jre-8u333-windows-i586.exe'", 
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app 'Java 8 R333 x64' -installParams 'INSTALLCFG=${var.win_temp_dir}\\apps\\java\\java_install.cfg' -installername 'jre-8u333-windows-x64.exe'", 
       # Conda Navigator update
       # "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
     ]
