@@ -37,7 +37,7 @@ Write-Log -Level "INFO" -Message  "Disabling Notepad++ Updater"
 
 Foreach ($programDir in $programDirectories) {
     Write-Log -Level "INFO" -Message "Search for $($programDir) in $($programDirectories)"
-    $nppDirs = Get-ChildItem -Directory -Path $programDir | Where-Object { $_.name -match $searchString }
+    $nppDirs = Get-ChildItem -Directory -Path $programDir | Where-Object { $_.name -like $searchString }
 
     if ($nppDirs) {
         foreach ($dirObj in $nppDirs) {
