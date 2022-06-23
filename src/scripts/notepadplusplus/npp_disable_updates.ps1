@@ -1,6 +1,6 @@
 [CmdletBinding()]
 Param (
-    [string]$searchString = "Notepad++",
+    [string]$searchString = "Notepad`+`+",
     [string]$updaterDir = "updater"
 )
 
