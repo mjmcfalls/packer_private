@@ -111,10 +111,15 @@ Unzip installer
 Download installation files: miktexsetup_standalone --verbose --local-package-repository=C:\miktex-repository --package-set=complete download
 Install: miktexsetup_standalone --verbose --local-package-repository=C:\miktex-repository --shared=yes --user-config="<APPDATA>\MiKTeX" --user-data="<LOCALAPPDATA>\MiKTeX" --user-install=<APPDATA>\MiKTeX" --print-info-only install
 
+Update install: &"C:\Program Files\MiKTeX\miktex\bin\x64\mpm.exe" --admin --update
+
+#### TexStudio
+Need to check for C:\Program Files\texstudio for vcruntime140.dll (Seems to not get installed sometimes?)
+Copy from "C:\Program Files\MiKTeX\miktex\bin\x64\vcruntime140.dll" to C:\Program Files\texstudio
 
 #### R Studio
 Disable Crash reporting: 
-Create "C:\Program Files\RStudio\crash-handler.conf"
+Create "C:\Program Files\RStudio\crash-handler.conf" -> Actually goes to %programdata%\Rstudio
 Contents: crash-handling-enabled=0
 Notes: Can be set under rstudio-prefs.json
 
@@ -127,3 +132,12 @@ Create and copy rstudio-prefs.json to c:\ProgramData\Rstudio
 #### Julia
 Uses INNO Setup
 Flags: /SP /verysilent /allusers
+
+#### VScode
+System wide extensions: have to be installed into the default user account
+
+varname = {
+    "name" = ""
+    "installer" = ""
+    "parameters" = ""
+}
