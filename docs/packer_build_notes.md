@@ -17,6 +17,7 @@ packer build -force -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file sec
 packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_parallel.pkr.hcl
 
 ### To-Do
+- [] Change password in Autounattend.xml
 - [x] Chrome Preferences broken (cannot find file - Search for preference file: initial_preferences)
 - [x] Edge preferences fixed
 - [x] One Drive not being removed; Fix: Moved logic to Administrator from system
