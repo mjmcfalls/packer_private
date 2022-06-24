@@ -35,6 +35,6 @@ Write-Log -Level "INFO" -Message "Updating Anaconda Navigator"
 Write-Log -Level "INFO" -Message "Running: Start-Process -NoNewWindow -PassThru -Wait -FilePath `"$($condaBatPath)`" -ArgumentList `"$($navigatorUpdateCmd)`""
 $navigatorUpdateResults = Start-Process -NoNewWindow -PassThru -Wait -FilePath $condaBatPath -ArgumentList "$($navigatorUpdateCmd)"
 
-Write-Log -Level "INFO" -Message "Navigator Results: $($navigatorUpdateResults)"
+$navigatorUpdateResults
 
 Write-Log -Level "INFO" -Message "Conda Navigator update Script Finished"
