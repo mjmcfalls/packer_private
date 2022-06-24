@@ -83,7 +83,7 @@ $env:PACKER_LOG = $debugging
 $env:PACKER_LOG_PATH = $debugLog
 
 Write-Log -Level "INFO" -Message "Building $($vm_name_postfix) from ISO"
-Write-Log -Level "DEBUG" -Message "$($packerpath) build -timestamp-ui -only win_iso.hyperv-iso.win_iso -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($bare_output_path)`" -var `"vm_name=$($vm_name_postfix)`" -var-file $($varsfile) -var-file $($appvarFile)  -var-file $($secretsfile) $($buildfile)" 
+Write-Log -Level "DEBUG" -Message "$($packerpath) build -timestamp-ui -only win_iso.hyperv-iso.win_iso -var -var `"switchname=$($switch)`" `"keep_registered=$($keepregistered)`" -var `"output_directory=$($bare_output_path)`" -var `"vm_name=$($vm_name_postfix)`" -var-file $($varsfile) -var-file $($appvarFile)  -var-file $($secretsfile) $($buildfile)" 
 
 Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -timestamp-ui -only win_iso.hyperv-iso.win_iso -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($bare_output_path)`" -var `"vm_name=$($vm_name_postfix)`" -var-file $($varsfile) -var-file $($appvarFile) -var-file $($secretsfile) $($buildfile)" -Wait
 
