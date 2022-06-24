@@ -48,6 +48,8 @@ if ($crashHandlerPaths) {
         }
         else {
             Write-Log -Level "INFO" -Message "Cannot Find $($crashHandlerDestination)"
+            Write-Log -Level "INFO" -Message "Creating $($crashHandlerDestination)"
+            New-Item -ItemType Directory -Force -Path $crashHandlerDestination
         }
     }
     else {
