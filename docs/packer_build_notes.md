@@ -66,6 +66,7 @@ packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Wind
 - [] EndNote 20
 - [x] File Shredder
 - [] Mplus v8.4
+- [] MySql Workbench 8.0 CE
 - [] NovaBench
 - [] NSIS Pirana
 - [] Nvivo
