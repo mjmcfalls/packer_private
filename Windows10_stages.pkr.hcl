@@ -426,7 +426,7 @@ build {
     inline = [
       "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
     ]
-
+  }
 }
 
 build { 
