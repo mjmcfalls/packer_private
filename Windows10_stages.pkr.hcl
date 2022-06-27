@@ -416,11 +416,16 @@ build {
     ]
   }
 
-    provisioner "powershell" {
+  provisioner "powershell" {
     inline = [
       "a:/OneDrive_removal.ps1"
     ]
   }
+
+  provisioner "powershell" {
+    inline = [
+      "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
+    ]
 
 }
 
@@ -503,7 +508,7 @@ build {
       # "a:\\psappdeploy\\Virtio\\install_Virtio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -isoname '${var.virtio_isoname}' -install",
       # Utilities
       "a:\\Install_pswindowsupdate.ps1",
-      "${var.win_temp_dir}\\scripts\\Virtio\install_virtio.ps1 -outpath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}/apps/Virtio/virtio-win-0.1.217.iso'"
+      "${var.win_temp_dir}\\scripts\\Virtio\\install_virtio.ps1 -outpath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}/apps/Virtio/virtio-win-0.1.217.iso'",
       "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -SearchPath '${var.win_temp_dir}\\apps' -app 'sysinternals'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.seven_zip, "name", "7zip")}' -installParams '${lookup(var.seven_zip, "parameters", "/S")}' -installername '${lookup(var.seven_zip, "installer", "7z2107-x64.exe")}'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.fileshredder, "name", "FileShredder")}' -installParams '${lookup(var.fileshredder, "parameters", "/SILENT")}' -installername '${lookup(var.fileshredder, "installer", "file_shredder_setup.exe")}'", 
@@ -542,7 +547,7 @@ build {
       "${var.win_temp_dir}\\scripts\\julia\\julia_addToPath.ps1",
       # Conda Navigator update
       "${var.win_temp_dir}\\scripts\\anaconda\\conda_update_navigator.ps1",
-      # "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
+      "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
     ]
   }
 }
@@ -572,7 +577,7 @@ build {
 
 build { 
   name = "win_base_optimize"
-  sources = ["source.qemu.Windows10_base"]
+  sources = ["source.qemu.Windows10_base","source.hyperv-vmcx.Windows_base"]
 
   provisioner "powershell" {
     elevated_user = "SYSTEM"
