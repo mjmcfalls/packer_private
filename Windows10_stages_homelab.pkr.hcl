@@ -408,6 +408,14 @@ build {
     ]
   }
 
+
+  provisioner "file" {
+    source      = "./src/apps/wget"
+    destination = "c:/program files/wget/"
+    direction   =  "upload"
+  }
+
+
   provisioner "powershell" {
     elevated_user = "SYSTEM"
     elevated_password = ""
@@ -433,17 +441,11 @@ build {
   name = "win_base"
   sources = ["source.hyperv-vmcx.Windows_base"]
 
-  provisioner "file" {
-    source      = "./src/apps/wget"
-    destination = "${var.win_temp_dir}/"
-    direction   =  "upload"
-  }
-
   provisioner "powershell" {
     # elevated_user = "SYSTEM"
     # elevated_password = ""
     inline = [
-      "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.win_temp_dir}\\wget\\wget.exe'",
+      "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath 'c:\\program files\\wget\\wget.exe'",
       # "a:\\psappdeploy\\Virtio\\install_Virtio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -isoname '${var.virtio_isoname}' -install",
       # Utilities
       "a:\\Install_pswindowsupdate.ps1",
@@ -504,7 +506,7 @@ build {
     elevated_user = "SYSTEM"
     elevated_password = ""
     inline = [
-      "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.win_temp_dir}\\wget\\wget.exe'",
+      "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath 'c:\\program files\\wget\\wget.exe'",
       # "a:\\psappdeploy\\Virtio\\install_Virtio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -isoname '${var.virtio_isoname}' -install",
       # Utilities
       "a:\\Install_pswindowsupdate.ps1",
@@ -565,7 +567,7 @@ build {
 # Application installations
   provisioner "powershell" {
     inline = [
-      "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.win_temp_dir}\\wget\\wget.exe'",
+      "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath 'c:\\program files\\wget\\wget.exe'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath  '${var.win_temp_dir}' -installername 'adksetup.exe' -app 'msadk' -installParams '/ceip off /norestart /quiet /features OptionId.WindowsPerformanceToolkit OptionId.DeploymentTools OptionId.ApplicationCompatibilityToolkit OptionId.WindowsAssessmentToolkit'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -installername 'adkwinpesetup.exe' -app 'mswinpeadk' -installParams '/ceip off /norestart /quiet' ",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -installername 'Setup_MakeMKV_v1.17.0.exe' -app 'MakeMKV' -installParams '/S' ",
