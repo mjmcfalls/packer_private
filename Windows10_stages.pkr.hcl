@@ -176,6 +176,11 @@ variable "anaconda_install_dir" {
   default =  "C:\\programdata\\Anaconda3"
 }
 
+variable "wget_path" {
+  type    = string
+  default = "c:/wget/"
+}
+
 variable "r" {
   type = map(string)
 }
