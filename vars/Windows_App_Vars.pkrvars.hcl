@@ -14,7 +14,7 @@
 # ms_adk_installer = "adksetup.exe"
 # sdelete_uri = "https://download.sysinternals.com/files/SDelete.zip"
 # virtio_isoname = "virtio-win-0.1.217.iso"
-wget_path = 'c:\\wget\\'
+wget_path = "c:\\wget"
 
 r_studio = {
     "name" = "RStudio-2022.02.1-461"

@@ -410,7 +410,7 @@ build {
 
   provisioner "file" {
     source      = "./src/apps/wget"
-    destination = "${var.wget_path}"
+    destination = "'${var.wget_path}\\'"
     direction   =  "upload"
   }
 
