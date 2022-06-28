@@ -409,8 +409,8 @@ build {
     elevated_password = ""
     inline = [
       "a:/Config_Winrm.ps1",
-      "New-Item -ItemType Directory '${var.wget_path} -Force",
-      "a:/Windows_os_optimize.ps1 -defaultsUserSettingsPath 'a:\\DefaultUsersSettings.txt' -ScheduledTasksListPath 'a:\\ScheduledTasks.txt' -automaticTracingFilePath 'a:\\AutomaticTracers.txt' -servicesToDisablePath 'a:\\ServicesToDisable.txt'"
+      "New-Item -ItemType Directory '${var.wget_path}' -Force",
+      "a:/Windows_os_optimize.ps1 -defaultsUserSettingsPath 'a:\\DefaultUsersSettings.txt' -ScheduledTasksListPath 'a:\\ScheduledTasks.txt' -automaticTracingFilePath 'a:\\AutomaticTracers.txt' -servicesToDisablePath 'a:\\ServicesToDisable.txt'",
     ]
   }
 
