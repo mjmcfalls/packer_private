@@ -18,16 +18,18 @@ packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Wind
 
 ### To-Do
 - [] Change password in Autounattend.xml
+- [] Remove packer user from autounattend.xml
 - [x] Chrome Preferences broken (cannot find file - Search for preference file: initial_preferences)
 - [x] Edge preferences fixed
 - [x] One Drive not being removed; Fix: Moved logic to Administrator from system
 - [] Python2.7 Not added to path (might need to manually add to path; unattend file looks correct)
 - [] VScode redirect for extensions
-- [] Update conda navigator
+- [x] Update conda navigator
 - [] Start menu customization
 - [] Taskbar customization
 - [x] NPP silent install hangs; fix: change /s to /S
 - [] BGInfo needs customization
+- [x] BGInfo - Change to fill backgroup
 - [] Validation: Application installs (Pester?)
 - [] Validation: Image validation (Pester?)
 - [] Join Active Directory
@@ -39,7 +41,8 @@ packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Wind
 - [x] Java Not installing
 - [x] R Studio: Disable crash reporting
 - [x] R Studio: Customize user prefs (Disable update checks)
-- [] Notepad++: Disable auto-update (Rename "C:\Program Files\Notepad++\updater\")
+- [x] Notepad++: Disable auto-update (Rename "C:\Program Files\Notepad++\updater\")
+- [] WWW - Replace Startup pages with static SRW page?
 ### Applications in Build
 - [x] Atom
 - [x] Notepad++
