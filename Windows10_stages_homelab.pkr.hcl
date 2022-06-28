@@ -178,7 +178,7 @@ variable "anaconda_install_dir" {
 
 variable "wget_path" {
   type    = string
-  default = "c:/wget/"
+  default = "c:/Program Files/wget/"
 }
 
 variable "r" {
@@ -409,6 +409,7 @@ build {
     elevated_password = ""
     inline = [
       "a:/Config_Winrm.ps1",
+      "New-Item -ItemType Directory '${var.wget_path} -Force",
       "a:/Windows_os_optimize.ps1 -defaultsUserSettingsPath 'a:\\DefaultUsersSettings.txt' -ScheduledTasksListPath 'a:\\ScheduledTasks.txt' -automaticTracingFilePath 'a:\\AutomaticTracers.txt' -servicesToDisablePath 'a:\\ServicesToDisable.txt'"
     ]
   }
@@ -518,7 +519,7 @@ build {
   #   destination = "${var.win_temp_dir}/"
   #   direction   =  "upload"
   # }
-  
+
   provisioner "powershell" {
     # elevated_user = "SYSTEM"
     # elevated_password = ""
