@@ -4,7 +4,7 @@ Param (
     $crashHandlerFile = "crash-handler.conf",
     $preferenceFile = "rstudio-prefs.json",
     $preferencesDestination = "C:\ProgramData\Rstudio",
-    $crashHandlerDestination = "C:\Program Files\RStudio\",
+    $crashHandlerDestination = "C:\ProgramData\RStudio\",
     $searchPath = $env:temp,
     $rStudioSearchString = "RStudio"
 )

@@ -546,7 +546,7 @@ build {
       "${var.win_temp_dir}\\scripts\\notepadplusplus\\npp_disable_updates.ps1",
       "${var.win_temp_dir}\\scripts\\julia\\julia_addToPath.ps1",
       # Conda Navigator update
-      "${var.win_temp_dir}\\scripts\\anaconda\\conda_update_navigator.ps1",
+      # "${var.win_temp_dir}\\scripts\\anaconda\\conda_update_navigator.ps1",
       "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
     ]
   }
