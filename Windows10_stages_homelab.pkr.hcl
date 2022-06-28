@@ -513,11 +513,12 @@ build {
   name = "win_base"
   sources = ["source.qemu.Windows10_base"]
 
-  provisioner "file" {
-    source      = "./src/apps/wget"
-    destination = "${var.win_temp_dir}/"
-    direction   =  "upload"
-  }
+  # provisioner "file" {
+  #   source      = "./src/apps/wget"
+  #   destination = "${var.win_temp_dir}/"
+  #   direction   =  "upload"
+  # }
+  
   provisioner "powershell" {
     # elevated_user = "SYSTEM"
     # elevated_password = ""
