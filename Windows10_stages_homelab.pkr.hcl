@@ -471,14 +471,28 @@ build {
       # R and R Studio
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.r, "name", "R")}' -installParams '${lookup(var.r, "parameters", "/verysilent /NORESTART /MERGETASKS=!desktopicon")}' -installername '${lookup(var.r, "installer", "R-4.2.0-win.exe")}'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.r_studio, "name","R Studio 2022.02.1-461")}' -installParams '${lookup(var.r_studio, "parameters","/S")}' -installername '${lookup(var.r_studio,"installer","RStudio-2022.02.1-461.exe")}'", 
-      # TexStudio and Miktex
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.miktex, "name", "MikTex")}' -installParams '${lookup(var.miktex, "parameters", "--verbose --local-package-repository=C:\\temp\\apps\\miktex\\repo --shared=yes install")}' -installername '${lookup(var.miktex,"installer", "miktexsetup_standalone.exe")}'", 
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.texstudio, "name", "TexStudio")}' -installParams '${lookup(var.texstudio, "parameters", "/S")}' -installername '${lookup(var.texstudio,"installer", "texstudio-4.2.3-win-qt6.exe")}'", 
-      # Java
+            # Java
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.java_x86, "name", "Java 8 R333 x86")}' -installParams '${lookup(var.java_x86, "parameters", "INSTALLCFG=${var.win_temp_dir}\\apps\\java\\java_install.cfg")}' -installername '${lookup(var.java_x86, "installer", "jre-8u333-windows-i586.exe")}'", 
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.java_x64, "name","Java 8 R333 x64")}' -installParams '${lookup(var.java_x64, "parameters", "INSTALLCFG=${var.win_temp_dir}\\apps\\java\\java_install.cfg")}' -installername '${lookup(var.java_x64, "installer", "jre-8u333-windows-x64.exe")}'", 
       # Julia
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.julia, "name","Julia")}' -installParams '${lookup(var.julia, "parameters", "/SP /verysilent /allusers")}' -installername '${lookup(var.julia, "installer", "julia-1.7.3-win32.exe")}'", 
+      ]
+  }
+
+  provisioner "powershell" {
+    # elevated_user = "SYSTEM"
+    # elevated_password = ""
+    inline = [
+       # TexStudio and Miktex
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.miktex, "name", "MikTex")}' -installParams '${lookup(var.miktex, "parameters", "--verbose --local-package-repository=C:\\temp\\apps\\miktex\\repo --shared=yes install")}' -installername '${lookup(var.miktex,"installer", "miktexsetup_standalone.exe")}'", 
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.texstudio, "name", "TexStudio")}' -installParams '${lookup(var.texstudio, "parameters", "/S")}' -installername '${lookup(var.texstudio,"installer", "texstudio-4.2.3-win-qt6.exe")}'", 
+    ]
+  }
+
+  provisioner "powershell" {
+    # elevated_user = "SYSTEM"
+    # elevated_password = ""
+    inline = [
       # App Customization
       "${var.win_temp_dir}\\scripts\\Chrome\\install_Chrome_MasterPrefs.ps1 -SearchPath '${var.win_temp_dir}\\scripts'",
       "${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install",
@@ -491,7 +505,7 @@ build {
     ]
   }
 }
-
+ 
 build { 
   name = "win_base"
   sources = ["source.qemu.Windows10_base"]
@@ -501,16 +515,15 @@ build {
     destination = "${var.win_temp_dir}/"
     direction   =  "upload"
   }
-
   provisioner "powershell" {
-    elevated_user = "SYSTEM"
-    elevated_password = ""
+    # elevated_user = "SYSTEM"
+    # elevated_password = ""
     inline = [
       "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath 'c:\\program files\\wget\\wget.exe'",
-      # "a:\\psappdeploy\\Virtio\\install_Virtio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -isoname '${var.virtio_isoname}' -install",
+       "${var.win_temp_dir}\\scripts\\Virtio\\install_virtio.ps1 -outpath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}/apps/Virtio/virtio-win-0.1.217.iso'",
+      # "${var.win_temp_dir}\\scripts\\Virtio\\install_virtio.ps1 -outpath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}/apps/Virtio/virtio-win-0.1.217.iso'",
       # Utilities
       "a:\\Install_pswindowsupdate.ps1",
-      "${var.win_temp_dir}\\scripts\\Virtio\\install_virtio.ps1 -outpath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}/apps/Virtio/virtio-win-0.1.217.iso'",
       "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -SearchPath '${var.win_temp_dir}\\apps' -app 'sysinternals'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.seven_zip, "name", "7zip")}' -installParams '${lookup(var.seven_zip, "parameters", "/S")}' -installername '${lookup(var.seven_zip, "installer", "7z2107-x64.exe")}'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.fileshredder, "name", "FileShredder")}' -installParams '${lookup(var.fileshredder, "parameters", "/SILENT")}' -installername '${lookup(var.fileshredder, "installer", "file_shredder_setup.exe")}'", 
@@ -533,14 +546,28 @@ build {
       # R and R Studio
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.r, "name", "R")}' -installParams '${lookup(var.r, "parameters", "/verysilent /NORESTART /MERGETASKS=!desktopicon")}' -installername '${lookup(var.r, "installer", "R-4.2.0-win.exe")}'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.r_studio, "name","R Studio 2022.02.1-461")}' -installParams '${lookup(var.r_studio, "parameters","/S")}' -installername '${lookup(var.r_studio,"installer","RStudio-2022.02.1-461.exe")}'", 
-      # TexStudio and Miktex
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.miktex, "name", "MikTex")}' -installParams '${lookup(var.miktex, "parameters", "--verbose --local-package-repository=C:\\temp\\apps\\miktex\\repo --shared=yes install")}' -installername '${lookup(var.miktex,"installer", "miktexsetup_standalone.exe")}'", 
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.texstudio, "name", "TexStudio")}' -installParams '${lookup(var.texstudio, "parameters", "/S")}' -installername '${lookup(var.texstudio,"installer", "texstudio-4.2.3-win-qt6.exe")}'", 
-      # Java
+            # Java
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.java_x86, "name", "Java 8 R333 x86")}' -installParams '${lookup(var.java_x86, "parameters", "INSTALLCFG=${var.win_temp_dir}\\apps\\java\\java_install.cfg")}' -installername '${lookup(var.java_x86, "installer", "jre-8u333-windows-i586.exe")}'", 
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.java_x64, "name","Java 8 R333 x64")}' -installParams '${lookup(var.java_x64, "parameters", "INSTALLCFG=${var.win_temp_dir}\\apps\\java\\java_install.cfg")}' -installername '${lookup(var.java_x64, "installer", "jre-8u333-windows-x64.exe")}'", 
       # Julia
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.julia, "name","Julia")}' -installParams '${lookup(var.julia, "parameters", "/SP /verysilent /allusers")}' -installername '${lookup(var.julia, "installer", "julia-1.7.3-win32.exe")}'", 
+      ]
+  }
+
+  provisioner "powershell" {
+    # elevated_user = "SYSTEM"
+    # elevated_password = ""
+    inline = [
+       # TexStudio and Miktex
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.miktex, "name", "MikTex")}' -installParams '${lookup(var.miktex, "parameters", "--verbose --local-package-repository=C:\\temp\\apps\\miktex\\repo --shared=yes install")}' -installername '${lookup(var.miktex,"installer", "miktexsetup_standalone.exe")}'", 
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.texstudio, "name", "TexStudio")}' -installParams '${lookup(var.texstudio, "parameters", "/S")}' -installername '${lookup(var.texstudio,"installer", "texstudio-4.2.3-win-qt6.exe")}'", 
+    ]
+  }
+  
+  provisioner "powershell" {
+    # elevated_user = "SYSTEM"
+    # elevated_password = ""
+    inline = [
       # App Customization
       "${var.win_temp_dir}\\scripts\\Chrome\\install_Chrome_MasterPrefs.ps1 -SearchPath '${var.win_temp_dir}\\scripts'",
       "${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install",
@@ -548,8 +575,8 @@ build {
       "${var.win_temp_dir}\\scripts\\notepadplusplus\\npp_disable_updates.ps1",
       "${var.win_temp_dir}\\scripts\\julia\\julia_addToPath.ps1",
       # Conda Navigator update
-      # "${var.win_temp_dir}\\scripts\\anaconda\\conda_update_navigator.ps1",
-      "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
+      "${var.win_temp_dir}\\scripts\\anaconda\\conda_update_navigator.ps1",
+      # "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
     ]
   }
 }
