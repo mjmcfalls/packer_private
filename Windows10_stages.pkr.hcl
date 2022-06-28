@@ -410,7 +410,7 @@ build {
 
   provisioner "file" {
     source      = "./src/apps/wget"
-    destination = "${var.win_temp_dir}/"
+    destination = "c:/program files/wget/"
     direction   =  "upload"
   }
 
