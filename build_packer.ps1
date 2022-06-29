@@ -127,17 +127,31 @@ if ($createVM.IsPresent) {
     # Write-Log -Level "INFO" -Message "Base App VM: Set CPU Count to 4"
     # Set-VMProcessor -VMName "$($baseappVM)" -Count 4 
 
+    # Optimize Base VM
+    $baseOptVMPath = Get-ChildItem -Path $base_opt_output_path -Recurse | Where-Object { $_.Extension -eq ".vhdx" }
+    Write-Log -Level "INFO" -Message "Base Optimized VM Path: $($baseOptVMPath.FullName)"
+
+    $baseOptVM = New-VM -Name "$($baseOptVMName)" -Generation 1 -MemoryStartupBytes $memory -SwitchName $switch -VHDPath $baseOptVMPath.FullName
+    Write-Log -Level "INFO" -Message "Base Optimized VM: $($baseOptVM)"
+
+    Write-Log -Level "INFO" -Message "Base Optimized VM: Set CPU Count to $($numOfCpus)"
+    Set-VMProcessor -VMName $baseOptVMName -Count $numOfCpus
+
+    # Optimize Base+App VM
     $baseappOptVMPath = Get-ChildItem -Path $baseapp_opt_output_path -Recurse | Where-Object { $_.Extension -eq ".vhdx" }
-    Write-Log -Level "INFO" -Message "Base VM Path:$($baseappOptVMPath.FullName)"
+    Write-Log -Level "INFO" -Message "Base App Optimized VM Path:$($baseappOptVMPath.FullName)"
 
     $baseappOptVM = New-VM -Name "$($baseappOptVMName)" -Generation 1 -MemoryStartupBytes $memory -SwitchName $switch -VHDPath $baseappOptVMPath.FullName
     Write-Log -Level "INFO" -Message "Base App Optimized VM: $($baseappOptVM)"
     Write-Log -Level "INFO" -Message "Base App Optimized VM: Set CPU Count to $($numOfCpus)"
     Set-VMProcessor -VMName "$($baseappOptVMPath)" -Count $numOfCpus
+    
     if($startVM.IsPresent){
         Write-Log -Level "INFO" -Message "Start VM: $($baseappOptVMName)"
         Start-VM -Name $baseappOptVMName
 
+        Write-Log -Level "INFO" -Message "Start VM: $($baseOptVMName)"
+        Start-VM -Name $baseOptVMName
         # Write-Log -Level "INFO" -Message "Start VM: $($baseappVMName)"
         # Start-VM -Name $baseappVMName
     }
