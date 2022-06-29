@@ -409,7 +409,7 @@ build {
     elevated_password = ""
     inline = [
       "a:/Config_Winrm.ps1",
-      "a:/Create_wget_direcotry.ps1 -wgetPath '${var.wget_path}'",
+      "a:/Create_wget_directory.ps1 -wgetPath '${var.wget_path}'",
       "a:/Windows_os_optimize.ps1 -defaultsUserSettingsPath 'a:\\DefaultUsersSettings.txt' -ScheduledTasksListPath 'a:\\ScheduledTasks.txt' -automaticTracingFilePath 'a:\\AutomaticTracers.txt' -servicesToDisablePath 'a:\\ServicesToDisable.txt'",
     ]
   }
