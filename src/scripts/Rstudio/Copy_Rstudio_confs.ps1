@@ -4,7 +4,7 @@ Param (
     $crashHandlerFile = "crash-handler.conf",
     $preferenceFile = "rstudio-prefs.json",
     $preferencesDestination = "C:\ProgramData\Rstudio",
-    $crashHandlerDestination = "C:\ProgramData\RStudio\",
+    $crashHandlerDestination = "C:\ProgramData\RStudio",
     $searchPath = $env:temp,
     $rStudioSearchString = "RStudio"
 )
@@ -42,15 +42,18 @@ $crashHandlerPaths = Get-ChildItem -File -Path $searchPath -Recurse | Where-Obje
 
 if ($crashHandlerPaths) {
     if ($crashHandlerDestination) {
+        Write-Log -Level "INFO" -Message "Target $($crashHandlerDestination) for $($crashHandlerPaths.FullName)"
         if (Test-Path $crashHandlerDestination) {
-            Write-Log -Level "INFO" -Message "Copying $($crashHandlerPaths.FullName) to $($crashHandlerDestination)"
-            Copy-Item -Path $crashHandlerPaths.FullName -Destination $crashHandlerDestination -Force
+            Write-Log -Level "INFO" -Message "$($crashHandlerDestination) Exists; No action needed."
         }
         else {
             Write-Log -Level "INFO" -Message "Cannot Find $($crashHandlerDestination)"
             Write-Log -Level "INFO" -Message "Creating $($crashHandlerDestination)"
             New-Item -ItemType Directory -Force -Path $crashHandlerDestination
         }
+
+        Write-Log -Level "INFO" -Message "Copying $($crashHandlerPaths.FullName) to $($crashHandlerDestination)"
+        Copy-Item -Path $crashHandlerPaths.FullName -Destination $crashHandlerDestination -Force
     }
     else {
         $dataList = New-Object System.Collections.Generic.List[System.Object]
