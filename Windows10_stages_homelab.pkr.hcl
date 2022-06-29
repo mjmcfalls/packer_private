@@ -178,7 +178,7 @@ variable "anaconda_install_dir" {
 
 variable "wget_path" {
   type    = string
-  default = "c:/Program Files/wget/"
+  default = "c:\\Program Files\\wget"
 }
 
 variable "r" {
