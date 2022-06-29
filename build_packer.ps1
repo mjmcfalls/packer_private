@@ -20,7 +20,7 @@ Param (
     [string]$isoPath,
     [string]$isoSha,
     $memory = 1GB,
-    $numOfCpus = 2
+    $numOfCpus = 4
 )
 
 Function Write-Log {
@@ -84,36 +84,40 @@ $baseapp_opt_output_path = "$($outPath)\$($vm_name)\baseapp1_opt\$($baseappOptVM
 $env:PACKER_LOG = $debugging
 $env:PACKER_LOG_PATH = $debugLog
 
-Write-Log -Level "INFO" -Message "Building $($vm_name_postfix) from ISO"
-Write-Log -Level "DEBUG" -Message "$($packerpath) build -timestamp-ui -only win_iso.hyperv-iso.win_iso -var `"iso_checksum=$($isoSha)`" -var `"iso_url=$($isoPath)`" -var `"switchname=$($switch)`" `"keep_registered=$($keepregistered)`" -var `"output_directory=$($bare_output_path)`" -var `"vm_name=$($vm_name_postfix)`" -var-file $($varsfile) -var-file $($appvarFile)  -var-file $($secretsfile) $($buildfile)" 
+Write-Log -Level "INFO" -Message "Building $($bareVMName) from $($isoPath)"
+Write-Log -Level "DEBUG" -Message "$($packerpath) build -timestamp-ui -only win_iso.hyperv-iso.win_iso -var `"iso_checksum=$($isoSha)`" -var `"iso_url=$($isoPath)`" -var `"switchname=$($switch)`" `"keep_registered=$($keepregistered)`" -var `"output_directory=$($bare_output_path)`" -var `"vm_name=$($bareVMName)`" -var-file $($varsfile) -var-file $($appvarFile)  -var-file $($secretsfile) $($buildfile)" 
+Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -timestamp-ui -only win_iso.hyperv-iso.win_iso -var `"iso_checksum=$($isoSha)`" -var `"iso_url=$($isoPath)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($bare_output_path)`" -var `"vm_name=$($bareVMName)`" -var-file $($varsfile) -var-file $($appvarFile) -var-file $($secretsfile) $($buildfile)" -Wait
 
-Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -timestamp-ui -only win_iso.hyperv-iso.win_iso -var `"iso_checksum=$($isoSha)`" -var `"iso_url=$($isoPath)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($bare_output_path)`" -var `"vm_name=$($vm_name_postfix)`" -var-file $($varsfile) -var-file $($appvarFile) -var-file $($secretsfile) $($buildfile)" -Wait
-
-Write-Log -Level "INFO" -Message "Building $($vm_name_postfix) from $($bare_output_path)"
-
-Write-Log -Level "DEBUG" -Message "$($packerpath) build -timestamp-ui -only win_base.hyperv-vmcx.Windows_base -var `"clone_from_vmcx_path=$($bare_output_path)\Virtual Hard Disks`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($base_output_path)`" -var `"vm_name=$($vm_name_postfix)`" -var-file $($varsfile) -var-file $($appvarFile)  -var-file $($secretsfile) $($buildfile)" 
-
-Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -timestamp-ui -only win_base.hyperv-vmcx.Windows_base -var `"clone_from_vmcx_path=$($bare_output_path)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($base_output_path)`" -var `"vm_name=$($vm_name_postfix)`" -var `"vm_ipaddress=$($vmIPAddress)`" -var `"vm_prefixlength=$($vmPrefixLength)`" -var `"vm_subnetmask=$($vmSubnetMask)`" -var `"vm_defaultgateway=$($hostIPAddress)`" -var-file $($varsfile) -var-file $($appvarFile)  -var-file $($secretsfile) $($buildfile)" -Wait
+Write-Log -Level "INFO" -Message "Building $($baseVMName) from $($bare_output_path)"
+Write-Log -Level "DEBUG" -Message "$($packerpath) build -timestamp-ui -only win_base.hyperv-vmcx.Windows_base -var `"clone_from_vmcx_path=$($bare_output_path)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($base_output_path)`" -var `"vm_name=$($baseVMName)`" -var-file $($varsfile) -var-file $($appvarFile)  -var-file $($secretsfile) $($buildfile)" 
+Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -timestamp-ui -only win_base.hyperv-vmcx.Windows_base -var `"clone_from_vmcx_path=$($bare_output_path)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($base_output_path)`" -var `"vm_name=$($baseVMName)`" -var-file $($varsfile) -var-file $($appvarFile)  -var-file $($secretsfile) $($buildfile)" -Wait
 
 
-# Write-Log -Level "INFO" -Message "Building $($baseappVMName) from $($base_output_path)"
+Write-Log -Level "INFO" -Message "Building $($baseappVMName) from $($base_output_path)"
+Write-Log -Level "DEBUG" -Message "$($packerpath) build -timestamp-ui -only win_base_apps1.hyperv-vmcx.Windows_base -var `"clone_from_vmcx_path=$($base_output_path)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($baseapp_output_path)`" -var `"vm_name=$($baseappVMName)`" -var-file $($varsfile) -var-file $($appvarFile)  -var-file $($secretsfile) $($buildfile)" 
+Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -timestamp-ui -only win_base_apps1.hyperv-vmcx.Windows_base -var `"clone_from_vmcx_path=$($base_output_path)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($baseapp_output_path)`" -var `"vm_name=$($baseappVMName)`" -var-file $($varsfile) -var-file $($appvarFile)  -var-file $($secretsfile) $($buildfile)" -Wait
 
-# Write-Log -Level "DEBUG" -Message "$($packerpath) build -timestamp-ui -only win_base_apps1.hyperv-vmcx.Windows_base -var `"clone_from_vmcx_path=$($base_output_path)\Virtual Hard Disks`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($baseapp_output_path)`" -var `"vm_name=$($vm_name_postfix)`" -var-file $($varsfile) -var-file $($appvarFile)  -var-file $($secretsfile) $($buildfile)" 
+Write-Log -Level "INFO" -Message "Building $($baseOptVMName) from $($baseapp_output_path)"
+Write-Log -Level "DEBUG" -Message "$($packerpath) build -timestamp-ui -only win_base_optimize.hyperv-vmcx.Windows10_base -var `"clone_from_vmcx_path=$($base_output_path)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($base_opt_output_path)`" -var `"vm_name=$($baseOptVMName)`" -var-file $($varsfile) -var-file $($appvarFile)  -var-file $($secretsfile) $($buildfile)" 
+Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -timestamp-ui -only win_base_optimize.hyperv-vmcx.Windows10_base -var `"clone_from_vmcx_path=$($base_output_path)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($base_opt_output_path)`" -var `"vm_name=$($baseOptVMName)`" -var-file $($varsfile) -var-file $($appvarFile)  -var-file $($secretsfile) $($buildfile)" -Wait
+# packer build -timestamp-ui -only 'win_base_optimize.qemu.Windows10_base' -var "keep_registered=false" -var "iso_checksum=sha256:$base_sha" -var iso_url=$base_output_path/$vm_name -var "nix_output_directory=$base_opt_output_path" -var "vm_name=$vm_name" -var-file vars/Windows_App_Vars.pkrvars.hcl -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages_homelab.pkr.hcl
 
-# Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -timestamp-ui -only win_base_apps1.hyperv-vmcx.Windows_base -var `"clone_from_vmcx_path=$($base_output_path)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($baseapp_output_path)`" -var `"vm_name=$($vm_name_postfix)`" -var `"vm_ipaddress=$($vmIPAddress)`" -var `"vm_prefixlength=$($vmPrefixLength)`" -var `"vm_subnetmask=$($vmSubnetMask)`" -var `"vm_defaultgateway=$($hostIPAddress)`" -var-file $($varsfile) -var-file $($appvarFile)  -var-file $($secretsfile) $($buildfile)" -Wait
-
+Write-Log -Level "INFO" -Message "Building $($baseappOptVMName) from $($baseapp_output_path)"
+Write-Log -Level "DEBUG" -Message "$($packerpath) build -timestamp-ui -only win_base_optimize.hyperv-vmcx.Windows10_base -var `"clone_from_vmcx_path=$($baseapp_output_path)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($baseapp_opt_output_path)`" -var `"vm_name=$($baseappOptVMName)`" -var-file $($varsfile) -var-file $($appvarFile)  -var-file $($secretsfile) $($buildfile)" 
+Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -timestamp-ui -only win_base_optimize.hyperv-vmcx.Windows10_base -var `"clone_from_vmcx_path=$($baseapp_output_path)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($baseapp_opt_output_path)`" -var `"vm_name=$($baseappOptVMName)`" -var-file $($varsfile) -var-file $($appvarFile)  -var-file $($secretsfile) $($buildfile)" -Wait
+# packer build -timestamp-ui -only 'win_base_optimize.qemu.Windows10_base' -var "keep_registered=false" -var "iso_checksum=sha256:$baseapp_sha" -var iso_url=$baseapp_output_path/$vm_name -var "nix_output_directory=$baseapp_opt_output_path" -var "vm_name=$vm_name" -var-file vars/Windows_App_Vars.pkrvars.hcl -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages_homelab.pkr.hcl
 
 
 if ($createVM.IsPresent) {
     Write-Log -Level "INFO" -Message "Creating VMs from VHDXs"
-    $baseVMPath = Get-ChildItem -Path $base_output_path -Recurse | Where-Object { $_.Extension -eq ".vhdx" }
-    Write-Log -Level "INFO" -Message "Base VM Path: $($baseVMPath.FullName)"
+    # $baseVMPath = Get-ChildItem -Path $base_output_path -Recurse | Where-Object { $_.Extension -eq ".vhdx" }
+    # Write-Log -Level "INFO" -Message "Base VM Path: $($baseVMPath.FullName)"
 
-    $baseVM = New-VM -Name "$($baseVMName)" -Generation 1 -MemoryStartupBytes $memory -SwitchName $switch -VHDPath $baseVMPath.FullName
-    Write-Log -Level "INFO" -Message "BaseVM: $($baseVM)"
+    # $baseVM = New-VM -Name "$($baseVMName)" -Generation 1 -MemoryStartupBytes $memory -SwitchName $switch -VHDPath $baseVMPath.FullName
+    # Write-Log -Level "INFO" -Message "BaseVM: $($baseVM)"
 
-    Write-Log -Level "INFO" -Message "Base VM: Set CPU Count to 4"
-    Set-VMProcessor -VMName $baseVMName -Count $numOfCpus
+    # Write-Log -Level "INFO" -Message "Base VM: Set CPU Count to 4"
+    # Set-VMProcessor -VMName $baseVMName -Count $numOfCpus
 
     # $baseappVMPath = Get-ChildItem -Path $baseapp_output_path -Recurse | Where-Object { $_.Extension -eq ".vhdx" }
     # Write-Log -Level "INFO" -Message "Base VM Path:$($baseappVMPath.FullName)"
@@ -123,10 +127,16 @@ if ($createVM.IsPresent) {
     # Write-Log -Level "INFO" -Message "Base App VM: Set CPU Count to 4"
     # Set-VMProcessor -VMName "$($baseappVM)" -Count 4 
 
-    
+    $baseappOptVMPath = Get-ChildItem -Path $baseapp_opt_output_path -Recurse | Where-Object { $_.Extension -eq ".vhdx" }
+    Write-Log -Level "INFO" -Message "Base VM Path:$($baseappOptVMPath.FullName)"
+
+    $baseappOptVM = New-VM -Name "$($baseappOptVMName)" -Generation 1 -MemoryStartupBytes $memory -SwitchName $switch -VHDPath $baseappOptVMPath.FullName
+    Write-Log -Level "INFO" -Message "Base App Optimized VM: $($baseappOptVM)"
+    Write-Log -Level "INFO" -Message "Base App Optimized VM: Set CPU Count to $($numOfCpus)"
+    Set-VMProcessor -VMName "$($baseappOptVMPath)" -Count $numOfCpus
     if($startVM.IsPresent){
-        Write-Log -Level "INFO" -Message "Start VM: $($baseVMName)"
-        Start-VM -Name $baseVMName
+        Write-Log -Level "INFO" -Message "Start VM: $($baseappOptVMName)"
+        Start-VM -Name $baseappOptVMName
 
         # Write-Log -Level "INFO" -Message "Start VM: $($baseappVMName)"
         # Start-VM -Name $baseappVMName
