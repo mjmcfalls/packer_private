@@ -141,3 +141,9 @@ julia = {
     "installer" = "julia-1.7.3-win32.exe"
     "parameters" = "/SP /verysilent /allusers"
 }
+
+vim = {
+    "name" = "VIM 9.0.0001"
+    "installer" = "gvim_9.0.0001_x64.exe"
+    "parameters" = "/S"
+}

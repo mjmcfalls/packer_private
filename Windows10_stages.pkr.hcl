@@ -253,9 +253,15 @@ variable "java_x86" {
 variable "java_x64" {
   type = map(string)
 }
+
 variable "julia" {
   type = map(string)
 }
+
+variable "vim" {
+  type = map(string)
+}
+
 
 
 packer {
@@ -435,16 +441,42 @@ build {
   }
 }
 
+build {
+  name = "win_iso"
+  sources = ["source.qemu.win_iso","source.hyperv-iso.win_iso"]
+
+  provisioner "powershell" {
+    elevated_user = "SYSTEM"
+    elevated_password = ""
+    inline = [
+      "a:/Config_Winrm.ps1",
+      "a:/Create_wget_directory.ps1 -wgetPath '${var.wget_path}'",
+      "a:/Install_dotnet3.5.ps1",
+      "a:/Windows_os_optimize.ps1 -defaultsUserSettingsPath 'a:\\DefaultUsersSettings.txt' -ScheduledTasksListPath 'a:\\ScheduledTasks.txt' -automaticTracingFilePath 'a:\\AutomaticTracers.txt' -servicesToDisablePath 'a:\\ServicesToDisable.txt'",
+    ]
+  }
+
+  provisioner "file" {
+    source      = "./src/apps/wget/"
+    destination = "${var.wget_path}"
+    direction   =  "upload"
+  }
+
+  provisioner "powershell" {
+    inline = [
+      "a:/OneDrive_removal.ps1",
+      "a:/Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
+    ]
+  }
+}
+
 build { 
   name = "win_base"
   sources = ["source.hyperv-vmcx.Windows_base"]
 
   provisioner "powershell" {
-    # elevated_user = "SYSTEM"
-    # elevated_password = ""
     inline = [
       "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.wget_path}\\wget.exe'",
-      # "a:\\psappdeploy\\Virtio\\install_Virtio.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -isoname '${var.virtio_isoname}' -install",
       # Utilities
       "a:\\Install_pswindowsupdate.ps1",
       "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -SearchPath '${var.win_temp_dir}\\apps' -app 'sysinternals'",
@@ -462,6 +494,7 @@ build {
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.vscode, "name", "VSCode")}' -installParams '${lookup(var.vscode, "parameters", "/VERYSILENT /loadinf=vscode.inf /MERGETASKS=!runcode")}' -installername '${lookup(var.vscode, "installer", "VSCodeSetup-x64-1.67.0.exe")}'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.atom, "name", "Atom")}' -installParams '${lookup(var.atom, "parameters", "-s")}' -installername '${lookup(var.atom,"installer", "AtomSetup-x64.exe")}'", 
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.npp, "name", "Notepad++")}' -installParams '${lookup(var.npp, "parameters", "/S")}' -installername '${lookup(var.npp,"installer", "npp.8.4.1.Installer.x64.exe")}'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.vim, "name", "VIM")}' -installParams '${lookup(var.vim, "parameters", "/S")}' -installername '${lookup(var.vim,"installer", "gvim_9.0.0001_x64.exe")}'",
       # Python and Conda
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.python_27, "name", "Python2.7")}' -installParams '${lookup(var.python_27, "parameters", "/quiet")}' -installername '${lookup(var.python_27, "installer", "python-2.7.18.amd64.msi")}'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.python_39, "name", "Python 3.9.13")}' -installParams '${lookup(var.python_39, "parameters", "/quiet")}' -installername '${lookup(var.python_39, "installer", "python-3.9.13-amd64.exe")}'",
@@ -469,7 +502,7 @@ build {
       # R and R Studio
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.r, "name", "R")}' -installParams '${lookup(var.r, "parameters", "/verysilent /NORESTART /MERGETASKS=!desktopicon")}' -installername '${lookup(var.r, "installer", "R-4.2.0-win.exe")}'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.r_studio, "name","R Studio 2022.02.1-461")}' -installParams '${lookup(var.r_studio, "parameters","/S")}' -installername '${lookup(var.r_studio,"installer","RStudio-2022.02.1-461.exe")}'", 
-            # Java
+      # Java
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.java_x86, "name", "Java 8 R333 x86")}' -installParams '${lookup(var.java_x86, "parameters", "INSTALLCFG=${var.win_temp_dir}\\apps\\java\\java_install.cfg")}' -installername '${lookup(var.java_x86, "installer", "jre-8u333-windows-i586.exe")}'", 
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.java_x64, "name","Java 8 R333 x64")}' -installParams '${lookup(var.java_x64, "parameters", "INSTALLCFG=${var.win_temp_dir}\\apps\\java\\java_install.cfg")}' -installername '${lookup(var.java_x64, "installer", "jre-8u333-windows-x64.exe")}'", 
       # Julia
@@ -478,8 +511,6 @@ build {
   }
 
   provisioner "powershell" {
-    # elevated_user = "SYSTEM"
-    # elevated_password = ""
     inline = [
        # TexStudio and Miktex
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.miktex, "name", "MikTex")}' -installParams '${lookup(var.miktex, "parameters", "--verbose --local-package-repository=C:\\temp\\apps\\miktex\\repo --shared=yes install")}' -installername '${lookup(var.miktex,"installer", "miktexsetup_standalone.exe")}'", 
@@ -488,8 +519,6 @@ build {
   }
 
   provisioner "powershell" {
-    # elevated_user = "SYSTEM"
-    # elevated_password = ""
     inline = [
       # App Customization
       "${var.win_temp_dir}\\scripts\\Chrome\\install_Chrome_MasterPrefs.ps1 -SearchPath '${var.win_temp_dir}\\scripts'",
@@ -503,14 +532,12 @@ build {
     ]
   }
 }
-
+ 
 build { 
   name = "win_base"
   sources = ["source.qemu.Windows10_base"]
 
   provisioner "powershell" {
-    # elevated_user = "SYSTEM"
-    # elevated_password = ""
     inline = [
       "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.wget_path}\\wget.exe'",
        "${var.win_temp_dir}\\scripts\\Virtio\\install_virtio.ps1 -outpath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}/apps/Virtio/virtio-win-0.1.217.iso'",
@@ -531,6 +558,7 @@ build {
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.vscode, "name", "VSCode")}' -installParams '${lookup(var.vscode, "parameters", "/VERYSILENT /loadinf=vscode.inf /MERGETASKS=!runcode")}' -installername '${lookup(var.vscode, "installer", "VSCodeSetup-x64-1.67.0.exe")}'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.atom, "name", "Atom")}' -installParams '${lookup(var.atom, "parameters", "-s")}' -installername '${lookup(var.atom,"installer", "AtomSetup-x64.exe")}'", 
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.npp, "name", "Notepad++")}' -installParams '${lookup(var.npp, "parameters", "/S")}' -installername '${lookup(var.npp,"installer", "npp.8.4.1.Installer.x64.exe")}'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.vim, "name", "VIM")}' -installParams '${lookup(var.vim, "parameters", "/S")}' -installername '${lookup(var.vim,"installer", "gvim_9.0.0001_x64.exe")}'",
       # Python and Conda
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.python_27, "name", "Python2.7")}' -installParams '${lookup(var.python_27, "parameters", "/quiet")}' -installername '${lookup(var.python_27, "installer", "python-2.7.18.amd64.msi")}'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.python_39, "name", "Python 3.9.13")}' -installParams '${lookup(var.python_39, "parameters", "/quiet")}' -installername '${lookup(var.python_39, "installer", "python-3.9.13-amd64.exe")}'",
@@ -538,7 +566,7 @@ build {
       # R and R Studio
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.r, "name", "R")}' -installParams '${lookup(var.r, "parameters", "/verysilent /NORESTART /MERGETASKS=!desktopicon")}' -installername '${lookup(var.r, "installer", "R-4.2.0-win.exe")}'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.r_studio, "name","R Studio 2022.02.1-461")}' -installParams '${lookup(var.r_studio, "parameters","/S")}' -installername '${lookup(var.r_studio,"installer","RStudio-2022.02.1-461.exe")}'", 
-            # Java
+      # Java
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.java_x86, "name", "Java 8 R333 x86")}' -installParams '${lookup(var.java_x86, "parameters", "INSTALLCFG=${var.win_temp_dir}\\apps\\java\\java_install.cfg")}' -installername '${lookup(var.java_x86, "installer", "jre-8u333-windows-i586.exe")}'", 
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.java_x64, "name","Java 8 R333 x64")}' -installParams '${lookup(var.java_x64, "parameters", "INSTALLCFG=${var.win_temp_dir}\\apps\\java\\java_install.cfg")}' -installername '${lookup(var.java_x64, "installer", "jre-8u333-windows-x64.exe")}'", 
       # Julia
@@ -547,8 +575,6 @@ build {
   }
 
   provisioner "powershell" {
-    # elevated_user = "SYSTEM"
-    # elevated_password = ""
     inline = [
        # TexStudio and Miktex
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.miktex, "name", "MikTex")}' -installParams '${lookup(var.miktex, "parameters", "--verbose --local-package-repository=C:\\temp\\apps\\miktex\\repo --shared=yes install")}' -installername '${lookup(var.miktex,"installer", "miktexsetup_standalone.exe")}'", 
@@ -557,8 +583,6 @@ build {
   }
   
   provisioner "powershell" {
-    # elevated_user = "SYSTEM"
-    # elevated_password = ""
     inline = [
       # App Customization
       "${var.win_temp_dir}\\scripts\\Chrome\\install_Chrome_MasterPrefs.ps1 -SearchPath '${var.win_temp_dir}\\scripts'",
@@ -567,8 +591,8 @@ build {
       "${var.win_temp_dir}\\scripts\\notepadplusplus\\npp_disable_updates.ps1",
       "${var.win_temp_dir}\\scripts\\julia\\julia_addToPath.ps1",
       # Conda Navigator update
-      "${var.win_temp_dir}\\scripts\\anaconda\\conda_update_navigator.ps1",
-      "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
+      # "${var.win_temp_dir}\\scripts\\anaconda\\conda_update_navigator.ps1",
+      # "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
     ]
   }
 }
@@ -577,20 +601,12 @@ build {
   name = "win_base_apps1"
   sources = ["source.qemu.Windows10_base","source.hyperv-vmcx.Windows_base"]
 
-  # provisioner "file" {
-  #   source      = "./src/scripts/"
-  #   destination = "${var.win_temp_dir}/scripts/"
-  #   direction   =  "upload"
-  # }
-
 # Application installations
   provisioner "powershell" {
     inline = [
       "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.wget_path}\\wget.exe'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath  '${var.win_temp_dir}' -installername 'adksetup.exe' -app 'msadk' -installParams '/ceip off /norestart /quiet /features OptionId.WindowsPerformanceToolkit OptionId.DeploymentTools OptionId.ApplicationCompatibilityToolkit OptionId.WindowsAssessmentToolkit'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -installername 'adkwinpesetup.exe' -app 'mswinpeadk' -installParams '/ceip off /norestart /quiet' ",
-      # "'${var.win_temp_dir}\\psappdeploy\\ms_adk\\Deploy-Application.ps1 -DeploymentType Install -DeployMode Silent",
-      # "${var.win_temp_dir}\\scripts\\CiscoAnyconnect\\install_anyconnect.ps1 -Cleanup -uri 'http://${build.PackerHTTPAddr}' -OutPath '${var.win_temp_dir}' -installername '${var.anyconnect_installer}' -install",
       "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
       ]
   }

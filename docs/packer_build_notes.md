@@ -53,18 +53,18 @@ packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Wind
 - [x] WinMerge
 - [x] BGInfo
 - [x] Python 2.7
-- [] Miktex
+- [x] Miktex
 - [x] git
 - [x] R
 - [x] R Studio 
 - [x] Anaconda 
 - [x] TexStudio (Requires MikTex to be installed)
-- [] MS ADK
+- [x] MS ADK
 - [x] Edge (First Run Customization)
 - [] VirtIO Drivers (Testing)
 - [] Java 8 Update 321 x86
 - [] Java 8 Update 321 x64
-- [] Julia 1.5.0
+- [x] Julia 1.5.0
 - [] EmEditor (Emurasoft)
 - [] EndNote 20
 - [x] File Shredder
@@ -140,6 +140,9 @@ Flags: /SP /verysilent /allusers
 
 #### VScode
 System wide extensions: have to be installed into the default user account
+
+#### SecureCRT
+scrt-sfx-x64.9.1.1.2638.exe /s /v"/qn"
 
 varname = {
     "name" = ""
