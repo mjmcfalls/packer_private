@@ -1,3 +1,4 @@
+# Packer Variables
 variable "autounattend" {
   type    = string
   default = "${env("autounattend")}"
@@ -38,6 +39,16 @@ variable "iso_url" {
   default = "${env("iso_url")}"
 }
 
+variable "use_backing_file" {
+  type    = string
+  default = false
+}
+
+variable "clone_from_vmcx_path" {
+  type    = string
+  default = ""
+}
+
 variable "keep_registered" {
   type    = string
   default = "false"
@@ -72,6 +83,12 @@ variable "restart_timeout" {
   default = "5m"
 }
 
+variable "boot_wait" {
+  type    = string
+  default = "60s"
+}
+
+# Build Specific variables
 variable "vm_name" {
   type    = string
   default = "${env("vm_name")}"
@@ -89,46 +106,6 @@ variable "vmx_version" {
 variable "win_temp_dir" {
   type    = string
   default = "${env("win_temp_dir")}"
-}
-
-variable "winrm_insecure" {
-  type    = string
-  default = "${env("winrm_insecure")}"
-}
-
-variable "winrm_password" {
-  type    = string
-  default = "${env("winrm_password")}"
-}
-
-variable "winrm_timeout" {
-  type    = string
-  default = "${env("winrm_timeout")}"
-}
-
-variable "winrm_use_ntlm" {
-  type    = string
-  default = "${env("winrm_use_ntlm")}"
-}
-
-variable "winrm_use_ssl" {
-  type    = string
-  default = "${env("winrm_use_ssl")}"
-}
-
-variable "winrm_username" {
-  type    = string
-  default = "${env("winrm_username")}"
-}
-
-variable "use_backing_file" {
-  type    = string
-  default = false
-}
-
-variable "clone_from_vmcx_path" {
-  type    = string
-  default = ""
 }
 
 variable "vm_ipaddress" {
@@ -151,36 +128,53 @@ variable "vm_defaultgateway" {
   default = ""
 }
 
-variable "anaconda_install_type" {
-  type    = string
-  default = "/InstallationType=AllUsers"
-}
-
-variable "anaconda_install_addpath" {
-  type    = string
-  default = "/AddToPath=1"
-}
-
-variable "anaconda_install_registerpy" {
-  type    = string
-  default = "/RegisterPython=1"
-}
-
-variable "anaconda_install_silent" {
-  type    = string
-  default = "/S"
-}
-
-variable "anaconda_install_dir" {
-  type    = string
-  default =  "C:\\programdata\\Anaconda3"
-}
-
 variable "wget_path" {
   type    = string
   default = "c:\\Program Files\\wget"
 }
 
+# WinRM Variables
+variable "winrm_insecure" {
+  type    = string
+  default = "${env("winrm_insecure")}"
+}
+
+variable "winrm_timeout" {
+  type    = string
+  default = "${env("winrm_timeout")}"
+}
+
+variable "winrm_use_ntlm" {
+  type    = string
+  default = "${env("winrm_use_ntlm")}"
+}
+
+variable "winrm_use_ssl" {
+  type    = string
+  default = "${env("winrm_use_ssl")}"
+}
+
+variable "winrm_username" {
+  type    = string
+  default = "${env("winrm_username")}"
+}
+
+variable "winrm_password" {
+  type    = string
+  default = "${env("winrm_password")}"
+}
+# SSH Variables
+variable "ssh_username" {
+  type    = string
+  default = ""
+}
+
+variable "ssh_password" {
+  type    = string
+  default = ""
+}
+
+# Application specific map variables
 variable "r" {
   type = map(string)
 }
@@ -304,7 +298,7 @@ source "qemu" "win_iso" {
 
 source "qemu" "Windows10_base" {
   accelerator      = "kvm"
-  boot_wait        = "60s"
+  boot_wait        = "${var.boot_wait}"
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
   disk_size        = "${var.disk_size}"
@@ -332,7 +326,7 @@ source "qemu" "Windows10_base" {
 
 source "qemu" "Windows10_choco" {
   accelerator      = "kvm"
-  boot_wait        = "60s"
+  boot_wait        = "${var.boot_wait}"
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
   disk_size        = "${var.disk_size}"
@@ -357,7 +351,7 @@ source "qemu" "Windows10_choco" {
 }
 
 source "hyperv-iso" "win_iso" {
-  boot_wait        = "120s"
+  boot_wait        = "${var.boot_wait}"
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
   disk_size        = "${var.disk_size}"
@@ -380,7 +374,7 @@ source "hyperv-iso" "win_iso" {
 }
 
 source "hyperv-vmcx" "Windows_base" {
-  boot_wait        = "60s"
+  boot_wait        = "${var.boot_wait}"
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
   floppy_files     = ["./src/scripts/"]
