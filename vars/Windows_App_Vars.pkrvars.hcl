@@ -147,3 +147,9 @@ vim = {
     "installer" = "gvim_9.0.0001_x64.exe"
     "parameters" = "/S"
 }
+
+r_tools_40 = {
+    "name" = "R Tools 4.0 x64"
+    "installer" = "rtools40-x86_64.exe"
+    "parameters" = "/VERYSILENT /DIR=C:\rtools40"
+}
