@@ -44,7 +44,7 @@ Foreach ($programDir in $programDirectories) {
             Write-Log -Level "INFO" -Message "Searching $($dirObj.FullName)"
             $updaterPath = Join-Path -Path $dirObj.FullName -ChildPath $updaterDir
             if (Test-Path -Path $updaterPath) {
-                Write-Log -Level "INFO" -Message "Found $($newUpdaterName)"
+                Write-Log -Level "INFO" -Message "Found $($updaterPath)"
                 Write-Log -Level "INFO" -Message "Renaming $($updaterPath) to $($newUpdaterName)"
                 Rename-Item -Path $updaterPath -NewName $newUpdaterName
             }
