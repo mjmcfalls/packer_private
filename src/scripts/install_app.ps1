@@ -47,8 +47,8 @@ Function Write-Log {
 $ProgressPreference = 'SilentlyContinue'
 Write-Log -Level "INFO" -Message "Starting Install - $($app)"
 
-$installerExtension = $installerName.split(".")[-1]
-$installerFileName = $installerName.split("$($installerExtension)")[0]
+$installerExtension = [System.IO.Path]::GetExtension("$($installerName)")
+$installerFileName = [io.path]::GetFileNameWithoutExtension($installerName)
 Write-Log -Level "INFO" -Message "Installer file Name: $($installerFileName); Installer File Extension: $($installerExtension)"
 
 Write-Log -Level "INFO" -Message "Search for $($installerName) in $($searchPath)"
@@ -62,7 +62,6 @@ if ($appSrcPath -is [array]) {
 else {
     Write-Log -Level "INFO" -Message "Found $($appSrcPath.FullName)"
 }
-
 
 
 Write-Log -Level "INFO" -Message "Switching to Directory - $($appSrcPath.Directoryname)"
