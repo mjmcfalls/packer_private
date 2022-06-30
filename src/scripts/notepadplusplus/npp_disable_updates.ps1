@@ -36,7 +36,7 @@ $newUpdaterName = "$($updaterDir)_$($timestamp)"
 Write-Log -Level "INFO" -Message  "Disabling Notepad++ Updater"
 
 Foreach ($programDir in $programDirectories) {
-    Write-Log -Level "INFO" -Message "Search for $($programDir) in $($programDirectories)"
+    Write-Log -Level "INFO" -Message "Searching for $($searchString) in $($programDir)"
     $nppDirs = Get-ChildItem -Directory -Path $programDir | Where-Object { $_.name -like $searchString }
 
     if ($nppDirs) {
