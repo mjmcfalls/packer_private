@@ -43,6 +43,8 @@ packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Wind
 - [x] R Studio: Customize user prefs (Disable update checks)
 - [x] Notepad++: Disable auto-update (Rename "C:\Program Files\Notepad++\updater\")
 - [] WWW - Replace Startup pages with static SRW page?
+- [] Install App Script - Revisit logic for spliting file name; inconsistent split with spaces
+- [] R/R Studio Library paths
 ### Applications in Build
 - [x] Atom
 - [x] Notepad++
@@ -61,7 +63,7 @@ packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Wind
 - [x] TexStudio (Requires MikTex to be installed)
 - [x] MS ADK
 - [x] Edge (First Run Customization)
-- [] VirtIO Drivers (Testing)
+- [x] VirtIO Drivers (Testing)
 - [] Java 8 Update 321 x86
 - [] Java 8 Update 321 x64
 - [x] Julia 1.5.0
