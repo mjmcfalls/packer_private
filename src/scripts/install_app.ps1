@@ -48,21 +48,26 @@ $ProgressPreference = 'SilentlyContinue'
 Write-Log -Level "INFO" -Message "Starting Install - $($app)"
 
 $installerExtension = [System.IO.Path]::GetExtension("$($installerName)")
-$installerFileName = [io.path]::GetFileNameWithoutExtension($installerName)
+$installerName = [io.path]::GetFileNameWithoutExtension($installerName)
+
 Write-Log -Level "INFO" -Message "Installer file Name: $($installerFileName); Installer File Extension: $($installerExtension)"
 
-Write-Log -Level "INFO" -Message "Search for $($installerName) in $($searchPath)"
+Write-Log -Level "INFO" -Message "Searching for $($installerName) in $($searchPath)"
 $appSrcPath = Get-ChildItem -File -Path $searchPath -Recurse | Where-Object { $_.name -match $installerName }
 
-if ($appSrcPath -is [array]) {
-    Write-Log -Level "INFO" -Message "Found multiple installers; selecting [0]"
-    $appSrcPath = $appSrcPath[0]
-    Write-Log -Level "INFO" -Message "Using $($appSrcPath.FullName)"
+if ($appSrcPath) {
+    if ($appSrcPath -is [array]) {
+        Write-Log -Level "INFO" -Message "Found multiple installers; selecting [0]"
+        $appSrcPath = $appSrcPath[0]
+        Write-Log -Level "INFO" -Message "Using $($appSrcPath.FullName)"
+    }
+    else {
+        Write-Log -Level "INFO" -Message "Using $($appSrcPath.FullName)"
+    }
 }
 else {
-    Write-Log -Level "INFO" -Message "Found $($appSrcPath.FullName)"
+    Write-Log -Level "INFO" -Message "$($installerName) not found"
 }
-
 
 Write-Log -Level "INFO" -Message "Switching to Directory - $($appSrcPath.Directoryname)"
 Push-Location $appSrcPath.Directoryname 
