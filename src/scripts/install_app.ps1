@@ -50,7 +50,7 @@ Write-Log -Level "INFO" -Message "Starting Install - $($app)"
 $installerExtension = [System.IO.Path]::GetExtension("$($installerName)")
 $installerName = [io.path]::GetFileNameWithoutExtension($installerName)
 
-Write-Log -Level "INFO" -Message "Installer file Name: $($installerFileName); Installer File Extension: $($installerExtension)"
+Write-Log -Level "INFO" -Message "Installer file Name: $($installerName); Installer File Extension: $($installerExtension)"
 
 Write-Log -Level "INFO" -Message "Searching for $($installerName) in $($searchPath)"
 $appSrcPath = Get-ChildItem -File -Path $searchPath -Recurse | Where-Object { $_.name -match $installerName }
