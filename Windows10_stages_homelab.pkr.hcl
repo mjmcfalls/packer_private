@@ -502,7 +502,6 @@ build {
   provisioner "powershell" {
     inline = [
       "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.wget_path}\\wget.exe'",
-       "${var.win_temp_dir}\\scripts\\Virtio\\install_virtio.ps1 -outpath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}/apps/Virtio/virtio-win-0.1.217.iso'",
       # Utilities
       "a:\\Install_pswindowsupdate.ps1",
       "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -SearchPath '${var.win_temp_dir}\\apps' -app 'sysinternals'",
@@ -528,6 +527,7 @@ build {
       # R and R Studio
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.r, "name", "R")}' -installParams '${lookup(var.r, "parameters", "/verysilent /NORESTART /MERGETASKS=!desktopicon")}' -installername '${lookup(var.r, "installer", "R-4.2.0-win.exe")}'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.r_studio, "name","R Studio 2022.02.1-461")}' -installParams '${lookup(var.r_studio, "parameters","/S")}' -installername '${lookup(var.r_studio,"installer","RStudio-2022.02.1-461.exe")}'", 
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.r_tools_40, "name","R Tools")}' -installParams '${lookup(var.r_tools_40, "parameters","/VERYSILENT")}' -installername '${lookup(var.r_tools_40,"installer","rtools40-x86_64.exe")}'", 
       # Java
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.java_x86, "name", "Java 8 R333 x86")}' -installParams '${lookup(var.java_x86, "parameters", "INSTALLCFG=${var.win_temp_dir}\\apps\\java\\java_install.cfg")}' -installername '${lookup(var.java_x86, "installer", "jre-8u333-windows-i586.exe")}'", 
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.java_x64, "name","Java 8 R333 x64")}' -installParams '${lookup(var.java_x64, "parameters", "INSTALLCFG=${var.win_temp_dir}\\apps\\java\\java_install.cfg")}' -installername '${lookup(var.java_x64, "installer", "jre-8u333-windows-x64.exe")}'", 
@@ -543,7 +543,7 @@ build {
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.texstudio, "name", "TexStudio")}' -installParams '${lookup(var.texstudio, "parameters", "/S")}' -installername '${lookup(var.texstudio,"installer", "texstudio-4.2.3-win-qt6.exe")}'", 
     ]
   }
-  
+
   provisioner "powershell" {
     inline = [
       # App Customization
@@ -553,8 +553,8 @@ build {
       "${var.win_temp_dir}\\scripts\\notepadplusplus\\npp_disable_updates.ps1",
       "${var.win_temp_dir}\\scripts\\julia\\julia_addToPath.ps1",
       # Conda Navigator update
-      # "${var.win_temp_dir}\\scripts\\anaconda\\conda_update_navigator.ps1",
-      # "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
+      "${var.win_temp_dir}\\scripts\\anaconda\\conda_update_navigator.ps1",
+      "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
     ]
   }
 }
