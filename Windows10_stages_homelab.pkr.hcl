@@ -304,7 +304,7 @@ source "qemu" "win_iso" {
   winrm_username   = "${var.winrm_username}"
 }
 
-source "qemu" "Windows10_base" {
+source "qemu" "Windows_base" {
   accelerator      = "kvm"
   boot_wait        = "60s"
   communicator     = "winrm"
@@ -497,7 +497,7 @@ build {
  
 build { 
   name = "win_base"
-  sources = ["source.qemu.Windows10_base"]
+  sources = ["source.qemu.Windows_base"]
 
   provisioner "powershell" {
     inline = [
@@ -561,7 +561,7 @@ build {
 
 build { 
   name = "win_base_apps1"
-  sources = ["source.qemu.Windows10_base","source.hyperv-vmcx.Windows_base"]
+  sources = ["source.qemu.Windows_base","source.hyperv-vmcx.Windows_base"]
 
 # Application installations
   provisioner "powershell" {
@@ -578,7 +578,7 @@ build {
 
 build { 
   name = "win_base_optimize"
-  sources = ["source.qemu.Windows10_base","source.hyperv-vmcx.Windows_base"]
+  sources = ["source.qemu.Windows_base","source.hyperv-vmcx.Windows_base"]
 
   provisioner "powershell" {
     elevated_user = "SYSTEM"
