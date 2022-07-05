@@ -45,6 +45,7 @@ packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Wind
 - [] WWW - Replace Startup pages with static SRW page?
 - [] Install App Script - Revisit logic for spliting file name; inconsistent split with spaces
 - [] R/R Studio Library paths
+- [] Python3: installs to program files instead of c:\python39
 ### Applications in Build
 - [x] Atom
 - [x] Notepad++
@@ -97,10 +98,12 @@ C:\ProgramData\Anaconda3;C:\ProgramData\Anaconda3\Library\mingw-w64\bin;C:\Progr
 #### R checks
 TBD
 #### Python Checks
-TBD
-#### Anaconda Checks
-TBD
+- [] Check install directory
+- [] Check env path
 
+#### Anaconda Checks
+- [] Environments imported
+- [] Environment sanity check ( ENV open and appropriate packages installed?)
 
 ### Application Specific Information
 

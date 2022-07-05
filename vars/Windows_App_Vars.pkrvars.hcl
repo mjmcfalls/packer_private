@@ -67,7 +67,7 @@ python_27 = {
 python_39 = {
     "name" = "Python 3.9.13"
     "installer" = "python-3.9.13-amd64.exe"
-    "parameters" = "/quiet"
+    "parameters" = "/quiet unattend.xml"
 }
 
 conda = {
