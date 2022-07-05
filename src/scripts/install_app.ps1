@@ -72,20 +72,20 @@ else {
 Write-Log -Level "INFO" -Message "Switching to Directory - $($appSrcPath.Directoryname)"
 Push-Location $appSrcPath.Directoryname 
 
-Write-Log -Level "INFO" -Message "Getting Extension of $($appSrcPath.FullName)"
-$installerExtension = [System.IO.Path]::GetExtension("$($appSrcPath.FullName)")
-
-Write-Log -Level "INFO" -Message "Extension is: $($installerExtension)"
+# Write-Log -Level "INFO" -Message "Getting Extension of $($appSrcPath.FullName)"
+# $installerExtension = [System.IO.Path]::GetExtension("$($appSrcPath.FullName)")
+# 
+# Write-Log -Level "INFO" -Message "Extension is: $($installerExtension)"
 
 if ($installerExtension -like ".msi") {
-    Write-Log -Level "INFO" -Message "MSI Install of $($appSrcPath.FullName)"
-    Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($appSrcPath.FullName) $($installParams)`""
-    Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($appSrcPath.FullName) $($installParams)" -Wait -PassThru
+    Write-Log -Level "INFO" -Message "MSI Install of $($appSrcPath.Name)"
+    Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($appSrcPath.Name) $($installParams)`""
+    Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($appSrcPath.Name) $($installParams)" -Wait -PassThru
 }
 elseif ($installerExtension -like ".exe") {
-    Write-Log -Level "INFO" -Message "EXE Install of $($appSrcPath.FullName)"
-    Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($appSrcPath.FullName) -ArgumentList `"$($installParams)`""
-    Start-Process -NoNewWindow -FilePath $appSrcPath.FullName -ArgumentList "$($installParams)" -Wait -PassThru    
+    Write-Log -Level "INFO" -Message "EXE Install of $($appSrcPath.Name)"
+    Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($appSrcPath.Name) -ArgumentList `"$($installParams)`""
+    Start-Process -NoNewWindow -FilePath $appSrcPath.Name -ArgumentList "$($installParams)" -Wait -PassThru    
 }
 
 Pop-Location
