@@ -166,7 +166,7 @@ if ($createVM.IsPresent) {
     $baseappOptVM = New-VM -Name "$($baseappOptVMName)" -Generation 1 -MemoryStartupBytes $memory -SwitchName $switch -VHDPath $baseappOptVMPath.FullName
     Write-Log -Level "INFO" -Message "Base App Optimized VM: $($baseappOptVM)"
     Write-Log -Level "INFO" -Message "Base App Optimized VM: Set CPU Count to $($numOfCpus)"
-    Set-VMProcessor -VMName "$($baseappOptVMPath)" -Count $numOfCpus
+    Set-VMProcessor -VMName "$($baseappOptVMName)" -Count $numOfCpus
     
     if($startVM.IsPresent){
         Write-Log -Level "INFO" -Message "Start VM: $($baseappOptVMName)"
