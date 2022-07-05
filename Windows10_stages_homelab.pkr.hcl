@@ -573,7 +573,7 @@ build {
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -installername 'eac-1.6.exe' -app 'Exact Audio Copy' -installParams '/S' ",
       # "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
       # Customization
-      "${var.win_temp_dir}\\scripts\\lam\\install_lame.ps1 -SearchPath '${var.win_temp_dir}\apps' -installername 'lame.exe' -app 'lame'",
+      "${var.win_temp_dir}\\scripts\\lame\\install_lame.ps1 -SearchPath '${var.win_temp_dir}\\apps' -installername 'lame.exe' -app 'lame'",
       ]
   }
 }
