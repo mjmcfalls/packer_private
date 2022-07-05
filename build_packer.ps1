@@ -98,7 +98,7 @@ $bareVM_StopWatch.Stop()
 
 $baseVM_StopWatch = [System.Diagnostics.StopWatch]::StartNew()
 Write-Log -Level "INFO" -Message "Building $($baseVMName) from $($bare_output_path)"
-$env:PACKER_LOG_PATH = "$($outPath)\$($base_output_path).log"
+$env:PACKER_LOG_PATH = "$($outPath)\$($baseVMName).log"
 Write-Log -Level "DEBUG" -Message "$($packerpath) build -timestamp-ui -only win_base.hyperv-vmcx.Windows_base -var `"clone_from_vmcx_path=$($bare_output_path)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($base_output_path)`" -var `"vm_name=$($baseVMName)`" -var-file $($varsfile) -var-file $($appvarFile)  -var-file $($secretsfile) $($buildfile)" 
 Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -timestamp-ui -only win_base.hyperv-vmcx.Windows_base -var `"clone_from_vmcx_path=$($bare_output_path)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($base_output_path)`" -var `"vm_name=$($baseVMName)`" -var-file $($varsfile) -var-file $($appvarFile)  -var-file $($secretsfile) $($buildfile)" -Wait
 Write-Log -Level "INFO" -Message "End Build $($baseVMName) from $($bare_output_path)"
@@ -106,7 +106,7 @@ $baseVM_StopWatch.Stop()
 
 $baseOptVMName_StopWatch = [System.Diagnostics.StopWatch]::StartNew()
 Write-Log -Level "INFO" -Message "Building $($baseOptVMName) from $($baseapp_output_path)"
-$env:PACKER_LOG_PATH = "$($outPath)\$($base_opt_output_path).log"
+$env:PACKER_LOG_PATH = "$($outPath)\$($baseOptVMName).log"
 Write-Log -Level "DEBUG" -Message "$($packerpath) build -timestamp-ui -only win_base_optimize.hyperv-vmcx.Windows_base -var `"clone_from_vmcx_path=$($base_output_path)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($base_opt_output_path)`" -var `"vm_name=$($baseOptVMName)`" -var-file $($varsfile) -var-file $($appvarFile)  -var-file $($secretsfile) $($buildfile)" 
 Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -timestamp-ui -only win_base_optimize.hyperv-vmcx.Windows_base -var `"clone_from_vmcx_path=$($base_output_path)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($base_opt_output_path)`" -var `"vm_name=$($baseOptVMName)`" -var-file $($varsfile) -var-file $($appvarFile)  -var-file $($secretsfile) $($buildfile)" -Wait
 # packer build -timestamp-ui -only 'win_base_optimize.qemu.Windows_base' -var "keep_registered=false" -var "iso_checksum=sha256:$base_sha" -var iso_url=$base_output_path/$vm_name -var "nix_output_directory=$base_opt_output_path" -var "vm_name=$vm_name" -var-file vars/Windows_App_Vars.pkrvars.hcl -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages_homelab.pkr.hcl
@@ -115,7 +115,7 @@ $baseOptVMName_StopWatch.Stop()
 
 $baseappVM_StopWatch = [System.Diagnostics.StopWatch]::StartNew()
 Write-Log -Level "INFO" -Message "Building $($baseappVMName) from $($base_opt_output_path)"
-$env:PACKER_LOG_PATH = "$($outPath)\$($baseapp_output_path).log"
+$env:PACKER_LOG_PATH = "$($outPath)\$($baseappVMName).log"
 Write-Log -Level "DEBUG" -Message "$($packerpath) build -timestamp-ui -only win_base_apps1.hyperv-vmcx.Windows_base -var `"clone_from_vmcx_path=$($base_opt_output_path)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($baseapp_output_path)`" -var `"vm_name=$($baseappVMName)`" -var-file $($varsfile) -var-file $($appvarFile)  -var-file $($secretsfile) $($buildfile)" 
 Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -timestamp-ui -only win_base_apps1.hyperv-vmcx.Windows_base -var `"clone_from_vmcx_path=$($base_opt_output_path)`" -var `"switchname=$($switch)`" -var `"keep_registered=$($keepregistered)`" -var `"output_directory=$($baseapp_output_path)`" -var `"vm_name=$($baseappVMName)`" -var-file $($varsfile) -var-file $($appvarFile)  -var-file $($secretsfile) $($buildfile)" -Wait
 Write-Log -Level "INFO" -Message "End Build $($baseappVMName) from $($base_opt_output_path)"
