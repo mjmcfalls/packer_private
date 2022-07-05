@@ -129,8 +129,8 @@ Start-DotNetRecompile -dotNetPaths $dotNetPaths
 # $dismCleanupResults = Start-Process -NoNewWindow -Wait -PassThru -FilePath "Dism.exe" -ArgumentList "/online /Cleanup-Image /StartComponentCleanup"
 
 # Clean-up and remove all superseded versions of every component in the component store
-Write-Log -logfile $logfile -Level "INFO" -Message "Running Dism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase"
-$dismCleanupResults = Start-Process -NoNewWindow -Wait -FilePath "Dism.exe" -ArgumentList "/online /Cleanup-Image /StartComponentCleanup /ResetBase"
+Write-Log -logfile $logfile -Level "INFO" -Message "Running Dism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase /Quiet"
+$dismCleanupResults = Start-Process -NoNewWindow -Wait -FilePath "Dism.exe" -ArgumentList "/online /Cleanup-Image /StartComponentCleanup /ResetBase /Quiet"
 
 # Clean up tmp files from Windows
 Write-Log -logfile $logfile -Level "INFO" -Message "Getting .tmp, .dmp, .etl, .evtx, thumbcache*.db, *.log files for removal"
