@@ -49,10 +49,13 @@ Function Write-Log {
 
 $app = "OS Optimize"
 $optimizeHashTable = @{}
-$appXHashTable = @{}
 
+$appXResults = New-Object System.Collections.Generic.List[System.Object]
 $schTasksResults = New-Object System.Collections.Generic.List[System.Object]
 $regKeyResults = New-Object System.Collections.Generic.List[System.Object]
+$serviceChangesList = New-Object System.Collections.Generic.List[System.Object]
+$tracingChangesList = New-Object System.Collections.Generic.List[System.Object]
+$allChangeResults = @{}
 
 $osRegistryChangesArray = @(
     @{DisplayName = "Cortana"; Path = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search'; Name = 'AllowCortana'; PropertyType = "DWORD"; Value = 0; ParentPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\'; ParentKey = 'Windows Search'; ItemResults = $null; PropertyResults = $null }
@@ -80,27 +83,56 @@ else {
 }
 
 
-
 # Set High Performance
 $highperfguid = ((((powercfg /list | Select-String "High Performance") -Split ":")[1]) -Split "\(")[0].trim()
 Write-Log -logfile $logfile -Level "INFO" -Message "Setting performance plan to $($highperfguid)"
 powercfg /setactive "$($highperfguid)"
 
 # Remove AppX Packages
+Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Get Installed AppX Packages"
 $installedAppXApps = Get-ProvisionedAppxPackage -Online
 
 foreach ($appX in $installedAppXApps) {
-    if (-Not ($appX.DisplayName -in $appxIgnoreList)) {
-        Write-Log -logfile $logfile -Level "INFO" -Message "Removing AppX Provisioned Package: $($appX.DisplayName)"
-        Remove-AppxProvisionedPackage -Online -AllUsers -PackageName $($appX.PackageName) | Out-Null
+    $tempAppXhashTbl = @{ AppXDisplayName = $appX.DisplayName; AppXPackageName = $appX.PackageName; Skipped = $null; ProvisionedPackageResults = $null; PackageResults = $null }
 
-        Write-Log -logfile $logfile -Level "INFO" -Message "Removing AppX Package: $($appX.DisplayName)"
-        Remove-AppxPackage -AllUsers -Package $($appX.PackageName) | Out-Null
+    if (-Not ($appX.DisplayName -in $appxIgnoreList)) {
+        # Removing Provisioned App X Package
+        Try {
+            Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Removing AppX Provisioned Package: $($appX.DisplayName)"
+            $provisionedPackageResults = Remove-AppxProvisionedPackage -Online -AllUsers -PackageName $($appX.PackageName) -ErrorAction Stop
+
+            Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - $($appX.DisplayName): $($provisionedPackageResults)"
+            $tempAppXhashTbl.ProvisionedPackageResults = $provisionedPackageResults
+        }
+        Catch {
+            $tempAppXhashTbl.ProvisionedPackageResults = $_
+        }
+
+        # Removing Provisioned App X Package
+        Try {
+            Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Removing AppX Package: $($appX.DisplayName)"
+            $appXPackageResults = Remove-AppxPackage -AllUsers -Package $($appX.PackageName) -ErrorAction Stop
+
+            Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - $($appX.DisplayName): $($appXPackageResults)"
+            $tempAppXhashTbl.PackageResults = $appXPackageResults
+        }
+        Catch {
+            Write-Log -logfile $logfile -Level "ERROR" -Message "$($app) - $($appX.DisplayName): $($_)"
+            $tempAppXhashTbl.PackageResults = $_
+        }
     }
+    else {
+        $tempAppXhashTbl.Skipped = $true
+    }
+    $appXResults.Add($tempAppXhashTbl)
 }
 
+# Add changes to hastable for reporting
+$allChangeResults.Add("AppX", $appXResults)
 
-for($i=0; $i -lt $osRegistryChangesArray.length; $i++) {
+Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Starting Global Registry Changes"
+# Global Registry Changes
+for ($i = 0; $i -lt $osRegistryChangesArray.length; $i++) {
     Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Disable $($osRegistryChangesArray[$i].DisplayName)"
     if ($osRegistryChangesArray[$i].ParentPath) {
         try {
@@ -125,112 +157,143 @@ for($i=0; $i -lt $osRegistryChangesArray.length; $i++) {
         $osRegistryChangesArray[$i].PropertyResults = $_
     }
 }
+# Add changes to hastable for reporting
+$allChangeResults.Add("SystemRegistry", $osRegistryChangesArray)
 
 
-
+Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Searching for $($defaultsUserSettingsPath)"
 if (Test-Path $defaultsUserSettingsPath) {
+    Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Found $($defaultsUserSettingsPath)"
     $defaultUserSettings = Get-Content $defaultsUserSettingsPath
 
     if ($defaultUserSettings.count -gt 0) {
         Foreach ($item in $defaultUserSettings) {
             $regResults = Start-Process C:\Windows\System32\Reg.exe -ArgumentList "$($item)" -Wait -PassThru
 
-            $psobj = [PSCustomObject]@{
-                Name    = $item
+            $usrHashTblTemp = @{
+                Name    = $item;
                 Results = $regResults
             }
 
-            $regKeyResults.Add($psobj)
+            $regKeyResults.Add($usrHashTblTemp)
         }
     }
-
+   
 }
 else {
-    Write-Log -logfile $logfile -Level "INFO" -Message  "Unable to find $($defaultsUserSettingsPath)"
+    Write-Log -logfile $logfile -Level "INFO" -Message  "$($app) - Unable to find $($defaultsUserSettingsPath)"
 }
+$allChangeResults.Add("DefaultUserRegistryKeys", $regKeyResults)
 
 # Disable Scheduled Tasks
+Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Searching for $($ScheduledTasksListPath)"
 if (Test-Path $ScheduledTasksListPath) {
     Write-Log -logfile $logfile -Level "INFO" -Message "Found $($ScheduledTasksListPath)"
     $SchTasksList = Get-Content $ScheduledTasksListPath
 
     if ($SchTasksList.count -gt 0) {
-        Write-Log -logfile $logfile -Level "INFO" -Message "$($ScheduledTasksListPath) is not empty"
-        Write-Log -logfile $logfile -Level "INFO" -Message "Getting Enabled Scheduled Tasks"
+        Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - $($ScheduledTasksListPath) contains $($schTasksList.count) items"
+        Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Getting Enabled Scheduled Tasks"
         $EnabledScheduledTasks = Get-ScheduledTask | Where-Object { $_.State -ne "Disabled" }
 
         Foreach ($item in $SchTasksList) {
-            Write-Log -logfile $logfile -Level "INFO" -Message "$($item): Disabling scheduled task"
+            $schTaskHashTbl = @{ SchTaskName = "$($item.trim())"; results = $null }
+            Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - $($item): Disabling scheduled task"
             $schTaskResult = $EnabledScheduledTasks | Where-Object { $_.TaskName -like "$($item.trim())" } | Disable-ScheduledTask
-            $schTasksResults.add($schTaskResult)
+            $schTaskHashTbl.results = $schTaskResult
+            $schTasksResults.add($schTaskHashTbl)
         }
     }
 }
 else {
-    Write-Log -logfile $logfile -Level "INFO" -Message  "Unable to find $($ScheduledTasksListPath)"
+    Write-Log -logfile $logfile -Level "INFO" -Message  "$($app) - Unable to find $($ScheduledTasksListPath)"
 }
+
+$allChangeResults.Add("ScheduledTasks", $schTasksResults)
 
 # Disable Windows Services
+Write-Log -logfile $logfile -Level "INFO" -Message  "$($app) - Searching for $($servicesToDisablePath)"
 if (Test-Path $servicesToDisablePath) {
+    Write-Log -logfile $logfile -Level "INFO" -Message  "$($app) - Found $($servicesToDisablePath)"
     $servicesToDisable = Get-Content $servicesToDisablePath
     if ($servicesToDisable.count -gt 0) {
+        Write-Log -logfile $logfile -Level "INFO" -Message  "$($app) - $($servicesToDisablePath) contains $($servicesToDisable.count) items"
+
         Foreach ($service in $servicesToDisable) {
-            $serviceExists = Get-Service -Name W32Time -ErrorAction SilentlyContinue
-            if ($null -eq $serviceExists) {
-                Write-Log -logfile $logfile -Level "INFO" -Message  "$($service): Found Service"
-                Write-Log -logfile $logfile -Level "INFO" -Message  "$($service): Stopping Service"
+            Write-Log -logfile $logfile -Level "INFO" -Message  "$($app) - Check if $($service) exists"
+            $svcHashTbl = @{ Name = $service; DisplayName = $null; Status = $null; StartupType = $null }
+
+            $serviceExists = Get-Service -Name "$($service)" -ErrorAction SilentlyContinue
+            if ($serviceExists) {
+                Write-Log -logfile $logfile -Level "INFO" -Message  "$($app) - Found $($service)"
+                Write-Log -logfile $logfile -Level "INFO" -Message  "$($app) - Stopping $($service)"
                 Stop-Service $service
-                Write-Log -logfile $logfile -Level "INFO" -Message  "$($service): Setting StartupType to Disabled"
+                Write-Log -logfile $logfile -Level "INFO" -Message  "$($app) - Setting StartupType of $($service) to Disabled"
                 Set-Service -Name $service -StartupType Disabled
+                $serviceState = Get-Service "$($service)" | Select-Object Name, DisplayName, Status, StartupType
+                $svcHashTbl.DisplayName = $service.DisplayName
+                $svcHashTbl.Status = $service.Status
+                $svcHashTbl.StartupType = $service.StartupType
             }
             else {
-                Write-Log -logfile $logfile -Level "INFO" -Message "$($service): Service not found"
+                Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - $($service) not found"
+                $svcHashTbl.Status = "NotFound"
             }
+
+            $serviceChangesList.add($serviceState)
         }
     }
 }
 else {
-    Write-Log -logfile $logfile -Level "INFO" -Message  "Unable to find $($servicesToDisablePath)"
+    Write-Log -logfile $logfile -Level "INFO" -Message  "$($app) - Unable to find $($servicesToDisablePath)"
 }
+$allChangeResults.Add("Services", $serviceChangesList)
 
 # Disable Windows Automatic tracing
+Write-Log -logfile $logfile -Level "INFO" -Message  "$($app) - Searching for $($automaticTracingFilePath)"
 if (Test-Path $automaticTracingFilePath) {
+    Write-Log -logfile $logfile -Level "INFO" -Message  "$($app) - Found $($automaticTracingFilePath)"
     $AutomaticTracers = Get-Content $automaticTracingFilePath
     if ($AutomaticTracers.count -gt 0) {
+        Write-Log -logfile $logfile -Level "INFO" -Message  "$($app) - $($automaticTracingFilePath) contains $($AutomaticTracers.count) tracers"
+        $tracerHashTbl = @{RegPath = $tracer; Value = 0; Property = "Start"; PropertyType = "DWORD"; results = $null }
+
         Foreach ($tracer in $AutomaticTracers) {
-            Write-Log -logfile $logfile -Level "INFO" -Message "$($tracer): Starting logic to disable tracer"
-            Write-Log -logfile $logfile -Level "INFO" -Message  "$($tracer): Testing for existance of tracer"
+            Write-Log -logfile $logfile -Level "INFO" -Message  "$($app) - Testing for existance of $($tracer) tracing"
             if (Test-Path "$($tracer)") {
-                Write-Log -logfile $logfile -Level "INFO" -Message  "$($tracer): Disabling tracer"
-                New-ItemProperty -Path "$($tracer)" -Name "Start" -PropertyType "DWORD" -Value "0" -Force
+                Write-Log -logfile $logfile -Level "INFO" -Message  "$($app) - Disabling $($tracer) tracing"
+                $tracerResults = New-ItemProperty -Path "$($tracer)" -Name "Start" -PropertyType "DWORD" -Value "0" -Force
+                $tracerHashTbl.results = $tracerResults
             }
             else {
-                Write-Log -logfile $logfile -Level "INFO" -Message  "$($tracer): Unable to find"
+                Write-Log -logfile $logfile -Level "INFO" -Message  "$($app) - Unable to find $($tracer) tracing"
+                $tracerHashTbl.results = "NotFound"
             }
-            
+            $tracingChangesList.Add($tracerHashTbl)
         }
     }
 }
 else {
-    Write-Log -logfile $logfile -Level "INFO" -Message  "Unable to find $($automaticTracingFilePath)"
+    Write-Log -logfile $logfile -Level "INFO" -Message  "$($app) - Unable to find $($automaticTracingFilePath)"
 }
+$allChangeResults.Add("Tracing", $tracingChangesList)
 
 # Disable Windows Features
 foreach ($feature in $winFeaturesToDisable) {
-    Write-Log -logfile $logfile -Level "INFO" -Message "$($feature): Disabling Windows Feature"
+    Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Disabling $($feature) Feature"
     Disable-WindowsOptionalFeature -Online -FeatureName $feature
 }
 
 # Disable System Restore
-Write-Log -logfile $logfile -Level "INFO" -Message "Disabling System Restore for C:"
+Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Disabling System Restore for C:"
 Disable-ComputerRestore -Drive "C:\"
 
 # Disable Hibernate
-Write-Log -logfile $logfile -Level "INFO" -Message "Disabling Hibernate"
+Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Disabling Hibernate"
 powercfg /hibernate off
 
 # Disable Crash Dumps
-Write-Log -logfile $logfile -Level "INFO" -Message "Disabling System crash dumps"
+Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Disabling System crash dumps"
 Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\CrashControl' -Name 'CrashDumpEnabled' -Value '1'
 Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\CrashControl' -Name 'LogEvent' -Value '0'
 Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\CrashControl' -Name 'SendAlert' -Value '0'
@@ -238,23 +301,23 @@ Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\CrashControl' -Na
 
 
 # Disable Logon Background
-Write-Log -logfile $logfile -Level "INFO" -Message "Disable Logon Background"
+Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Disable Logon Background"
 Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\System' -Name 'DisableLogonBackgroundImage' -Value '1'
 
 # Network Optimization
-Write-Log -logfile $logfile -Level "INFO" -Message "Disable SMB Bandwidth Throttling"
+Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Disable SMB Bandwidth Throttling"
 Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Services\LanmanWorkstation\Parameters" DisableBandwidthThrottling -Value $DisableBandwidthThrottling -Force
 
-Write-Log -logfile $logfile -Level "INFO" -Message "Set FileInfoCacheEntries to $($FileInfoCacheEntriesValue)"
+Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Set FileInfoCacheEntries to $($FileInfoCacheEntriesValue)"
 Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Services\LanmanWorkstation\Parameters" FileInfoCacheEntriesMax -Value $FileInfoCacheEntriesValue -Force
 
-Write-Log -logfile $logfile -Level "INFO" -Message "Set DirectoryCacheEntriesMax to $($DirectoryCacheEntriesMax)"
+Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Set DirectoryCacheEntriesMax to $($DirectoryCacheEntriesMax)"
 Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Services\LanmanWorkstation\Parameters" DirectoryCacheEntriesMax -Value $DirectoryCacheEntriesMax -Force
 
-Write-Log -logfile $logfile -Level "INFO" -Message "Set FileNotFoundCacheEntriesMax to $($FileNotFoundCacheEntriesMax)"
+Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Set FileNotFoundCacheEntriesMax to $($FileNotFoundCacheEntriesMax)"
 Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Services\LanmanWorkstation\Parameters" FileNotFoundCacheEntriesMax -Value $FileNotFoundCacheEntriesMax -Force
 
-Write-Log -logfile $logfile -Level "INFO" -Message "Set DormantFileLimit to $($DormantFileLimit)"
+Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Set DormantFileLimit to $($DormantFileLimit)"
 Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Services\LanmanWorkstation\Parameters" DormantFileLimit -Value $DormantFileLimit -Force
 
 # Disk cleanup will occur post application installs
