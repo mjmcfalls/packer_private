@@ -74,7 +74,7 @@ $osRegistryChangesArray = @(
 
 
 if (Test-Path $auditLogPath) {
-    Write-Log -Level "INFO" -Message "$($app) - $($auditLogPath) exists"
+    Write-Log -Level "INFO" -Message "$($app) - Audit Log Path $($auditLogPath) exists"
 }
 else {
     Write-Log -Level "INFO" -Message "$($app) - Creating $($auditLogPath)"
@@ -321,3 +321,5 @@ Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Set DormantFileLim
 Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Services\LanmanWorkstation\Parameters" DormantFileLimit -Value $DormantFileLimit -Force
 
 # Disk cleanup will occur post application installs
+
+$allChangeResults | ConvertTo-JSON | Set-Content (Join-Path -Path $auditLogPath -ChildPath $auditLogFile)

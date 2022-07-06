@@ -48,20 +48,20 @@ $ProgressPreference = 'SilentlyContinue'
 
 $installStopWatch = [System.Diagnostics.StopWatch]::StartNew()
 
-Writ
+Write-Log -Level "INFO" -Message "$($app) - Searching $($searchPath) for $($app)"
 $appSrcPath = Get-ChildItem -Directory -Path $searchPath | Where-Object { $_.Name -match $app }
 
 
-Write-Log -Level "INFO" -Message "Installer Path: $($appSrcPath.FullName)"
+Write-Log -Level "INFO" -Message "$($app) - Installer Path: $($appSrcPath.FullName)"
 
-Write-Log -Level "INFO" -Message "Moving $($appSrcPath.FullName) to $($installDest)"
+Write-Log -Level "INFO" -Message "$($app) - Moving $($appSrcPath.FullName) to $($installDest)"
 
 $items = Get-Childitem $appSrcPath.FullName -Recurse | Where-object { $_.Extension -notlike ".htm*" } 
 
 foreach ($copyItem in $items) {
-    Write-Log -Level "INFO" -Message "Moving $($copyItem.FullName) to $($installDest)"
+    Write-Log -Level "INFO" -Message "$($app) - Moving $($copyItem.FullName) to $($installDest)"
     Move-Item -Path $copyItem.FullName -Destination $installDest -Force 
 }
 
 $installStopWatch.Stop()
-Write-Log -Level "INFO" -Message "LAME installed Finished: $($installStopWatch.Elapsed)"
+Write-Log -Level "INFO" -Message "$($app) - Installed Finished; Elapsed Time: $($installStopWatch.Elapsed)"

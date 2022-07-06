@@ -80,12 +80,12 @@ if ($appSrcPath) {
     if ($installerExtension -like ".msi") {
         Write-Log -Level "INFO" -Message "$($app) - $($installerExtension) Install of $($appSrcPath.FullName)"
         Write-Log -Level "INFO" -Message "$($app) - MSIExec: $($msiexec); Package: $($appSrcPath.FullName); Parameters: $($installParams)"
-        Start-Process -NoNewWindow -FilePath "$($msiexec)" -ArgumentList "/package $($appSrcPath.FullName) $($installParams)" -Wait -PassThru
+        $installInfo = Start-Process -NoNewWindow -FilePath "$($msiexec)" -ArgumentList "/package $($appSrcPath.FullName) $($installParams)" -Wait -PassThru
     }
     elseif ($installerExtension -like ".exe") {
         Write-Log -Level "INFO" -Message "$($app) - $($installerExtension) Install of $($appSrcPath.FullName)"
         Write-Log -Level "INFO" -Message "$($app) - Installer: $($appSrcPath.FullName); Parameters: $($installParams)"
-        Start-Process -NoNewWindow -FilePath "$($appSrcPath.FullName)" -ArgumentList "$($installParams)" -Wait -PassThru    
+        $installInfo = Start-Process -NoNewWindow -FilePath "$($appSrcPath.FullName)" -ArgumentList "$($installParams)" -Wait -PassThru    
     }
 
     Pop-Location
