@@ -322,4 +322,4 @@ Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Services\LanmanWorkstatio
 
 # Disk cleanup will occur post application installs
 
-$allChangeResults | ConvertTo-JSON | Set-Content (Join-Path -Path $auditLogPath -ChildPath $auditLogFile)
+$allChangeResults | ConvertTo-JSON | Set-Content (Join-Path -Path $auditLogPath -ChildPath "$(Get-Date -Format yyyyMMddhhmm)_$($buildName)_$($auditLogFile)")
