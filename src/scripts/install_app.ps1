@@ -45,6 +45,8 @@ Function Write-Log {
 }
 
 $ProgressPreference = 'SilentlyContinue'
+$installStopWatch = [System.Diagnostics.StopWatch]::StartNew()
+
 Write-Log -Level "INFO" -Message "Starting Install - $($app)"
 
 $installerExtension = [System.IO.Path]::GetExtension("$($installerName)")
@@ -76,10 +78,6 @@ Write-Log -Level "INFO" -Message "Switching to Directory - $($appSrcPath.Directo
 Push-Location $appSrcPath.Directoryname 
 
 Write-Log -Level "INFO" -Message "Current Working Directory: $(Get-Location)"
-# Write-Log -Level "INFO" -Message "Getting Extension of $($appSrcPath.FullName)"
-# $installerExtension = [System.IO.Path]::GetExtension("$($appSrcPath.FullName)")
-# 
-# Write-Log -Level "INFO" -Message "Extension is: $($installerExtension)"
 
 if ($installerExtension -like ".msi") {
     Write-Log -Level "INFO" -Message "MSI Install of $($appSrcPath.FullName)"
@@ -95,4 +93,5 @@ elseif ($installerExtension -like ".exe") {
 
 Pop-Location
 Write-Log -Level "INFO" -Message "Current Working Directory: $(Get-Location)"
-Write-Log -Level "INFO" -Message "End of $($app) install"
+$installStopWatch.Stop()
+Write-Log -Level "INFO" -Message "End of $($app) install: $($installStopWatch.Elapsed)"

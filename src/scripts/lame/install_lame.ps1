@@ -2,7 +2,7 @@
 Param (
     [string]$searchPath = $env:temp,
     [string]$app = "lame",
-    [string]$installDest = "C:\Program Files\Exact Audio Copy\",
+    [string]$installDest = "C:\Program Files\Exact Audio Copy",
     [string]$installername = "lame.exe"
 )
 
@@ -46,6 +46,9 @@ Function Write-Log {
 
 $ProgressPreference = 'SilentlyContinue'
 
+$installStopWatch = [System.Diagnostics.StopWatch]::StartNew()
+
+Writ
 $appSrcPath = Get-ChildItem -Directory -Path $searchPath | Where-Object { $_.Name -match $app }
 
 
@@ -53,6 +56,12 @@ Write-Log -Level "INFO" -Message "Installer Path: $($appSrcPath.FullName)"
 
 Write-Log -Level "INFO" -Message "Moving $($appSrcPath.FullName) to $($installDest)"
 
-Get-Childitem $appSrcPath.FullName -Recurse | Where-object { $_.Extension -notlike ".htm*" } | Move-Item -Destination $installDest -Force 
+$items = Get-Childitem $appSrcPath.FullName -Recurse | Where-object { $_.Extension -notlike ".htm*" } 
 
-Write-Log -Level "INFO" -Message "LAME installed Finished"
+foreach ($copyItem in $items) {
+    Write-Log -Level "INFO" -Message "Moving $($copyItem.FullName) to $($installDest)"
+    Move-Item -Path $copyItem.FullName -Destination $installDest -Force 
+}
+
+$installStopWatch.Stop()
+Write-Log -Level "INFO" -Message "LAME installed Finished: $($installStopWatch.Elapsed)"
