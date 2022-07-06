@@ -47,51 +47,54 @@ Function Write-Log {
 $ProgressPreference = 'SilentlyContinue'
 $installStopWatch = [System.Diagnostics.StopWatch]::StartNew()
 
-Write-Log -Level "INFO" -Message "Starting Install - $($app)"
+Write-Log -Level "INFO" -Message "$($app) - Starting Install"
 
 $installerExtension = [System.IO.Path]::GetExtension("$($installerName)")
 $installerName = [io.path]::GetFileNameWithoutExtension($installerName)
 
-Write-Log -Level "INFO" -Message "Installer file Name: $($installerName); Installer File Extension: $($installerExtension)"
+Write-Log -Level "INFO" -Message "$($app) - Installer file Name: $($installerName); Installer File Extension: $($installerExtension)"
 
-Write-Log -Level "INFO" -Message "Searching for $($installerName) in $($searchPath)"
+Write-Log -Level "INFO" -Message "$($app) - Searching for $($installerName) in $($searchPath)"
 $appSrcPath = Get-ChildItem -File -Path $searchPath -Recurse | Where-Object { $_.name -match $installerName }
 
 if ($appSrcPath) {
     if ($appSrcPath -is [array]) {
-        Write-Log -Level "INFO" -Message "Found multiple installers; selecting [0]: $($appSrcPath[0])"
+        Write-Log -Level "INFO" -Message "$($app) - Found multiple installers; selecting [0]: $($appSrcPath[0])"
         $appSrcPath = $appSrcPath[0]
-        Write-Log -Level "INFO" -Message "Using $($appSrcPath.FullName)"
+        Write-Log -Level "INFO" -Message "$($app) - Using $($appSrcPath.FullName)"
     }
     else {
-        Write-Log -Level "INFO" -Message "Using $($appSrcPath.FullName)"
+        Write-Log -Level "INFO" -Message "$($app) - Using $($appSrcPath.FullName)"
     }
+
+
+    Write-Log -Level "INFO" -Message "$($app) - Current Working Directory: $(Get-Location)"
+
+    Write-Log -Level "INFO" -Message "$($app) - Switching to Directory: $($appSrcPath.Directoryname)"
+
+    Push-Location $appSrcPath.Directoryname 
+
+    Write-Log -Level "INFO" -Message "$($app) - Current Working Directory: $(Get-Location)"
+
+    if ($installerExtension -like ".msi") {
+        Write-Log -Level "INFO" -Message "$($app) - MSI Install of $($appSrcPath.FullName)"
+        Write-Log -Level "INFO" -Message "$($app) - Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($appSrcPath.FullName) $($installParams)`""
+        Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($appSrcPath.FullName) $($installParams)" -Wait -PassThru
+    }
+    elseif ($installerExtension -like ".exe") {
+        Write-Log -Level "INFO" -Message "$($app) - EXE Install of $($appSrcPath.FullName)"
+        Write-Log -Level "INFO" -Message "$($app) - Start-Process -NoNewWindow -FilePath $($appSrcPath.FullName) -ArgumentList `"$($installParams)`""
+        Start-Process -NoNewWindow -FilePath "$($appSrcPath.FullName)" -ArgumentList "$($installParams)" -Wait -PassThru    
+    }
+
+
+    Pop-Location
+    Write-Log -Level "INFO" -Message "$($app) - Current Working Directory: $(Get-Location)"
 }
 else {
-    Write-Log -Level "INFO" -Message "$($installerName) not found"
+    Write-Log -Level "INFO" -Message "$($app) - $($installerName) not found"
 }
 
-Write-Log -Level "INFO" -Message "Current Working Directory: $(Get-Location)"
-
-Write-Log -Level "INFO" -Message "Switching to Directory: $($appSrcPath.Directoryname)"
-
-Push-Location $appSrcPath.Directoryname 
-
-Write-Log -Level "INFO" -Message "Current Working Directory: $(Get-Location)"
-
-if ($installerExtension -like ".msi") {
-    Write-Log -Level "INFO" -Message "MSI Install of $($appSrcPath.FullName)"
-    Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($appSrcPath.FullName) $($installParams)`""
-    Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($appSrcPath.FullName) $($installParams)" -Wait -PassThru
-}
-elseif ($installerExtension -like ".exe") {
-    Write-Log -Level "INFO" -Message "EXE Install of $($appSrcPath.FullName)"
-    Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($appSrcPath.FullName) -ArgumentList `"$($installParams)`""
-    Start-Process -NoNewWindow -FilePath "$($appSrcPath.FullName)" -ArgumentList "$($installParams)" -Wait -PassThru    
-}
-
-
-Pop-Location
-Write-Log -Level "INFO" -Message "Current Working Directory: $(Get-Location)"
 $installStopWatch.Stop()
-Write-Log -Level "INFO" -Message "End of $($app) install; Elpased Time: $($installStopWatch.Elapsed)"
+
+Write-Log -Level "INFO" -Message "$($app) - End of install; Elpased Time: $($installStopWatch.Elapsed)"
