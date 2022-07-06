@@ -73,7 +73,7 @@ else {
 
 Write-Log -Level "INFO" -Message "Current Working Directory: $(Get-Location)"
 
-Write-Log -Level "INFO" -Message "Switching to Directory - $($appSrcPath.Directoryname)"
+Write-Log -Level "INFO" -Message "Switching to Directory: $($appSrcPath.Directoryname)"
 
 Push-Location $appSrcPath.Directoryname 
 
