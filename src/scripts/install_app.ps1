@@ -94,4 +94,4 @@ elseif ($installerExtension -like ".exe") {
 Pop-Location
 Write-Log -Level "INFO" -Message "Current Working Directory: $(Get-Location)"
 $installStopWatch.Stop()
-Write-Log -Level "INFO" -Message "End of $($app) install: $($installStopWatch.Elapsed)"
+Write-Log -Level "INFO" -Message "End of $($app) install; Elpased Time: $($installStopWatch.Elapsed)"
