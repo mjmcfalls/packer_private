@@ -59,7 +59,7 @@ $appSrcPath = Get-ChildItem -File -Path $searchPath -Recurse | Where-Object { $_
 
 if ($appSrcPath) {
     if ($appSrcPath -is [array]) {
-        Write-Log -Level "INFO" -Message "Found multiple installers; selecting [0]"
+        Write-Log -Level "INFO" -Message "Found multiple installers; selecting [0]: $($appSrcPath[0])"
         $appSrcPath = $appSrcPath[0]
         Write-Log -Level "INFO" -Message "Using $($appSrcPath.FullName)"
     }
@@ -81,13 +81,13 @@ Write-Log -Level "INFO" -Message "Current Working Directory: $(Get-Location)"
 
 if ($installerExtension -like ".msi") {
     Write-Log -Level "INFO" -Message "MSI Install of $($appSrcPath.FullName)"
-    Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($appSrcPath.Name) $($installParams)`""
-    Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($appSrcPath.Name) $($installParams)" -Wait -PassThru
+    Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($appSrcPath.FullName) $($installParams)`""
+    Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($appSrcPath.FullName) $($installParams)" -Wait -PassThru
 }
 elseif ($installerExtension -like ".exe") {
     Write-Log -Level "INFO" -Message "EXE Install of $($appSrcPath.FullName)"
     Write-Log -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $($appSrcPath.FullName) -ArgumentList `"$($installParams)`""
-    Start-Process -NoNewWindow -FilePath $appSrcPath.FullName -ArgumentList "$($installParams)" -Wait -PassThru    
+    Start-Process -NoNewWindow -FilePath "$($appSrcPath.FullName)" -ArgumentList "$($installParams)" -Wait -PassThru    
 }
 
 
