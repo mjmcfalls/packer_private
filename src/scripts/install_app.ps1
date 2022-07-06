@@ -3,7 +3,8 @@ Param (
     [string]$app,
     [string]$searchPath = $env:temp,
     [string]$installParams,
-    [string]$installerName
+    [string]$installerName,
+    [string]$msiexec = "$($env:systemroot)\system32\msiexec.exe"
 )
 
 function New-TempFolder {
@@ -77,16 +78,15 @@ if ($appSrcPath) {
     Write-Log -Level "INFO" -Message "$($app) - Current Working Directory: $(Get-Location)"
 
     if ($installerExtension -like ".msi") {
-        Write-Log -Level "INFO" -Message "$($app) - MSI Install of $($appSrcPath.FullName)"
-        Write-Log -Level "INFO" -Message "$($app) - Start-Process -NoNewWindow -FilePath $($env:systemroot)\system32\msiexec.exe -ArgumentList `"/package $($appSrcPath.FullName) $($installParams)`""
-        Start-Process -NoNewWindow -FilePath "$($env:systemroot)\system32\msiexec.exe" -ArgumentList "/package $($appSrcPath.FullName) $($installParams)" -Wait -PassThru
+        Write-Log -Level "INFO" -Message "$($app) - $($installerExtension) Install of $($appSrcPath.FullName)"
+        Write-Log -Level "INFO" -Message "$($app) - MSIExec: $($msiexec); Package: $($appSrcPath.FullName); Parameters: $($installParams)"
+        Start-Process -NoNewWindow -FilePath "$($msiexec)" -ArgumentList "/package $($appSrcPath.FullName) $($installParams)" -Wait -PassThru
     }
     elseif ($installerExtension -like ".exe") {
-        Write-Log -Level "INFO" -Message "$($app) - EXE Install of $($appSrcPath.FullName)"
-        Write-Log -Level "INFO" -Message "$($app) - Start-Process -NoNewWindow -FilePath $($appSrcPath.FullName) -ArgumentList `"$($installParams)`""
+        Write-Log -Level "INFO" -Message "$($app) - $($installerExtension) Install of $($appSrcPath.FullName)"
+        Write-Log -Level "INFO" -Message "$($app) - Installer: $($appSrcPath.FullName); Parameters: $($installParams)"
         Start-Process -NoNewWindow -FilePath "$($appSrcPath.FullName)" -ArgumentList "$($installParams)" -Wait -PassThru    
     }
-
 
     Pop-Location
     Write-Log -Level "INFO" -Message "$($app) - Current Working Directory: $(Get-Location)"
