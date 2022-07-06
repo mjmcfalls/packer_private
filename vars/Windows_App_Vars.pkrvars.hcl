@@ -15,6 +15,8 @@
 # sdelete_uri = "https://download.sysinternals.com/files/SDelete.zip"
 # virtio_isoname = "virtio-win-0.1.217.iso"
 wget_path = "c:\\Program Files\\wget"
+audit_json_path = "c:\\ProgramData\\Packer"
+audit_json_file = "audit.json"
 
 r_studio = {
     "name" = "RStudio-2022.02.1-461"

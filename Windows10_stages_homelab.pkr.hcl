@@ -98,6 +98,14 @@ variable "vm_choco_name" {
   type    = string
 }
 
+variable "audit_json_path"{
+  type = string
+}
+
+variable "audit_json_file"{
+  type = string
+}
+
 variable "vmx_version" {
   type    = string
   default = "14"

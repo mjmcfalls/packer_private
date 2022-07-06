@@ -15,7 +15,10 @@ Param (
     [int]$FileNotFoundCacheEntriesMax = 2048,
     [int]$DormantFileLimit = 256,
     [int]$DisableBandwidthThrottling = 1,
-    [string]$logfile = $null
+    [string]$logfile = $null,
+    [string]$auditLogFile = "audit.json",
+    [string]$auditLogPath = "C:\ProgramData\Packer",
+    [string]$buildName = "Default"
 )
 
 Function Write-Log {
@@ -44,8 +47,39 @@ Function Write-Log {
     }
 }
 
+$app = "OS Optimize"
+$optimizeHashTable = @{}
+$appXHashTable = @{}
+
 $schTasksResults = New-Object System.Collections.Generic.List[System.Object]
 $regKeyResults = New-Object System.Collections.Generic.List[System.Object]
+
+$osRegistryChangesArray = @(
+    @{DisplayName = "Cortana"; Path = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search'; Name = 'AllowCortana'; PropertyType = "DWORD"; Value = 0; ParentPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\'; ParentKey = 'Windows Search'; ItemResults = $null; PropertyResults = $null }
+    @{DisplayName = "Consumer Features (Internet App Downloads)"; Path = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent'; Name = 'DisableWindowsConsumerFeatures'; PropertyType = "DWORD"; Value = 1; ParentPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows'; ParentKey = 'CloudContent'; ItemResults = $null; PropertyResults = $null }
+    @{DisplayName = "Disabling Windows Store Updates"; Path = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsStore\WindowsUpdate'; Name = 'AutoDownload'; PropertyType = "DWORD"; Value = 2; ParentPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsStore\'; ParentKey = 'WindowsUpdate'; ItemResults = $null; PropertyResults = $null }
+    @{DisplayName = "Windows tips"; Path = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent'; Name = 'DisableSoftLanding'; PropertyType = "DWORD"; Value = 1; ParentPath = $null; ParentKey = $null; ItemResults = $null; PropertyResults = $null }
+    @{DisplayName = "Windows Feeds"; Path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds"; Name = "EnableFeeds"; PropertyType = "DWORD"; Value = 0; ParentPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows'; ParentKey = "Windows Feeds"; ItemResults = $null; PropertyResults = $null }
+    @{DisplayName = "ShellFeedsTaskbarviewMode"; Path = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Feeds" ; Name = "ShellFeedsTaskbarviewMode"; PropertyType = "DWORD"; Value = 2; ParentPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion"; ParentKey = "Feeds"; ItemResults = $null; PropertyResults = $null }
+    @{DisplayName = "OneDrive - DisableFileSync"; Path = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Skydrive'; Name = 'DisableFileSync'; PropertyType = "DWORD"; Value = 1; ParentPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\'; ParentKey = 'Skydrive'; ItemResults = $null; PropertyResults = $null }
+    @{DisplayName = "OneDrive - DisableLibrariesDefaultSaveToSkyDrive"; Path = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Skydrive'; Name = 'DisableLibrariesDefaultSaveToSkyDrive'; PropertyType = "DWORD"; Value = 1; ParentPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\'; ParentKey = 'Skydrive'; ItemResults = $null; PropertyResults = $null }
+    @{DisplayName = "MS Edge First Run Experience"; Path = "HKLM:\Software\Policies\Microsoft\Edge"; Name = 'HideFirstRunExperience'; PropertyType = "DWORD"; Value = 1; ParentPath = "HKLM:\Software\Policies\Microsoft"; ParentKey = "Edge"; ItemResults = $null; PropertyResults = $null }
+    @{DisplayName = "OOBE Experience for Current User"; Path = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\UserProfileEngagement'; Name = 'ScoobeSystemSettingEnabled'; PropertyType = "DWORD"; Value = 0; ParentPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion"; ParentKey = "UserProfileEngagement"; ItemResults = $null; PropertyResults = $null }
+    @{DisplayName = "First Run Animations"; Path = 'HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon'; Name = 'EnableFirstLogonAnimation'; PropertyType = "DWORD"; Value = 0; ParentPath = $null; ParentKey = $null; ItemResults = $null; PropertyResults = $null }
+)
+
+
+
+if (Test-Path $auditLogPath) {
+    Write-Log -Level "INFO" -Message "$($app) - $($auditLogPath) exists"
+}
+else {
+    Write-Log -Level "INFO" -Message "$($app) - Creating $($auditLogPath)"
+    New-Item -Path $auditLogPath -ItemType Directory -Force
+
+}
+
+
 
 # Set High Performance
 $highperfguid = ((((powercfg /list | Select-String "High Performance") -Split ":")[1]) -Split "\(")[0].trim()
@@ -65,53 +99,33 @@ foreach ($appX in $installedAppXApps) {
     }
 }
 
-# dism /Online /Get-ProvisionedAppxPackages | Select-String PackageName | Select-String xbox | ForEach-Object { $_.Line.Split(':')[1].Trim() } | ForEach-Object { dism /Online /Remove-ProvisionedAppxPackage /PackageName:$_ }
 
-# Disable Cortana
-Write-Log -logfile $logfile -Level "INFO" -Message "Disable Cortana"
-New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\' -Name 'Windows Search' | Out-Null
-New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search' -Name 'AllowCortana' -PropertyType DWORD -Value '0' | Out-Null
+for($i=0; $i -lt $osRegistryChangesArray.length; $i++) {
+    Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Disable $($osRegistryChangesArray[$i].DisplayName)"
+    if ($osRegistryChangesArray[$i].ParentPath) {
+        try {
+            Write-Log -Level "INFO" -Message "New-Item -Path $($osRegistryChangesArray[$i].ParentPath) -Name $($osRegistryChangesArray[$i].ParentKey)"
+            $newItemResults = New-Item -Path $osRegistryChangesArray[$i].ParentPath -Name $osRegistryChangesArray[$i].ParentKey -ErrorAction Stop
+            $osRegistryChangesArray[$i].ItemResults = $newItemResults
+        }
+        catch {
+            Write-Log -Level "INFO" -Message "$($_)"
+            $osRegistryChangesArray[$i].ItemResults = $_
+        }
+    }
 
+    Write-Log -logfile $logfile -Level "INFO" -Message "$($app) -  New-ItemProperty: Path $($osRegistryChangesArray[$i].Path); Name $($osRegistryChangesArray[$i].Name); PropertyType $($osRegistryChangesArray[$i].PropertyType); Value $($osRegistryChangesArray[$i].Value)"
+    try {
+        $newItemPropertyResults = New-ItemProperty -Path $osRegistryChangesArray[$i].Path -Name $osRegistryChangesArray[$i].Name -PropertyType $osRegistryChangesArray[$i].PropertyType -Value $osRegistryChangesArray[$i].Value -ErrorAction stop
+        $osRegistryChangesArray[$i].PropertyResults = $newItemPropertyResults
 
-# Registry changes
-Write-Log -logfile $logfile -Level "INFO" -Message "Disabling Consumer Features (Internet App Downloads)"
-New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows' -Name 'CloudContent' | Out-Null
-New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent' -Name 'DisableWindowsConsumerFeatures' -PropertyType DWORD -Value '1' | Out-Null 
+    }
+    catch {
+        Write-Log -logfile $logfile -Level "INFO" -Message "$($_)"
+        $osRegistryChangesArray[$i].PropertyResults = $_
+    }
+}
 
-Write-Log -logfile $logfile -Level "INFO" -Message "Disabling Windows Store Updates"
-New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsStore\WindowsUpdate" -Force | Out-Null
-New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsStore\WindowsUpdate" -Name "AutoDownload" -PropertyType DWORD -Value "2"
-
-Write-Log -logfile $logfile -Level "INFO" -Message "Disabling Windows tips"
-New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent' -Name 'DisableSoftLanding' -PropertyType DWORD -Value '1' | Out-Null 
-
-# Disable Windows Feeds
-Write-Log -logfile $logfile -Level "INFO" -Message "Creating HKLM:\SOFTWARE\Policies\Microsoft\Windows -Name Windows Feeds"
-New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows" -Name "Windows Feeds" -Force
-
-Write-Log -logfile $logfile -Level "INFO" -Message "Disabling Windows Feeds"
-New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" -Name "EnableFeeds" -PropertyType DWORD -Value "0" | Out-Null 
-
-New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion" -Name "Feeds" -Force
-New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Feeds" -Name "ShellFeedsTaskbarviewMode" -PropertyType DWORD -Value "2" -Force | Out-Null
-# reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" /v EnableFeeds /t REG_DWORD /d 0 /f
-
-Write-Log -logfile $logfile -Level "INFO" -Message "Disabling OneDrive Syncing for All users"
-New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\' -Name 'Skydrive' | Out-Null
-New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Skydrive' -Name 'DisableFileSync' -PropertyType DWORD -Value '1' | Out-Null
-New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Skydrive' -Name 'DisableLibrariesDefaultSaveToSkyDrive' -PropertyType DWORD -Value '1' | Out-Null 
-
-
-Write-Log -logfile $logfile -Level "INFO" -Message "Disabling MS Edge First Run Experience"
-New-Item -Path "HKLM:\Software\Policies\Microsoft" -Name "Edge" -Force
-New-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Edge" -Name HideFirstRunExperience -PropertyType DWORD -Value "1" -Force | Out-Null
-
-Write-Log -logfile $logfile -Level "INFO" -Message "Disabling OOBE Experience for Current User"
-New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion" -Name "UserProfileEngagement" -Force
-New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\UserProfileEngagement" -Name "ScoobeSystemSettingEnabled" -PropertyType DWORD -Value "0" -Force | Out-Null
-
-Write-Log -logfile $logfile -Level "INFO" -Message "Disabling First Run Animations"
-New-ItemProperty -Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "EnableFirstLogonAnimation" -Value "0" -Force | Out-Null 
 
 
 if (Test-Path $defaultsUserSettingsPath) {
