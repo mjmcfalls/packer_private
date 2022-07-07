@@ -66,7 +66,8 @@ packer build -timestamp-ui -only 'win_base.qemu.Windows_base' -var "keep_registe
 # packer build -timestamp-ui -only 'win_base_optimize.qemu.Windows_base' -var "keep_registered=false" -var "iso_checksum=sha256:$baseapp_sha" -var iso_url=$baseapp_output_path/$vm_name -var "nix_output_directory=$baseapp_opt_output_path" -var "vm_name=$vm_name" -var-file vars/Windows_App_Vars.pkrvars.hcl -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages_homelab.pkr.hcl
 
 
-virt-install --name "Win10_base_$current_date" --memory 8192 --vcpus 6 --disk bus=virtio,path="$base_output_path/$vm_name" --network bridge:br0 --import --os-variant win10
+echo "virt-install --name "Win10_base_$current_date" --memory 8192 --vcpus 6 --disk bus=virtio,path=$base_output_path/$vm_name --network bridge:br0 --import --os-variant win10"
+virt-install --name "Win10_base_$current_date" --memory 8192 --vcpus 6 --disk bus=virtio,path=$base_output_path/$vm_name --network bridge:br0 --import --os-variant win10
 # virt-install --name "Win10_baseapp_$current_date" --memory 8192 --vcpus 6 --disk "$baseapp_output_path/$vm_name" --import --os-variant win10
 
 
