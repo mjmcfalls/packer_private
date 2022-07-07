@@ -144,11 +144,12 @@ for ($i = 0; $i -lt $osRegistryChangesArray.length; $i++) {
             Write-Log -Level "INFO" -Message "$($_)"
             $osRegistryChangesArray[$i].ItemResults = $_
         }
+        Write-Log -Level "INFO" -Message "$($app) - Results: $($osRegistryChangesArray[$i].ItemResults)"
     }
 
     Write-Log -logfile $logfile -Level "INFO" -Message "$($app) -  New-ItemProperty: Path $($osRegistryChangesArray[$i].Path); Name $($osRegistryChangesArray[$i].Name); PropertyType $($osRegistryChangesArray[$i].PropertyType); Value $($osRegistryChangesArray[$i].Value)"
     try {
-        $newItemPropertyResults = New-ItemProperty -Path $osRegistryChangesArray[$i].Path -Name $osRegistryChangesArray[$i].Name -PropertyType $osRegistryChangesArray[$i].PropertyType -Value $osRegistryChangesArray[$i].Value -ErrorAction stop
+        $newItemPropertyResults = New-ItemProperty -Path $osRegistryChangesArray[$i].Path -Name $osRegistryChangesArray[$i].Name -PropertyType $osRegistryChangesArray[$i].PropertyType -Value ($osRegistryChangesArray[$i].Value) -ErrorAction stop
         $osRegistryChangesArray[$i].PropertyResults = $newItemPropertyResults
 
     }
@@ -156,6 +157,7 @@ for ($i = 0; $i -lt $osRegistryChangesArray.length; $i++) {
         Write-Log -logfile $logfile -Level "INFO" -Message "$($_)"
         $osRegistryChangesArray[$i].PropertyResults = $_
     }
+    Write-Log -Level "INFO" -Message "$($app) - Results: $($osRegistryChangesArray[$i].PropertyResults)"
 }
 # Add changes to hastable for reporting
 $allChangeResults.Add("SystemRegistry", $osRegistryChangesArray)
