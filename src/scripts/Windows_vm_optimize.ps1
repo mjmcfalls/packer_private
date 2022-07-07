@@ -35,7 +35,8 @@ Function Write-Log {
 Function Clear-Directory {
     [Cmdletbinding()]
     Param(
-        $patharray
+        $patharray,
+        [string]$app
     )
 
     foreach ($tpath in $tempPaths) {
@@ -87,19 +88,33 @@ Function Start-Sdelete {
     Param (
         [string]$outPath = "c:\temp",
         [string]$sdelete_uri = "https://download.sysinternals.com/files/SDelete.zip",
-        [string]$sdelete_params = "-nobanner -z"
+        [string]$sdelete_params = "-nobanner -z",
+        [string]$sdelete_exe = "sdelete.exe",
+        [string]$app
     )
     
-    $sdeleteZipPath = Join-Path -Path $outpath -ChildPath "sdelete.zip"
+    Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Searching for $($sdelete_exe) in C:\Program Files"
+    $sdeleteLocalFiles = Get-Childitem -File -Recurse -Path "C:\Program Files" | Where-Object { $_.Name -like "$($sdelete_exe)" }
 
-    Write-Log -logfile $logfile -Level "INFO" -Message "Downloading Sdelete"
-    Invoke-WebRequest -Uri $sdelete_uri -OutFile $sdeleteZipPath -UseBasicParsing
+    if ($sdeleteLocalFiles) {
+        Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Found $($sdeleteLocalFiles)"
+        $sdelete_Path = $sdeleteLocalFiles.FullName
+    }
+    else {
+        Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - $($sdelete_exe) not found locally"
+        $sdeleteZipPath = Join-Path -Path $outpath -ChildPath "sdelete.zip"
+
+        Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Downloading Sdelete"
+        Invoke-WebRequest -Uri $sdelete_uri -OutFile $sdeleteZipPath -UseBasicParsing
+        
+        Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Unzipping $($sdeleteZipPath) to $($outPath)"
+        Expand-Archive -Path $sdeleteZipPath -DestinationPath $outpath 
+        $sdelete_path = Join-Path -Path $outpath -ChildPath "$($sdelete_exe)"
+    }
+
     
-    Write-Log -logfile $logfile -Level "INFO" -Message "Unzipping $($sdeleteZipPath) to $($outPath)"
-    Expand-Archive -Path $sdeleteZipPath -DestinationPath $outpath 
-    
-    Write-Log -logfile $logfile -Level "INFO" -Message "Start-Process -NoNewWindow -FilePath $(Join-Path -Path $outpath -ChildPath 'sdelete.exe') -ArgumentList $($sdelete_params)"
-    Start-Process -NoNewWindow -PassThru -FilePath (Join-Path -Path $outpath -ChildPath "sdelete.exe") -ArgumentList $sdelete_params -Wait #| Out-Null
+    Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Start-Process -NoNewWindow -FilePath $($sdelete_path) -ArgumentList $($sdelete_params)"
+    $sdeleteResults = Start-Process -NoNewWindow -PassThru -FilePath ($sdelete_path) -ArgumentList $sdelete_params -Wait -PassThru
     
 }
 
@@ -107,16 +122,18 @@ Function Start-DotNetRecompile {
     [CmdletBinding()]
     Param (
         $dotNetPaths = @("c:\windows\microsoft.net\framework64\v4.0.30319\ngen.exe", "c:\windows\microsoft.net\framework\v4.0.30319\ngen.exe"),
-        [string]$dotNetRecompileArgs = "update /force"
+        [string]$dotNetRecompileArgs = "update /force",
+        [string]$app
     )
     $results = New-Object System.Collections.Generic.List[System.Object]
     foreach ($dotNetPath in $dotNetPaths) {
-        Write-Log -logfile $logfile -Level "INFO" -Message "Recompiling x64 dot net"
+        Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Recompiling x64 dot net"
         $results.add((Start-Process -NoNewWindow -Passthru -FilePath $dotNetPath -ArgumentList $dotNetRecompileArgs -Wait))
 
     }
 }
-
+$app = "VM Optimize"
+$svcdefragsvc = "defragsvc"
 $tempPaths = New-Object System.Collections.Generic.List[System.Object]
 $tempPaths.Add($env:temp)
 $tempPaths.Add($outPath)
@@ -129,15 +146,15 @@ Start-DotNetRecompile -dotNetPaths $dotNetPaths
 # $dismCleanupResults = Start-Process -NoNewWindow -Wait -PassThru -FilePath "Dism.exe" -ArgumentList "/online /Cleanup-Image /StartComponentCleanup"
 
 # Clean-up and remove all superseded versions of every component in the component store
-Write-Log -logfile $logfile -Level "INFO" -Message "Running Dism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase /Quiet"
+Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Running Dism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase /Quiet"
 $dismCleanupResults = Start-Process -NoNewWindow -Wait -FilePath "Dism.exe" -ArgumentList "/online /Cleanup-Image /StartComponentCleanup /ResetBase /Quiet"
 
 # Clean up tmp files from Windows
-Write-Log -logfile $logfile -Level "INFO" -Message "Getting .tmp, .dmp, .etl, .evtx, thumbcache*.db, *.log files for removal"
+Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Getting .tmp, .dmp, .etl, .evtx, thumbcache*.db, *.log files for removal"
 # $filesToClean = Get-ChildItem -Path c:\* -Include (*.tmp, *.dmp, *.etl, *.evtx, thumbcache*.db, *.log) -File -Recurse -Force -ErrorAction SilentlyContinue
 # This takes way too long.  Need a faster way to look up these dfiles.
 $filesToClean = Get-ChildItem -Path c:\ -File -Recurse -Force -ErrorAction SilentlyContinue | Where-Object { $_.extension -in ("*.tmp", "*.dmp", "*.etl", "*.evtx", "*.log") -or $_.Name -like "thumbcache*.db" }
-Write-Log -logfile $logfile -Level "INFO" -Message "Removing .tmp, .dmp, .etl, .evtx, thumbcache*.db, *.log"
+Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Removing .tmp, .dmp, .etl, .evtx, thumbcache*.db, *.log"
 foreach ($file in $filesToClean) {
     # Write-Log -logfile $logfile -Level "INFO" -Message "Removing $($file.FullName)"
     if (Test-Path $file.FullName) {
@@ -149,34 +166,47 @@ foreach ($file in $filesToClean) {
 # Clean up from installs
 Clear-Directory -patharray $tempPaths
 
-Write-Log -logfile $logfile -Level "INFO" -Message "Removing $($env:ProgramData)\Microsoft\Windows\WER\Temp\*"
+Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Removing $($env:ProgramData)\Microsoft\Windows\WER\Temp\*"
 Remove-Item -Path $env:ProgramData\Microsoft\Windows\WER\Temp\* -Recurse -Force -ErrorAction SilentlyContinue
 
-Write-Log -logfile $logfile -Level "INFO" -Message "Removing $($env:ProgramData)\Microsoft\Windows\WER\ReportArchive\*"
+Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Removing $($env:ProgramData)\Microsoft\Windows\WER\ReportArchive\*"
 Remove-Item -Path $env:ProgramData\Microsoft\Windows\WER\ReportArchive\* -Recurse -Force -ErrorAction SilentlyContinue
 
-Write-Log -logfile $logfile -Level "INFO" -Message "Removing $($env:ProgramData)Microsoft\Windows\WER\ReportQueue\*"
+Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Removing $($env:ProgramData)Microsoft\Windows\WER\ReportQueue\*"
 Remove-Item -Path $env:ProgramData\Microsoft\Windows\WER\ReportQueue\* -Recurse -Force -ErrorAction SilentlyContinue
 
 # Clear Recyclebin
-Write-Log -logfile $logfile -Level "INFO" -Message "Clearing Recycle Bin"
+Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Clearing Recycle Bin"
 Clear-RecycleBin -Force -ErrorAction SilentlyContinue
 
 # Clear BCCache
-Write-Log -logfile $logfile -Level "INFO" -Message "Clearing BC Cache"
+Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Clearing BC Cache"
 Clear-BCCache -Force -ErrorAction SilentlyContinue
 
 if ($sdelete.IsPresent) {
     # Clean free space
-    Write-Log -logfile $logfile -Level "INFO" -Message "Starting sdelete to zero disk space"
+    Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Starting sdelete to zero disk space"
     Start-Sdelete -sdelete_params "-nobanner -z /accepteula C:"
 }
 
 # Defragment disk
-Write-Log -LogFile $logfile -Level "INFO" -Message "Defragment C:"
+Write-Log -LogFile $logfile -Level "INFO" -Message "$($app) - Defragment C:"
+$statusdefragsvc = Get-Service $svcdefragsvc
+if ($statusdefragsvc.Status -eq "Stopped") {
+    Write-Log -LogFile $logfile -Level "INFO" -Message "$($app) - $($svcdefragsvc) is $($statusdefragsvc.Status)"
+    Write-Log -LogFile $logfile -Level "INFO" -Message "$($app) - Setting $($svcdefragsvc) to Manual"
+    Set-Service $svcdefragsvc -StartupType Manual
+    Write-Log -LogFile $logfile -Level "INFO" -Message "$($app) - Starting $($svcdefragsvc)"
+    Start-Service $svcdefragsvc
+}
+
 Optimize-Volume -DriveLetter C -Defrag -Verbose
+Write-Log -LogFile $logfile -Level "INFO" -Message "$($app) - Stopping $($svcdefragsvc)"
+Stop-Service $svcdefragsvc
+Write-Log -LogFile $logfile -Level "INFO" -Message "$($app) - Setting $($svcdefragsvc) to Disabled"
+Set-Service $svcdefragsvc -StartupType Disabled
 
 # Clean up after sdelete
-Write-Log -logfile $logfile -Level "INFO" -Message "Final temp path clean-up"
+Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Final temp path clean-up"
 Clear-Directory -patharray $tempPaths
 
