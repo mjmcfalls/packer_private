@@ -60,7 +60,7 @@ $items = Get-Childitem $appSrcPath.FullName -Recurse | Where-object { $_.Extensi
 
 foreach ($copyItem in $items) {
     Write-Log -Level "INFO" -Message "$($app) - Moving $($copyItem.FullName) to $($installDest)"
-    Move-Item -Path $copyItem -Destination $installDest -Force 
+    Copy-Item -Path $copyItem -Destination $installDest -Force 
 }
 
 $installStopWatch.Stop()
