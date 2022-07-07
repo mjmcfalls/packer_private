@@ -19,31 +19,32 @@ packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Wind
 ### To-Do
 - [] Change password in Autounattend.xml
 - [] Remove packer user from autounattend.xml
+- [] Windows: Set Hostname
+- [] Windows: Join Active Directory
+- [] Windows: Update Group policy
 - [x] Chrome Preferences broken (cannot find file - Search for preference file: initial_preferences)
 - [x] Edge preferences fixed
-- [x] One Drive not being removed; Fix: Moved logic to Administrator from system
-- [] Python2.7 Not added to path (might need to manually add to path; unattend file looks correct)
-- [] VScode redirect for extensions
+- [x] One Drive: not being removed; Fix: Moved logic to Administrator from system
+- [] Python2.7: Not added to path (might need to manually add to path; unattend file looks correct)
+- [] VScode: redirect for extensions
 - [x] Update conda navigator
-- [] Start menu customization
-- [] Taskbar customization
+- [] Windows: Start menu customization
+- [] Windows: Taskbar customization
 - [x] NPP silent install hangs; fix: change /s to /S
 - [] BGInfo needs customization
 - [x] BGInfo - Change to fill backgroup
 - [] Validation: Application installs (Pester?)
 - [] Validation: Image validation (Pester?)
-- [] Join Active Directory
-- [] Update Group policy
 - [] Miktex: Script to find local repo
 - [] Miktex: Zip local repo, then uncompress on demand?  Might save time?
-- [] Import Conda Environments
-- [] Desktop Icon cleanup; Add specific desktop icons
+- [] Conda: Import Environments
+- [] Windows: Desktop Icon cleanup; Add specific desktop icons
 - [x] Java Not installing
 - [x] R Studio: Disable crash reporting
 - [x] R Studio: Customize user prefs (Disable update checks)
 - [x] Notepad++: Disable auto-update (Rename "C:\Program Files\Notepad++\updater\")
 - [] WWW - Replace Startup pages with static SRW page?
-- [] Install App Script - Revisit logic for spliting file name; inconsistent split with spaces
+- [x] Install App Script - Revisit logic for spliting file name; inconsistent split with spaces
 - [] R/R Studio Library paths
 - [] Python3: installs to program files instead of c:\python39
 ### Applications in Build
