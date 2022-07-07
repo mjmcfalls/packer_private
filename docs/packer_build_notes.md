@@ -149,6 +149,10 @@ System wide extensions: have to be installed into the default user account
 #### SecureCRT
 scrt-sfx-x64.9.1.1.2638.exe /s /v"/qn"
 
+#### R Tools
+The path in the packer variables needs to be in single quotes.
+
+
 varname = {
     "name" = ""
     "installer" = ""
