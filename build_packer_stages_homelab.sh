@@ -12,10 +12,9 @@ baseapp_opt_output_path=/home/libvirt/images/pool/Win10/Win10_baseapp_opt_$curre
 packer_path=/home/mmcfalls/dev/packer
 
 export PACKER_LOG="1"
+export LIBVIRT_DEFAULT_URI="qemu:///system"
 
-
-echo $PACKER_LOG_PATH
-echo $vm_name
+# echo $vm_name
 
 cd $packer_path
 
