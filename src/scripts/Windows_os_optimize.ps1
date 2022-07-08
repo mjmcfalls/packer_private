@@ -144,7 +144,7 @@ for ($i = 0; $i -lt $osRegistryChangesArray.length; $i++) {
     if ($osRegistryChangesArray[$i].ParentPath) {
         try {
             Write-Log -Level "INFO" -Message "New-Item -Path $($osRegistryChangesArray[$i].ParentPath) -Name $($osRegistryChangesArray[$i].ParentKey)"
-            $newItemResults = New-Item -Path $osRegistryChangesArray[$i].ParentPath -Name $osRegistryChangesArray[$i].ParentKey -ErrorAction Stop
+            $newItemResults = New-Item -Force -ErrorAction stop -Path $osRegistryChangesArray[$i].ParentPath -Name $osRegistryChangesArray[$i].ParentKey
             $osRegistryChangesArray[$i].ItemResults = $newItemResults
         }
         catch {
@@ -156,7 +156,7 @@ for ($i = 0; $i -lt $osRegistryChangesArray.length; $i++) {
 
     Write-Log -logfile $logfile -Level "INFO" -Message "$($app) -  New-ItemProperty: Path $($osRegistryChangesArray[$i].Path); Name $($osRegistryChangesArray[$i].Name); PropertyType $($osRegistryChangesArray[$i].PropertyType); Value $($osRegistryChangesArray[$i].Value)"
     try {
-        $newItemPropertyResults = New-ItemProperty -Path $osRegistryChangesArray[$i].Path -Name $osRegistryChangesArray[$i].Name -PropertyType $osRegistryChangesArray[$i].PropertyType -Value ($osRegistryChangesArray[$i].Value) -ErrorAction stop
+        $newItemPropertyResults = New-ItemProperty -Force -ErrorAction stop -Path $osRegistryChangesArray[$i].Path -Name $osRegistryChangesArray[$i].Name -PropertyType $osRegistryChangesArray[$i].PropertyType -Value ($osRegistryChangesArray[$i].Value)
         $osRegistryChangesArray[$i].PropertyResults = $newItemPropertyResults
 
     }
