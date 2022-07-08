@@ -7,6 +7,7 @@ Param (
     $appxIgnoreList = @("microsoft.windowscommunicationsapps", "Microsoft.WindowsCalculator", "Microsoft.DesktopAppInstaller", "Microsoft.WindowsStore", "Microsoft.StorePurchaseApp", "Microsoft.Appconnector"),
     $winFeaturesToDisable = @("DirectPlay", "WindowsMediaPlayer"),
     [string]$defaultsUserSettingsPath = "c:\temp\apps\Scripts\Microsoft\DefaultUsersSettings.txt",
+    [string]$defaultsUserVisualSettingsPath = "c:\temp\apps\Scripts\Microsoft\DefaultUserVisualEffects.txt",
     [string]$ScheduledTasksListPath = "c:\temp\apps\Scripts\Microsoft\ScheduledTasks.txt",
     [string]$automaticTracingFilePath = "c:\temp\apps\Scripts\Microsoft\AutomaticTracers.txt",
     [string]$servicesToDisablePath = "c:\temp\apps\Scripts\Microsoft\ServicesToDisable.txt",
@@ -53,6 +54,7 @@ $optimizeHashTable = @{}
 $appXResults = New-Object System.Collections.Generic.List[System.Object]
 $schTasksResults = New-Object System.Collections.Generic.List[System.Object]
 $regKeyResults = New-Object System.Collections.Generic.List[System.Object]
+$visualEffectsResults = New-Object System.Collections.Generic.List[System.Object]
 $serviceChangesList = New-Object System.Collections.Generic.List[System.Object]
 $tracingChangesList = New-Object System.Collections.Generic.List[System.Object]
 $allChangeResults = @{}
@@ -82,13 +84,16 @@ else {
 
 }
 
-
+# 
 # Set High Performance
+# 
 $highperfguid = ((((powercfg /list | Select-String "High Performance") -Split ":")[1]) -Split "\(")[0].trim()
 Write-Log -logfile $logfile -Level "INFO" -Message "Setting performance plan to $($highperfguid)"
 powercfg /setactive "$($highperfguid)"
 
+# 
 # Remove AppX Packages
+# 
 Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Get Installed AppX Packages"
 $installedAppXApps = Get-ProvisionedAppxPackage -Online
 
@@ -130,8 +135,10 @@ foreach ($appX in $installedAppXApps) {
 # Add changes to hastable for reporting
 $allChangeResults.Add("AppX", $appXResults)
 
-Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Starting Global Registry Changes"
+# 
 # Global Registry Changes
+# 
+Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Starting Global Registry Changes"
 for ($i = 0; $i -lt $osRegistryChangesArray.length; $i++) {
     Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Disable $($osRegistryChangesArray[$i].DisplayName)"
     if ($osRegistryChangesArray[$i].ParentPath) {
@@ -162,7 +169,9 @@ for ($i = 0; $i -lt $osRegistryChangesArray.length; $i++) {
 # Add changes to hastable for reporting
 $allChangeResults.Add("SystemRegistry", $osRegistryChangesArray)
 
-
+# 
+# Default User Registry Settings
+# 
 Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Searching for $($defaultsUserSettingsPath)"
 if (Test-Path $defaultsUserSettingsPath) {
     Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Found $($defaultsUserSettingsPath)"
@@ -187,7 +196,35 @@ else {
 }
 $allChangeResults.Add("DefaultUserRegistryKeys", $regKeyResults)
 
+# 
+# Default User Visual Effects Registry Settings
+# 
+Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Searching for $($defaultsUserVisualSettingsPath)"
+if (Test-Path $defaultsUserVisualSettingsPath) {
+    Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Found $($defaultsUserVisualSettingsPath)"
+    $defaultUserVisualSettings = Get-Content $defaultsUserVisualSettingsPath
+
+    if ($defaultUserVisualSettings.count -gt 0) {
+        Foreach ($item in $defaultUserVisualSettings) {
+            $regResults = Start-Process C:\Windows\System32\Reg.exe -ArgumentList "$($item)" -Wait -PassThru
+
+            $usrVisualHashTblTemp = @{
+                Name    = $item;
+                Results = $regResults
+            }
+
+            $visualEffectsResults.Add($usrVisualHashTblTemp)
+        }
+    }
+}
+else {
+    Write-Log -logfile $logfile -Level "INFO" -Message  "$($app) - Unable to find $($defaultsUserVisualSettingsPath)"
+}
+$allChangeResults.Add("DefaultUserVisualEffectsRegistryKeys", $visualEffectsResults)
+
+# 
 # Disable Scheduled Tasks
+# 
 Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Searching for $($ScheduledTasksListPath)"
 if (Test-Path $ScheduledTasksListPath) {
     Write-Log -logfile $logfile -Level "INFO" -Message "Found $($ScheduledTasksListPath)"
@@ -251,7 +288,9 @@ else {
 }
 $allChangeResults.Add("Services", $serviceChangesList)
 
+# 
 # Disable Windows Automatic tracing
+# 
 Write-Log -logfile $logfile -Level "INFO" -Message  "$($app) - Searching for $($automaticTracingFilePath)"
 if (Test-Path $automaticTracingFilePath) {
     Write-Log -logfile $logfile -Level "INFO" -Message  "$($app) - Found $($automaticTracingFilePath)"
@@ -280,33 +319,44 @@ else {
 }
 $allChangeResults.Add("Tracing", $tracingChangesList)
 
+# 
 # Disable Windows Features
+# 
 foreach ($feature in $winFeaturesToDisable) {
     Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Disabling $($feature) Feature"
     Disable-WindowsOptionalFeature -Online -FeatureName $feature
 }
 
+# 
 # Disable System Restore
+# 
 Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Disabling System Restore for C:"
 Disable-ComputerRestore -Drive "C:\"
 
+# 
 # Disable Hibernate
+# 
 Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Disabling Hibernate"
 powercfg /hibernate off
 
+# 
 # Disable Crash Dumps
+# 
 Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Disabling System crash dumps"
 Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\CrashControl' -Name 'CrashDumpEnabled' -Value '1'
 Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\CrashControl' -Name 'LogEvent' -Value '0'
 Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\CrashControl' -Name 'SendAlert' -Value '0'
 Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\CrashControl' -Name 'AutoReboot' -Value '1'
 
-
+# 
 # Disable Logon Background
+# 
 Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Disable Logon Background"
 Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\System' -Name 'DisableLogonBackgroundImage' -Value '1'
 
+# 
 # Network Optimization
+# 
 Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Disable SMB Bandwidth Throttling"
 Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Services\LanmanWorkstation\Parameters" DisableBandwidthThrottling -Value $DisableBandwidthThrottling -Force
 
@@ -322,6 +372,11 @@ Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Services\LanmanWorkstatio
 Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Set DormantFileLimit to $($DormantFileLimit)"
 Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Services\LanmanWorkstation\Parameters" DormantFileLimit -Value $DormantFileLimit -Force
 
+# 
 # Disk cleanup will occur post application installs
+# 
 
+# 
+# Export Config changes to json file
+# 
 $allChangeResults | ConvertTo-JSON | Set-Content (Join-Path -Path $auditLogPath -ChildPath "$(Get-Date -Format yyyyMMddhhmm)_$($buildName)_$($auditLogFile)")
