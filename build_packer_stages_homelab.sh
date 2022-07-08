@@ -50,6 +50,8 @@ packer build -timestamp-ui -only 'win_base.qemu.Windows_base' -var "keep_registe
 
 echo "Generate SHA256 checksum for $base_output_path/$vm_name"
 base_sha=$(sha256sum "$base_output_path/$vm_name" | cut -d " " -f 1)
+echo "sha256:$base_sha - $base_output_path/$vm_name"
+
 # Build Base + Apps1
 echo "Starting win_base_apps1.qemu.Windows_base - $baseapp_output_path"
 echo "iso_checksum=sha256:$base_sha"
@@ -60,6 +62,7 @@ packer build -timestamp-ui -only 'win_base_apps1.qemu.Windows_base' -var "keep_r
 
 echo "Generate SHA256 checksum for $baseapp_output_path/$vm_name"
 baseapp_sha=$(sha256sum "$baseapp_output_path/$vm_name" | cut -d " " -f 1)
+echo "sha256:$baseapp_sha - $baseapp_output_path/$vm_name"
 
 # Optimize VMs
 export PACKER_LOG_PATH="/home/mmcfalls/dev/logs/Win10_base_opt_$current_date"
