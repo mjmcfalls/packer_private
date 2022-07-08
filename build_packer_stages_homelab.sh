@@ -73,7 +73,19 @@ virt-install --name Win10_base_opt_$current_date --memory 8192 --vcpus 6 --disk 
 echo "virt-install --name Win10_baseapp_opt_$current_date --memory 8192 --vcpus 6 --disk bus=virtio,path=$baseapp_opt_output_path/$vm_name --network bridge:br0 --import --os-variant win10 --noautoconsole"
 virt-install --name Win10_baseapp_opt_$current_date --memory 8192 --vcpus 6 --disk bus=virtio,path=$baseapp_opt_output_path/$vm_name --network bridge:br0 --import --os-variant win10 --noautoconsole
 
+
+Echo "Adding SCSI Controller to Win10_base_opt_$current_date"
+virsh attach-device --config Win10_base_opt_$current_date /home/mmcfalls/dev/packer/src/script/kvm/scsi-controller.xml
+
+Echo "Adding SCSI Controller to Win10_baseapp_opt_$current_date" 
+virsh attach-device --config Win10_baseapp_opt_$current_date /home/mmcfalls/dev/packer/src/script/kvm/scsi-controller.xml
+
 Echo "Starting Win10_baseapp_opt_$current_date" 
 virsh start Win10_baseapp_opt_$current_date
+
 Echo "Starting Win10_base_opt_$current_date"
 virsh start Win10_base_opt$current_date
+
+
+Echo "Adding Bluray Drive to Win10_baseapp_opt_$current_date" 
+virsh attach-device --config Win10_baseapp_opt_$current_date /home/mmcfalls/dev/packer/src/script/kvm/bluray-drive.xml
