@@ -68,5 +68,12 @@ packer build -timestamp-ui -only 'win_base_optimize.qemu.Windows_base' -var "kee
 # echo "virt-install --name "Win10_base_$current_date" --memory 8192 --vcpus 6 --disk bus=virtio,path=$base_output_path/$vm_name --network bridge:br0 --import --os-variant win10"
 # virt-install --name "Win10_base_$current_date" --memory 8192 --vcpus 6 --disk bus=virtio,path=$base_output_path/$vm_name --network bridge:br0 --import --os-variant win10
 # virt-install --name "Win10_baseapp_$current_date" --memory 8192 --vcpus 6 --disk "$baseapp_output_path/$vm_name" --import --os-variant win10
-virt-install --name "Win10_base_opt_$current_date" --memory 8192 --vcpus 6 --disk bus=virtio,path=$base_opt_output_path/$vm_name --network bridge:br0 --import --os-variant win10
-virt-install --name "Win10_baseapp_opt_$current_date" --memory 8192 --vcpus 6 --disk bus=virtio,path=$baseapp_opt_output_path/$vm_name --network bridge:br0 --import --os-variant win10
+echo "virt-install --name Win10_base_opt_$current_date --memory 8192 --vcpus 6 --disk bus=virtio,path=$base_opt_output_path/$vm_name --network bridge:br0 --import --os-variant win10 --noautoconsole"
+virt-install --name Win10_base_opt_$current_date --memory 8192 --vcpus 6 --disk bus=virtio,path=$base_opt_output_path/$vm_name --network bridge:br0 --import --os-variant win10 --noautoconsole
+echo "virt-install --name Win10_baseapp_opt_$current_date --memory 8192 --vcpus 6 --disk bus=virtio,path=$baseapp_opt_output_path/$vm_name --network bridge:br0 --import --os-variant win10 --noautoconsole"
+virt-install --name Win10_baseapp_opt_$current_date --memory 8192 --vcpus 6 --disk bus=virtio,path=$baseapp_opt_output_path/$vm_name --network bridge:br0 --import --os-variant win10 --noautoconsole
+
+Echo "Starting Win10_baseapp_opt_$current_date" 
+virsh start Win10_baseapp_opt_$current_date
+Echo "Starting Win10_base_opt_$current_date"
+virsh start Win10_base_opt$current_date
