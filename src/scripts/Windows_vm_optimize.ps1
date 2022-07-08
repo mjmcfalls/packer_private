@@ -4,7 +4,8 @@ Param (
     [string]$sdelete_uri = "https://download.sysinternals.com/files/SDelete.zip",
     $dotNetPaths = @("c:\windows\microsoft.net\framework64\v4.0.30319\ngen.exe", "c:\windows\microsoft.net\framework\v4.0.30319\ngen.exe"),
     $fileExtensionsToRemove = @("*.tmp", "*.dmp", "*.etl", "*.evtx", "thumbcache*.db", "*.log"),
-    [switch]$sdelete
+    [switch]$sdelete,
+    [string]$sdeleteSearchPath = "C:\Program Files\Sysinternals"
 )
 
 Function Write-Log {
@@ -93,8 +94,8 @@ Function Start-Sdelete {
         [string]$app
     )
     
-    Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Searching for $($sdelete_exe) in C:\Program Files"
-    $sdeleteLocalFiles = Get-Childitem -File -Recurse -Path "C:\Program Files" | Where-Object { $_.Name -like "$($sdelete_exe)" }
+    Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Searching for $($sdelete_exe) in $($sdeleteSearchPath)"
+    $sdeleteLocalFiles = Get-Childitem -File -Recurse -Path $sdeleteSearchPath | Where-Object { $_.Name -like "$($sdelete_exe)" }
 
     if ($sdeleteLocalFiles) {
         Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Found $($sdeleteLocalFiles)"
@@ -114,7 +115,7 @@ Function Start-Sdelete {
 
     
     Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Start-Process -NoNewWindow -FilePath $($sdelete_path) -ArgumentList $($sdelete_params)"
-    $sdeleteResults = Start-Process -NoNewWindow -PassThru -FilePath ($sdelete_path) -ArgumentList $sdelete_params -Wait -PassThru
+    $sdeleteResults = Start-Process -NoNewWindow -PassThru -FilePath ($sdelete_path) -ArgumentList $sdelete_params -Wait
     
 }
 
