@@ -2,7 +2,7 @@
 Param (
     [string]$searchPath = $env:temp,
     [string]$app = "lame",
-    [string]$installDest = "C:\Program Files\Exact Audio Copy",
+    [string]$installDest = "C:\Program Files (x86)\Exact Audio Copy",
     [string]$installername = "lame.exe"
 )
 
