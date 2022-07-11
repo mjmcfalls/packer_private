@@ -155,3 +155,9 @@ r_tools_40 = {
     "installer" = "rtools40-x86_64.exe"
     "parameters" = "/VERYSILENT /DIR=C:\\rtools40"
 }
+
+docker = {
+    "name" = "Docker Desktop"
+    "installer" = "Docker Desktop Installer.exe"
+    "parameters" = "install --quiet"
+}

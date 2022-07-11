@@ -274,6 +274,10 @@ variable "r_tools_40" {
   type = map(string)
 }
 
+variable "docker" {
+  type = map(string)
+}
+
 packer {
   required_plugins {
     windows-update = {
@@ -583,6 +587,20 @@ build {
       # "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
       # Customization
       "${var.win_temp_dir}\\scripts\\lame\\install_lame.ps1 -SearchPath '${var.win_temp_dir}\\apps' -installername 'lame.exe' -app 'lame'",
+      ]
+  }
+}
+
+build { 
+  name = "win_base_apps2"
+  sources = ["source.qemu.Windows_base","source.hyperv-vmcx.Windows_base"]
+
+# Application installations
+  provisioner "powershell" {
+    inline = [
+      "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.wget_path}\\wget.exe'",
+      "${var.win_temp_dir}\\scripts\\Microsoft\\Install-wsl2.ps1",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.docker, "name", "Docker")}' -installParams '${lookup(var.docker, "parameters", "install --quiet")}' -installername '${lookup(var.docker, "installer", "Docker Desktop Installer.exe")}'", 
       ]
   }
 }
