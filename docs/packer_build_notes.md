@@ -47,41 +47,51 @@ packer build -timestamp-ui -only 'qemu.Windows_10' -var-file vars/Windows10/Wind
 - [x] Install App Script - Revisit logic for spliting file name; inconsistent split with spaces
 - [] R/R Studio Library paths
 - [] Python3: installs to program files instead of c:\python39
+- [] WSL: Additional images?
+- [] Docker: Add users to group (group policy?)
+- [] Docker: Create default settings
 ### Applications in Build
-- [x] Atom
-- [x] Notepad++
-- [x] Firefox
-- [x] Vscode (System Install)
+#### Base
 - [x] 7zip
-- [x] Chrome
-- [x] WinMerge
-- [x] BGInfo
-- [x] Python 2.7
-- [x] Miktex
-- [x] git
-- [x] R
-- [x] R Studio 
 - [x] Anaconda 
-- [x] TexStudio (Requires MikTex to be installed)
-- [x] MS ADK
+- [x] Atom
+- [x] BGInfo
+- [x] Chrome
 - [x] Edge (First Run Customization)
-- [x] VirtIO Drivers (Testing)
-- [] Java 8 Update 321 x86
+- [x] File Shredder
+- [x] Firefox
+- [x] git
+- [] Java 8 Update 321 x86 (Al)
 - [] Java 8 Update 321 x64
 - [x] Julia 1.5.0
+- [x] Notepad++
+- [x] Miktex
+- [x] Python 2.7
+- [x] R
+- [x] R Studio 
+- [x] SpeedCrunch
+- [x] TexStudio (Requires MikTex to be installed)
+- [x] Vim 8.2
+- [x] Vscode (System Install)
+- [x] WinMerge
+#### Base + Apps 1
+- [x] MS ADK
+
+#### Base + Apps 2
+- [] WSL
+- [] Docker
+
+#### Apps to integrate
 - [] EmEditor (Emurasoft)
 - [] EndNote 20
-- [x] File Shredder
 - [] Mplus v8.4
 - [] MySql Workbench 8.0 CE
 - [] NovaBench
 - [] NSIS Pirana
 - [] Nvivo
 - [] Phoenix (Certara)
-- [x] SpeedCrunch
 - [] Stata 15,16,17
 - [] Sudaan 11.0.3 x64
-- [] Vim 8.2
 - [] VLC
 - [] X-win32 18
 - [] Wolfra Manager (Classic) 2.7
