@@ -600,9 +600,12 @@ build {
     inline = [
       "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.wget_path}\\wget.exe'",
       "${var.win_temp_dir}\\scripts\\Microsoft\\Install-wsl2.ps1",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.docker, "name", "Docker")}' -installParams '${lookup(var.docker, "parameters", "install --quiet")}' -installername '${lookup(var.docker, "installer", "Docker Desktop Installer.exe")}'", 
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.docker, "name", "Docker")}' -installParams '${lookup(var.docker, "parameters", "install --quiet --accept-license")}' -installername '${lookup(var.docker, "installer", "Docker Desktop Installer.exe")}'", 
       ]
   }
+  
+  provisioner "windows-restart" {}
+
 }
 
 build { 
