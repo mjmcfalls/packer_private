@@ -79,17 +79,17 @@ echo "Generating SHA256 checksum for $baseapptwo_output_path/$vm_name"
 baseapptwo_sha=$(sha256sum "$baseapptwo_output_path/$vm_name" | cut -d " " -f 1)
 
 # Optimize VMs
-echo "win_base_optimize.qemu.Windows_base - $baseapp_output_path"
+echo "win_base_optimize.qemu.Windows_base - $base_opt_output_path"
 echo "iso_checksum=sha256:$base_sha"
 echo "iso_url=$base_output_path/$vm_name"
 export PACKER_LOG_PATH="/home/mmcfalls/dev/logs/Win10_base_opt_$current_date"
 packer build -timestamp-ui -only 'win_base_optimize.qemu.Windows_base' -var "keep_registered=false" -var "iso_checksum=sha256:$base_sha" -var iso_url=$base_output_path/$vm_name -var "nix_output_directory=$base_opt_output_path" -var "vm_name=$vm_name" -var-file vars/Windows_App_Vars.pkrvars.hcl -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages_homelab.pkr.hcl
 
-echo "win_base_optimize.qemu.Windows_base - $baseapp_output_path"
-echo "iso_checksum=sha256:$baseapp_sha"
-echo "iso_url=$baseapp_output_path/$vm_name"
-export PACKER_LOG_PATH="/home/mmcfalls/dev/logs/Win10_baseapp_opt_$current_date"
-packer build -timestamp-ui -only 'win_base_optimize.qemu.Windows_base' -var "keep_registered=false" -var "iso_checksum=sha256:$baseapp_sha" -var iso_url=$baseapp_output_path/$vm_name -var "nix_output_directory=$baseapp_opt_output_path" -var "vm_name=$vm_name" -var-file vars/Windows_App_Vars.pkrvars.hcl -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages_homelab.pkr.hcl
+# echo "win_base_optimize.qemu.Windows_base - $baseapp_output_path"
+# echo "iso_checksum=sha256:$baseapp_sha"
+# echo "iso_url=$baseapp_output_path/$vm_name"
+# export PACKER_LOG_PATH="/home/mmcfalls/dev/logs/Win10_baseapp_opt_$current_date"
+# packer build -timestamp-ui -only 'win_base_optimize.qemu.Windows_base' -var "keep_registered=false" -var "iso_checksum=sha256:$baseapp_sha" -var iso_url=$baseapp_output_path/$vm_name -var "nix_output_directory=$baseapp_opt_output_path" -var "vm_name=$vm_name" -var-file vars/Windows_App_Vars.pkrvars.hcl -var-file vars/Windows10/Windows10.pkrvars.hcl -var-file secrets/secrets.pkrvars.hcl Windows10_stages_homelab.pkr.hcl
 
 echo "win_base_optimize.qemu.Windows_base - $baseapptwo_output_path"
 echo "iso_checksum=sha256:$baseapptwo_sha"
@@ -105,8 +105,8 @@ echo "Starting Virt-install"
 echo "virt-install --name Win10_base_opt_$current_date --memory 8192 --vcpus 6 --disk bus=virtio,path=$base_opt_output_path/$vm_name --network bridge:br0 --import --os-variant win10 --noautoconsole"
 virt-install --name Win10_base_opt_$current_date --memory 8192 --vcpus 6 --disk bus=virtio,path=$base_opt_output_path/$vm_name --network bridge:br0 --import --os-variant win10 --noautoconsole
 
-echo "virt-install --name Win10_baseapp_opt_$current_date --memory 8192 --vcpus 6 --disk bus=virtio,path=$baseapp_opt_output_path/$vm_name --network bridge:br0 --import --os-variant win10 --noautoconsole"
-virt-install --name Win10_baseapp_opt_$current_date --memory 8192 --vcpus 6 --disk bus=virtio,path=$baseapp_opt_output_path/$vm_name --network bridge:br0 --import --os-variant win10 --noautoconsole
+# echo "virt-install --name Win10_baseapp_opt_$current_date --memory 8192 --vcpus 6 --disk bus=virtio,path=$baseapp_opt_output_path/$vm_name --network bridge:br0 --import --os-variant win10 --noautoconsole"
+# virt-install --name Win10_baseapp_opt_$current_date --memory 8192 --vcpus 6 --disk bus=virtio,path=$baseapp_opt_output_path/$vm_name --network bridge:br0 --import --os-variant win10 --noautoconsole
 
 echo "virt-install --name Win10_baseapptwo_opt_$current_date --memory 8192 --vcpus 6 --disk bus=virtio,path=$baseapptwo_opt_output_path/$vm_name --network bridge:br0 --import --os-variant win10 --noautoconsole"
 virt-install --name Win10_baseapptwo_opt_$current_date --memory 8192 --vcpus 6 --disk bus=virtio,path=$baseapptwo_opt_output_path/$vm_name --network bridge:br0 --import --os-variant win10 --noautoconsole
@@ -115,14 +115,14 @@ virt-install --name Win10_baseapptwo_opt_$current_date --memory 8192 --vcpus 6 -
 echo "Adding SCSI Controller to Win10_base_opt_$current_date"
 virsh attach-device --config Win10_base_opt_$current_date /home/mmcfalls/dev/packer/src/scripts/kvm/scsi-controller.xml
 
-echo "Adding SCSI Controller to Win10_baseapp_opt_$current_date" 
-virsh attach-device --config Win10_baseapp_opt_$current_date /home/mmcfalls/dev/packer/src/scripts/kvm/scsi-controller.xml
+# echo "Adding SCSI Controller to Win10_baseapp_opt_$current_date" 
+# virsh attach-device --config Win10_baseapp_opt_$current_date /home/mmcfalls/dev/packer/src/scripts/kvm/scsi-controller.xml
 
-echo "Starting Win10_baseapp_opt_$current_date" 
-virsh start Win10_baseapp_opt_$current_date
+# echo "Starting Win10_baseapp_opt_$current_date" 
+# virsh start Win10_baseapp_opt_$current_date
 
 echo "Starting Win10_base_opt_$current_date"
 virsh start Win10_base_opt_$current_date
 
-echo "Adding Bluray Drive to Win10_baseapp_opt_$current_date" 
-virsh attach-device --config Win10_baseapp_opt_$current_date /home/mmcfalls/dev/packer/src/scripts/kvm/bluray-drive.xml
+# echo "Adding Bluray Drive to Win10_baseapp_opt_$current_date" 
+# virsh attach-device --config Win10_baseapp_opt_$current_date /home/mmcfalls/dev/packer/src/scripts/kvm/bluray-drive.xml

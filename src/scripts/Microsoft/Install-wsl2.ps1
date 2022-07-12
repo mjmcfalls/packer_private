@@ -1,4 +1,11 @@
+[CmdletBinding()]
 
+Param (
+    [string]$app = "WSL2",
+    [string]$searchPath = $env:temp,
+    [string]$installParams = "--install",
+    [string]$installername = "wsl.exe"
+)
 Function Write-Log {
     [CmdletBinding()]
     Param(
@@ -24,5 +31,5 @@ Function Write-Log {
     }
 }
 
-Write-Log -Level "INFO" -Message "Installing WSL2"
-&wsl.exe --install
+Write-Log -Level "INFO" -Message "Installing $($app)"
+Start-Process -Wait -Passthru -NoNewWindow -FilePath $installername -ArgumentList "$($installParams)"
