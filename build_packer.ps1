@@ -181,6 +181,15 @@ if ($createVM.IsPresent) {
 
 if ($cleanup.IsPresent) {
     Write-Log -Level "INFO" -Message "Cleaning up Intermediate builds"
+    
+    Write-Log -Level "INFO" -Message "Removing $($bare_output_path)"
+    Remove-Item -Recurse -Force -Path $bare_output_path
+
+    Write-Log -Level "INFO" -Message "Removing $($base_output_path)"
+    Remove-Item -Recurse -Force -Path $base_output_path
+
+    Write-Log -Level "INFO" -Message "Removing $($baseapp_output_path)"
+    Remove-Item -Recurse -Force -Path $baseapp_output_path
 }
 
 # Stop Script Stopwatch
