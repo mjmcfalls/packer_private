@@ -122,7 +122,7 @@ echo "Starting Win10_baseapp_opt_$current_date"
 virsh start Win10_baseapp_opt_$current_date
 
 echo "Starting Win10_base_opt_$current_date"
-virsh start Win10_base_opt$current_date
+virsh start Win10_base_opt_$current_date
 
 echo "Adding Bluray Drive to Win10_baseapp_opt_$current_date" 
 virsh attach-device --config Win10_baseapp_opt_$current_date /home/mmcfalls/dev/packer/src/scripts/kvm/bluray-drive.xml
