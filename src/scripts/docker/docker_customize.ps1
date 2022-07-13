@@ -6,7 +6,7 @@ Param (
     [string]$settingsFile = "settings.json",
     [string]$serviceName = "com.docker.service",
     [string]$serviceStartupType = "delayed-auto",
-    [string]$settingsFileDest = "c:\users\Default User\Appdata\Roaming\Docker"
+    [string]$settingsFileDest = "C:\users\Default User\Appdata\Roaming\Docker"
 )
 Function Write-Log {
     [CmdletBinding()]
@@ -58,8 +58,8 @@ $settingsFileState = Get-ChildItem $searchPath -Recurse -File | Where-Object { $
 if ($settingsFileState) {
     Write-Log -Level "INFO" -Message "$($app) - Found: $($settingsFileState.FullName)"
 
-    Write-Log -Level "INFO" -Message "$($app) - Copy-Item -Path $($settingsFileState.FullName) -Destination $(Join-Path -Path $settingsFileDest -ChildPath "$($settingsFile)") -Force"
-    Copy-Item -Path $settingsFileState.FullName -Destination $settingsFileDest -Force
+    Write-Log -Level "INFO" -Message "$($app) - Copy-Item -Path `"$($settingsFileState.FullName)`" -Destination `"$(Join-Path -Path $settingsFileDest -ChildPath $settingsFile)`" -Force"
+    Copy-Item -Path $settingsFileState.FullName -Destination "$($settingsFileDest)" -Force
 
 }
 else {
