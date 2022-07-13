@@ -612,7 +612,7 @@ build {
       "${var.win_temp_dir}\\scripts\\Microsoft\\Install-wsl2.ps1",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.docker, "name", "Docker")}' -installParams '${lookup(var.docker, "parameters", "install --quiet --accept-license")}' -installername '${lookup(var.docker, "installer", "Docker Desktop Installer.exe")}'", 
       "${var.win_temp_dir}\\scripts\\docker\\docker_customize.ps1 -SearchPath '${var.win_temp_dir}' -settingsFileDest 'c:\\users\\Administrator\\Appdata\roaming\\Docker'", 
-      "${var.win_temp_dir}\\scripts\\docker\\docker_customize.ps1 -SearchPath '${var.win_temp_dir}', 
+      "${var.win_temp_dir}\\scripts\\docker\\docker_customize.ps1 -SearchPath '${var.win_temp_dir}'", 
       ]
   }
 
