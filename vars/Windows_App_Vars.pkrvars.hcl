@@ -159,5 +159,5 @@ r_tools_40 = {
 docker = {
     "name" = "Docker Desktop"
     "installer" = "Docker Desktop Installer.exe"
-    "parameters" = "install --quiet --accept-license"
+    "parameters" = "install --quiet --accept-license --backend=wsl-2"
 }
