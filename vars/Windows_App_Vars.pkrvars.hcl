@@ -25,8 +25,8 @@ r_studio = {
 }
 
 r = {
-    "name"="R 4.2.0"
-    "installer"="R-4.2.0-win.exe"
+    "name"="R-4.1.3"
+    "installer"="R-4.1.3-win.exe"
     "parameters"="/verysilent /NORESTART /MERGETASKS=!desktopicon"
 }
 
