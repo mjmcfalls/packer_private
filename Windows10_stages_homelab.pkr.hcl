@@ -183,6 +183,10 @@ variable "ssh_password" {
 }
 
 # Application specific map variables
+variable "r_tools_path"{
+  type = string
+  default = "C:\\rtools40"
+}
 variable "r" {
   type = map(string)
 }
@@ -565,6 +569,7 @@ build {
       "${var.win_temp_dir}\\scripts\\Rstudio\\copy_rstudio_confs.ps1 -SearchPath '${var.win_temp_dir}' -crashHandlerFile 'crash-handler.conf' -preferenceFile 'rstudio-prefs.json' -preferencesDestination 'C:\\ProgramData\\Rstudio' -crashHandlerDestination 'C:\\ProgramData\\RStudio'",
       "${var.win_temp_dir}\\scripts\\notepadplusplus\\npp_disable_updates.ps1",
       "${var.win_temp_dir}\\scripts\\julia\\julia_addToPath.ps1",
+      "${var.win_temp_dir}\\scripts\\Microsoft\\update_path.ps1 -app 'Rtools' -Path '${var.r_tools_path}'",
       # Conda Navigator update
       "${var.win_temp_dir}\\scripts\\anaconda\\conda_update_navigator.ps1",
       # "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"

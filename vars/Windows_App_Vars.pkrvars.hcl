@@ -17,6 +17,7 @@
 wget_path = "c:\\Program Files\\wget"
 audit_json_path = "c:\\ProgramData\\Packer"
 audit_json_file = "audit.json"
+r_tools_path = "C:\\rtools40"
 
 r_studio = {
     "name" = "RStudio-2022.02.1-461"
