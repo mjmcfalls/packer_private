@@ -1,5 +1,5 @@
 vm_name = "rhel8_{{isotime \"20060102_1504\"}} .qcow2"
-nix_output_directory = "/home/libvirt/images/pool/rhel8_{{isotime \"20060102_1504\"}}"
+nix_output_directory = "/home/mmcfalls/images/pool/rhel8_{{isotime \"20060102_1504\"}}"
 cpu_num = "4"
 disk_size = "61440"
 memory = "4096"
