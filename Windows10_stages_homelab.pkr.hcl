@@ -183,6 +183,9 @@ variable "ssh_password" {
 }
 
 # Application specific map variables
+variable "winscp" {
+  type = map(string)
+}
 variable "r" {
   type = map(string)
 }
@@ -508,6 +511,8 @@ build {
   }
 }
  
+
+
 build { 
   name = "win_base"
   sources = ["source.qemu.Windows_base"]
@@ -519,6 +524,7 @@ build {
       "a:\\Install_pswindowsupdate.ps1",
       "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -SearchPath '${var.win_temp_dir}\\apps' -app 'sysinternals'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.seven_zip, "name", "7zip")}' -installParams '${lookup(var.seven_zip, "parameters", "/S")}' -installername '${lookup(var.seven_zip, "installer", "7z2107-x64.exe")}'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.winscp, "name", "Winscp")}' -installParams '${lookup(var.winscp, "parameters", "/S")}' -installername '${lookup(var.winscp, "installer", "7z2107-x64.exe")}'",
       # "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.fileshredder, "name", "FileShredder")}' -installParams '${lookup(var.fileshredder, "parameters", "/SILENT")}' -installername '${lookup(var.fileshredder, "installer", "file_shredder_setup.exe")}'", 
       # "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.speedcrunch, "name", "SpeedCrunch")}' -installParams '${lookup(var.speedcrunch, "parameters", "/S")}' -installername '${lookup(var.speedcrunch,"installer", "SpeedCrunch-0.12-win32.exe")}'", 
       # "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.winmerge, "name", "WinMerge")}' -installParams '${lookup(var.winmerge, "parameters", "/VERYSILENT /NORESTART /MERGETASKS=!desktopicon")}' -installername '${lookup(var.winmerge,"installer", "WinMerge-2.16.20-x64-Setup.exe")}'", 
