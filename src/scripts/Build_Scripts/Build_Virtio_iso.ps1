@@ -58,9 +58,9 @@ if (-Not (Test-Path $mountPath)) {
     New-Item -ItemType Directory -Path $mountPath -Force | Out-Null
 }
 
-if (-Not (Test-Path $isoPath)) {
-    New-Item -ItemType Directory -Path $isoPath -Force | Out-Null
-}
+# if (-Not (Test-Path $isoPath)) {
+#     New-Item -ItemType Directory -Path $isoPath -Force | Out-Null
+# }
 
 # if ( -Not (Get-Item $isoPath) -is [System.IO.DirectoryInfo]) {
 #     $isoPathDir = (Get-Item $isoPath).Directory
