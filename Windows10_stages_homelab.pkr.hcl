@@ -585,6 +585,7 @@ build {
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -installername 'adkwinpesetup.exe' -app 'mswinpeadk' -installParams '/ceip off /norestart /quiet'",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -installername 'Setup_MakeMKV_v1.17.0.exe' -app 'MakeMKV' -installParams '/S' ",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -installername 'eac-1.6.exe' -app 'Exact Audio Copy' -installParams '/S' ",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -installername 'Postman-win64-Setup.exe' -app 'Postman x64' -installParams '-s' ",
       # "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
       # Customization
       "${var.win_temp_dir}\\scripts\\lame\\install_lame.ps1 -SearchPath '${var.win_temp_dir}\\apps' -installername 'lame.exe' -app 'lame'",
