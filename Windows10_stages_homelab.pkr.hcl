@@ -186,6 +186,7 @@ variable "ssh_password" {
 variable "winscp" {
   type = map(string)
 }
+
 variable "r" {
   type = map(string)
 }
