@@ -25,8 +25,9 @@ baseapptwo_opt_output_path=/home/libvirt/images/pool/$os_name/$os_name-baseapptw
 # Virt information
 virt_bridge=br0
 os_variant=win10
-virt_cpu=6
-virt_memory=8192
+declare -i virt_cpu=6
+declare -i virt_memory=8192
+
 # os_vars=vars/Windows10/Windows10.pkrvars.hcl
 # secret_vars=secrets/secrets.pkrvars.hcl
 # build_file=Windows10_stages_homelab.pkr.hcl
@@ -84,7 +85,8 @@ echo "Secrets File: $secret_vars"
 echo "Build File: $build_file"
 echo "Logs: $PACKER_LOG_PATH"
 
-packer build -timestamp-ui -only 'win_base.qemu.Windows_base' -var "keep_registered=false" -var "iso_checksum=sha256:$bare_sha" -var iso_url=$bare_output_path/$vm_name -var "nix_output_directory=$base_output_path" -var "vm_name=$vm_name" -var-file $app_vars -var-file $os_vars -var-file $secret_var $build_file
+echo "packer build -timestamp-ui -only 'win_base.qemu.Windows_base' -var "keep_registered=false" -var "iso_checksum=sha256:$bare_sha" -var iso_url=$bare_output_path/$vm_name -var "nix_output_directory=$base_output_path" -var "vm_name=$vm_name" -var-file $app_vars -var-file $os_vars -var-file $secret_vars $build_file"
+packer build -timestamp-ui -only 'win_base.qemu.Windows_base' -var "keep_registered=false" -var "iso_checksum=sha256:$bare_sha" -var iso_url=$bare_output_path/$vm_name -var "nix_output_directory=$base_output_path" -var "vm_name=$vm_name" -var-file $app_vars -var-file $os_vars -var-file $secret_vars $build_file
 
 echo "Generating SHA256 checksum for $base_output_path/$vm_name"
 base_sha=$(sha256sum "$base_output_path/$vm_name" | cut -d " " -f 1)
@@ -102,7 +104,7 @@ echo "Secrets File: $secret_vars"
 echo "Build File: $build_file"
 echo "Logs: $PACKER_LOG_PATH"
 
-packer build -timestamp-ui -only 'win_base_apps1.qemu.Windows_base' -var "keep_registered=false" -var "iso_checksum=sha256:$base_sha" -var iso_url=$base_output_path/$vm_name -var "nix_output_directory=$baseapp_output_path" -var "vm_name=$vm_name" -var-file $app_vars -var-file $os_vars -var-file $secret_var $build_file
+packer build -timestamp-ui -only 'win_base_apps1.qemu.Windows_base' -var "keep_registered=false" -var "iso_checksum=sha256:$base_sha" -var iso_url=$base_output_path/$vm_name -var "nix_output_directory=$baseapp_output_path" -var "vm_name=$vm_name" -var-file $app_vars -var-file $os_vars -var-file $secret_vars $build_file
 
 echo "Generating SHA256 checksum for $baseapp_output_path/$vm_name"
 baseapp_sha=$(sha256sum "$baseapp_output_path/$vm_name" | cut -d " " -f 1)
@@ -122,7 +124,7 @@ echo "Build File: $build_file"
 echo "Logs: $PACKER_LOG_PATH"
 
 export PACKER_LOG_PATH="/home/mmcfalls/dev/logs/$os_name-baseapptwo-$current_date"
-packer build -timestamp-ui -only 'win_base_apps2.qemu.Windows_base' -var "keep_registered=false" -var "iso_checksum=sha256:$base_sha" -var iso_url=$base_output_path/$vm_name -var "nix_output_directory=$baseapptwo_output_path" -var "vm_name=$vm_name" -var-file $app_vars -var-file $os_vars -var-file $secret_var $build_file
+packer build -timestamp-ui -only 'win_base_apps2.qemu.Windows_base' -var "keep_registered=false" -var "iso_checksum=sha256:$base_sha" -var iso_url=$base_output_path/$vm_name -var "nix_output_directory=$baseapptwo_output_path" -var "vm_name=$vm_name" -var-file $app_vars -var-file $os_vars -var-file $secret_vars $build_file
 
 echo "Generating SHA256 checksum for $baseapptwo_output_path/$vm_name"
 baseapptwo_sha=$(sha256sum "$baseapptwo_output_path/$vm_name" | cut -d " " -f 1)
@@ -142,7 +144,7 @@ echo "Secrets File: $secret_vars"
 echo "Build File: $build_file"
 echo "Logs: $PACKER_LOG_PATH"
 
-packer build -timestamp-ui -only 'win_base_optimize.qemu.Windows_base' -var "keep_registered=false" -var "iso_checksum=sha256:$base_sha" -var iso_url=$base_output_path/$vm_name -var "nix_output_directory=$base_opt_output_path" -var "vm_name=$vm_name" -var-file $app_vars -var-file $os_vars -var-file $secret_var $build_file
+packer build -timestamp-ui -only 'win_base_optimize.qemu.Windows_base' -var "keep_registered=false" -var "iso_checksum=sha256:$base_sha" -var iso_url=$base_output_path/$vm_name -var "nix_output_directory=$base_opt_output_path" -var "vm_name=$vm_name" -var-file $app_vars -var-file $os_vars -var-file $secret_vars $build_file
 
 
 # Optimize Base app
@@ -159,7 +161,7 @@ echo "Secrets File: $secret_vars"
 echo "Build File: $build_file"
 echo "Logs: $PACKER_LOG_PATH"
 
-packer build -timestamp-ui -only 'win_base_optimize.qemu.Windows_base' -var "keep_registered=false" -var "iso_checksum=sha256:$baseapp_sha" -var iso_url=$baseapp_output_path/$vm_name -var "nix_output_directory=$baseapp_opt_output_path" -var "vm_name=$vm_name" -var-file $app_vars -var-file $os_vars -var-file $secret_var $build_file
+packer build -timestamp-ui -only 'win_base_optimize.qemu.Windows_base' -var "keep_registered=false" -var "iso_checksum=sha256:$baseapp_sha" -var iso_url=$baseapp_output_path/$vm_name -var "nix_output_directory=$baseapp_opt_output_path" -var "vm_name=$vm_name" -var-file $app_vars -var-file $os_vars -var-file $secret_vars $build_file
 
 # Optimize baseapptwo
 export PACKER_LOG_PATH="/home/mmcfalls/dev/logs/$os_name-baseapptwo-opt-$current_date"
@@ -175,7 +177,7 @@ echo "Build File: $build_file"
 echo "Logs: $PACKER_LOG_PATH"
 
 
-packer build -timestamp-ui -only 'win_base_optimize.qemu.Windows_base' -var "keep_registered=false" -var "iso_checksum=sha256:$baseapptwo_sha" -var iso_url=$baseapptwo_output_path/$vm_name -var "nix_output_directory=$baseapptwo_opt_output_path" -var "vm_name=$vm_name" -var-file $app_vars -var-file $os_vars -var-file $secret_var $build_file
+packer build -timestamp-ui -only 'win_base_optimize.qemu.Windows_base' -var "keep_registered=false" -var "iso_checksum=sha256:$baseapptwo_sha" -var iso_url=$baseapptwo_output_path/$vm_name -var "nix_output_directory=$baseapptwo_opt_output_path" -var "vm_name=$vm_name" -var-file $app_vars -var-file $os_vars -var-file $secret_vars $build_file
 
 # 
 # Adding new VMs to KVM
