@@ -323,8 +323,16 @@ $allChangeResults.Add("Tracing", $tracingChangesList)
 # Disable Windows Features
 # 
 foreach ($feature in $winFeaturesToDisable) {
-    Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Disabling $($feature) Feature"
-    Disable-WindowsOptionalFeature -Online -FeatureName $feature
+    $featureState = Get-WindowsOptionalFeature -Online -FeatureName $feature
+    # ).State
+    if($featureState.State -like "disabled"){
+        Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - $($feature) Feature Already Disabled"
+    }
+    else{
+        Write-Log -logfile $logfile -Level "INFO" -Message "$($app) - Disabling $($feature) Feature"
+        Disable-WindowsOptionalFeature -Online -FeatureName $feature
+    }
+
 }
 
 # 
