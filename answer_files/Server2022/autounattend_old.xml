@@ -7,15 +7,6 @@
                     <Value>QQBnAHUAbgBpAG0AbwBuADQAMgBBAGQAbQBpAG4AaQBzAHQAcgBhAHQAbwByAFAAYQBzAHMAdwBvAHIAZAA=</Value>
                     <PlainText>false</PlainText>
                 </AdministratorPassword>
-                <LocalAccounts>
-                    <LocalAccount wcm:action="add">
-                        <Password>
-                            <Value>UABhAGMAawBlAHIAMAAxACEAUABhAHMAcwB3AG8AcgBkAA==</Value>
-                            <PlainText>false</PlainText>
-                        </Password>
-                        <Name>packer</Name>
-                    </LocalAccount>
-                </LocalAccounts>
             </UserAccounts>
             <OOBE>
                 <HideEULAPage>true</HideEULAPage>
@@ -24,17 +15,15 @@
                 <ProtectYourPC>1</ProtectYourPC>
                 <HideLocalAccountScreen>true</HideLocalAccountScreen>
                 <HideOnlineAccountScreens>true</HideOnlineAccountScreens>
+                <NetworkLocation>Work</NetworkLocation>
             </OOBE>
             <TimeZone>Eastern Standard Time</TimeZone>
         </component>
-        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <InputLocale>en-US</InputLocale>
-            <UILanguage>en-US</UILanguage>
-            <UserLocale>en-US</UserLocale>
-            <SystemLocale>en-US</SystemLocale>
-        </component>
     </settings>
     <settings pass="specialize">
+        <component name="Microsoft-Windows-ServerManager-SvrMgrNc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <DoNotOpenServerManagerAtLogon>true</DoNotOpenServerManagerAtLogon>
+        </component>
         <component name="Microsoft-Windows-TerminalServices-LocalSessionManager" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <fDenyTSConnections>false</fDenyTSConnections>
         </component>
@@ -77,32 +66,6 @@
                     <Description>Copy Files</Description>
                 </RunSynchronousCommand>
             </RunSynchronous>
-        </component>
-        <component name="Microsoft-Windows-Deployment" processorArchitecture="wow64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <RunSynchronous>
-                <RunSynchronousCommand wcm:action="add">
-                    <Path>cmd /c net user Administrator /active:yes</Path>
-                    <Description>Enable Local admin</Description>
-                    <Order>1</Order>
-                </RunSynchronousCommand>
-                <RunSynchronousCommand wcm:action="add">
-                    <Description>Create temp dir</Description>
-                    <Order>2</Order>
-                    <Path>cmd /c mkdir c:\temp</Path>
-                    <WillReboot>Never</WillReboot>
-                </RunSynchronousCommand>
-            </RunSynchronous>
-        </component>
-        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="wow64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <AutoLogon>
-                <Password>
-                    <Value>QQBnAHUAbgBpAG0AbwBuADQAMgBQAGEAcwBzAHcAbwByAGQA</Value>
-                    <PlainText>false</PlainText>
-                </Password>
-                <Enabled>true</Enabled>
-                <Username>Administrator</Username>
-                <LogonCount>5</LogonCount>
-            </AutoLogon>
         </component>
     </settings>
     <settings pass="windowsPE">
@@ -184,5 +147,5 @@
             <SkipRearm>1</SkipRearm>
         </component>
     </settings>
-    <cpi:offlineImage cpi:source="wim:c:/users/administrator/desktop/unattend%20files/windows10_ltsb/19044.1288.211006-0501.21h2_release_svc_refresh_client_ltsc_eval_x64fre_en-us/sources/install.wim#Windows 10 Enterprise LTSC 2021 Evaluation" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
+    <cpi:offlineImage cpi:source="wim:c:/users/administrator/desktop/server_eval_x64fre_en-us/sources/install.wim#Windows Server 2022 SERVERDATACENTER" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
 </unattend>

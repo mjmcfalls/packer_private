@@ -192,10 +192,10 @@ echo "virt-install --name $os_name-base-opt-$current_date --memory $virt_memory 
 virt-install --name $os_name-base-opt-$current_date --memory $virt_memory --vcpus $virt_cpu --disk bus=virtio,path=$base_opt_output_path/$vm_name --network bridge:$virt_bridge --import --os-variant $os_variant --noautoconsole
 
 echo "virt-install --name $os_name-baseapp-opt-$current_date --memory $virt_memory --vcpus virt_cpu --disk bus=virtio,path=$baseapp_opt_output_path/$vm_name --network bridge:$virt_bridge  --import --os-variant $os_variant --noautoconsole"
-virt-install --name $os_name-baseapp-opt-$current_date --memory $virt_memory --vcpus virt_cpu --disk bus=virtio,path=$baseapp_opt_output_path/$vm_name --network bridge:$virt_bridge --import --os-variant $os_variant --noautoconsole
+virt-install --name $os_name-baseapp-opt-$current_date --memory $virt_memory --vcpus $virt_cpu --disk bus=virtio,path=$baseapp_opt_output_path/$vm_name --network bridge:$virt_bridge --import --os-variant $os_variant --noautoconsole
 
 echo "virt-install --name $os_name-baseapptwo-opt-$current_date --memory $virt_memory --vcpus virt_cpu --disk bus=virtio,path=$baseapptwo_opt_output_path/$vm_name --network bridge:$virt_bridge  --import --os-variant $os_variant --noautoconsole"
-virt-install --name $os_name-baseapptwo-opt-$current_date --memory $virt_memory --vcpus virt_cpu --disk bus=virtio,path=$baseapptwo_opt_output_path/$vm_name --network bridge:$virt_bridge  --import --os-variant $os_variant --noautoconsole
+virt-install --name $os_name-baseapptwo-opt-$current_date --memory $virt_memory --vcpus $virt_cpu --disk bus=virtio,path=$baseapptwo_opt_output_path/$vm_name --network bridge:$virt_bridge  --import --os-variant $os_variant --noautoconsole
 
 
 echo "Adding SCSI Controller to $os_name-base-opt-$current_date"
