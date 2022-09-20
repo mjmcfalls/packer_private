@@ -13,14 +13,14 @@ app_vars=vars/Windows_App_Vars.pkrvars.hcl
 os_name=Server2022
 vm_name=$os_name-$current_date
 
-bare_output_path=/home/libvirt/images/pool/$os_name/$os_name-bare-$current_date
-base_output_path=/home/libvirt/images/pool/$os_name/$os_name-base-$current_date
-base_opt_output_path=/home/libvirt/images/pool/$os_name/$os_name-base-opt-$current_date
-baseapp_output_path=/home/libvirt/images/pool/$os_name/$os_name-baseapp-$current_date
-baseapp_opt_output_path=/home/libvirt/images/pool/$os_name/$os_name-baseapp-opt-$current_date
+bare_output_path=/mnt/vmstorage/templates/$os_name/$os_name-bare-$current_date
+base_output_path=/mnt/vmstorage/templates/$os_name/$os_name-base-$current_date
+base_opt_output_path=/mnt/vmstorage/templates/$os_name/$os_name-base-opt-$current_date
+baseapp_output_path=/mnt/vmstorage/templates/$os_name/$os_name-baseapp-$current_date
+baseapp_opt_output_path=/mnt/vmstorage/templates/$os_name/$os_name-baseapp-opt-$current_date
 
-baseapptwo_output_path=/home/libvirt/images/pool/$os_name/$os_name-baseapptwo-$current_date
-baseapptwo_opt_output_path=/home/libvirt/images/pool/$os_name/$os_name-baseapptwo-opt-$current_date
+baseapptwo_output_path=/mnt/vmstorage/templates/$os_name/$os_name-baseapptwo-$current_date
+baseapptwo_opt_output_path=/mnt/vmstorage/templates/$os_name/$os_name-baseapptwo-opt-$current_date
 
 # Virt information
 virt_bridge=br0

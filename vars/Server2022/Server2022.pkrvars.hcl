@@ -1,6 +1,6 @@
 vm_name = "Server2022_{{isotime \"20060102_1504\"}}.qcow2"
 vm_choco_name = "Server2022_choco_{{isotime \"20060102_1504\"}}.qcow2"
-nix_output_directory = "/home/libvirt/images/pool/Server2022/Server2022_{{isotime \"20060102_1504\"}}/"
+nix_output_directory = "/mnt/vmstorage/templates/Server2022/Server2022_{{isotime \"20060102_1504\"}}/"
 # nix_choco_output_directory = "/home/libvirt/images/pool/Win10/Win10_choco_{{isotime \"20060102_1504\"}}/"
 output_directory = "D:\\Hyperv\\packer\\Server2022"
 cpu_num = "6"

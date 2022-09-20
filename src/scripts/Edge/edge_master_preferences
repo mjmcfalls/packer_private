@@ -34,7 +34,10 @@
 		"show_toolbar_downloads_button": false,
 		"show_home_button": true,
 		"show_prompt_before_closing_tabs": false,
-		"show_toolbar_history_button": true
+		"show_toolbar_history_button": true,
+		"first_run_tabs": [
+			"https://its.unc.edu/research-computing/"
+		]
 	},
 	"default_search_provider": {
 		"enabled": true,
