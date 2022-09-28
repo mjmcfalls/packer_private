@@ -334,20 +334,17 @@ packer {
 source "vmware-iso" "win_iso" {
   boot_wait        = "60s"
   communicator     = "winrm"
-  CPUs             = "${var.cpu_num}"
-  RAM              = "${var.memory}"
+  cpus             = "${var.cpu_num}"
+  memory              = "${var.memory}"
 
-  disk_controller_type = ["pvscsi"]
-
+  disk_adapter_type = "${var.vmware_disk_adapter_type}"
   disk_size             = "${var.disk_size}"
-  disk_thin_provisioned = true
 
   network_name = "Packer"
-  network_card = "e1000"
+  network_adapter_type = "${var.vmware_network_adapter_type}"
  
   guest_os_type    = "${var.vmware_guest_os_type}"
   vm_name          = "${var.vm_name}"
-  folder        = "${var.vm_name}"
   headless = "false"
   tools_upload_flavor = "${var.tools_upload_flavor}"
 
