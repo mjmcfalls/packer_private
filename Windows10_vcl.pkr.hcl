@@ -340,21 +340,18 @@ source "vsphere-iso" "win_iso" {
   }
 
   network_adapters {
-      network = "PUBLIC"
-      network_card = "vmxnet3"
+      network = "Public"
+      network_card = "e1000e"
   }
   network_adapters {
-      network = "OtherNetwork"
-      network_card = "vmxnet3"
+      network = "Private"
+      network_card = "e1000e"
   }
 
   floppy_files     = ["${var.autounattend}","./src/scripts/"]
-  format           = "qcow2"
   guest_os_type    = "${var.vmware_guest_os_type}"
   iso_checksum     = "${var.iso_checksum}"
   iso_url          = "${var.iso_url}"
-
-  network_adapter_type = "${var.vmware_network_adapter_type}"
   output_directory = "${var.nix_output_directory}"
   shutdown_command = "${var.shutdown_command}"
   vm_name          = "${var.vm_name}"
