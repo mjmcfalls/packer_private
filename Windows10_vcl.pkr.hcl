@@ -331,10 +331,21 @@ source "vsphere-iso" "win_iso" {
   communicator     = "winrm"
   CPUs             = "${var.cpu_num}"
   RAM              = "${var.memory}"
+
   disk_controller_type = ["pvscsi"]
+
   storage {
     disk_size             = "${var.disk_size}"
     disk_thin_provisioned = true
+  }
+
+  network_adapters {
+      network = "PUBLIC"
+      network_card = "vmxnet3"
+  }
+  network_adapters {
+      network = "OtherNetwork"
+      network_card = "vmxnet3"
   }
 
   floppy_files     = ["${var.autounattend}","./src/scripts/"]
@@ -354,7 +365,7 @@ source "vsphere-iso" "win_iso" {
   winrm_use_ntlm   = "${var.winrm_use_ntlm}"
   winrm_use_ssl    = "${var.winrm_use_ssl}"
   winrm_username   = "${var.winrm_username}"
-
+  insecure_connection  = "true"
   host = "${var.vcenter_server}"
   username = "${var.vmware_username}"
   password  = "${var.vmware_password}"
