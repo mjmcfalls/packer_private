@@ -363,7 +363,10 @@ source "vsphere-iso" "win_iso" {
   winrm_use_ssl    = "${var.winrm_use_ssl}"
   winrm_username   = "${var.winrm_username}"
   insecure_connection  = "true"
+  
+  vcenter_server = "${var.vcenter_server}"
   host = "${var.vcenter_server}"
+  
   username = "${var.vmware_username}"
   password  = "${var.vmware_password}"
 }
