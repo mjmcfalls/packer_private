@@ -345,7 +345,7 @@ source "vmware-iso" "win_iso" {
  
   guest_os_type    = "${var.vmware_guest_os_type}"
   vm_name          = "${var.vm_name}"
-  headless = "false"
+  headless = "true"
   tools_upload_flavor = "${var.tools_upload_flavor}"
 
   floppy_files     = ["${var.autounattend}","./src/scripts/"]
