@@ -352,7 +352,7 @@ source "vsphere-iso" "win_iso" {
   guest_os_type    = "${var.vmware_guest_os_type}"
   iso_checksum     = "${var.iso_checksum}"
   iso_url          = "${var.iso_url}"
-  output_directory = "${var.nix_output_directory}"
+
   shutdown_command = "${var.shutdown_command}"
   vm_name          = "${var.vm_name}"
   folder        = "${var.vm_name}"
