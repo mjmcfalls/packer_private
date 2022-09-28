@@ -362,107 +362,9 @@ source "vsphere-iso" "win_iso" {
 }
 
 
-source "qemu" "Windows_base" {
-  accelerator      = "kvm"
-  boot_wait        = "60s"
-  communicator     = "winrm"
-  cpus             = "${var.cpu_num}"
-  disk_size        = "${var.disk_size}"
-  disk_interface   = "virtio"
-  disk_image       = true
-  iso_checksum     = "${var.iso_checksum}"
-  iso_url          = "${var.iso_url}"
-  floppy_files     = ["./src/scripts/"]
-  format           = "qcow2"
-  headless         = "${var.headless}"
-  http_directory   = "${var.http_directory}"
-  memory           = "${var.memory}"
-  net_device       = "e1000"
-  output_directory = "${var.nix_output_directory}"
-  shutdown_command = "${var.shutdown_command}"
-  vm_name          = "${var.vm_name}"
-  use_backing_file = "${var.use_backing_file}"
-  winrm_insecure   = "${var.winrm_insecure}"
-  winrm_password   = "${var.winrm_password}"
-  winrm_timeout    = "${var.winrm_timeout}"
-  winrm_use_ntlm   = "${var.winrm_use_ntlm}"
-  winrm_use_ssl    = "${var.winrm_use_ssl}"
-  winrm_username   = "${var.winrm_username}"
-}
-
-source "qemu" "Windows10_choco" {
-  accelerator      = "kvm"
-  boot_wait        = "60s"
-  communicator     = "winrm"
-  cpus             = "${var.cpu_num}"
-  disk_size        = "${var.disk_size}"
-  disk_interface   = "virtio"
-  floppy_files     = ["${var.autounattend}","./src/scripts/"]
-  format           = "qcow2"
-  headless         = "${var.headless}"
-  http_directory   = "${var.http_directory}"
-  iso_checksum     = "${var.iso_checksum}"
-  iso_url          = "${var.iso_url}"
-  memory           = "${var.memory}"
-  net_device       = "e1000"
-  output_directory = "${var.nix_choco_output_directory}"
-  shutdown_command = "${var.shutdown_command}"
-  vm_name          = "${var.vm_choco_name}"
-  winrm_insecure   = "${var.winrm_insecure}"
-  winrm_password   = "${var.winrm_password}"
-  winrm_timeout    = "${var.winrm_timeout}"
-  winrm_use_ntlm   = "${var.winrm_use_ntlm}"
-  winrm_use_ssl    = "${var.winrm_use_ssl}"
-  winrm_username   = "${var.winrm_username}"
-}
-
-source "hyperv-iso" "win_iso" {
-  boot_wait        = "120s"
-  communicator     = "winrm"
-  cpus             = "${var.cpu_num}"
-  disk_size        = "${var.disk_size}"
-  floppy_files     = ["${var.autounattend}","./src/scripts/"]
-  headless         = "${var.headless}"
-  http_directory   = "${var.http_directory}"
-  iso_checksum     = "${var.iso_checksum}"
-  iso_url          = "${var.iso_url}"
-  memory           = "${var.memory}"
-  output_directory = "${var.output_directory}"
-  shutdown_command = "a:/setup_restart.bat"
-  switch_name      = "${var.switchname}"
-  vm_name          = "${var.vm_name}"
-  winrm_insecure   = "${var.winrm_insecure}"
-  winrm_password   = "${var.winrm_password}"
-  winrm_timeout    = "${var.winrm_timeout}"
-  winrm_use_ntlm   = "${var.winrm_use_ntlm}"
-  winrm_use_ssl    = "${var.winrm_use_ssl}"
-  winrm_username   = "${var.winrm_username}"
-}
-
-source "hyperv-vmcx" "Windows_base" {
-  boot_wait        = "60s"
-  communicator     = "winrm"
-  cpus             = "${var.cpu_num}"
-  floppy_files     = ["./src/scripts/"]
-  headless         = "${var.headless}"
-  http_directory   = "${var.http_directory}"
-  memory           = "${var.memory}"
-  output_directory = "${var.output_directory}"
-  shutdown_command = "${var.shutdown_command}"
-  switch_name      = "${var.switchname}"
-  vm_name          = "${var.vm_name}"
-  winrm_insecure   = "${var.winrm_insecure}"
-  winrm_password   = "${var.winrm_password}"
-  winrm_timeout    = "${var.winrm_timeout}"
-  winrm_use_ntlm   = "${var.winrm_use_ntlm}"
-  winrm_use_ssl    = "${var.winrm_use_ssl}"
-  winrm_username   = "${var.winrm_username}"
-  clone_from_vmcx_path = "${var.clone_from_vmcx_path}"
-}
-
 build {
   name = "win_iso"
-  sources = ["source.qemu.win_iso","source.hyperv-iso.win_iso"]
+  sources = ["source.vsphere-iso.win_iso"]
 
   provisioner "powershell" {
     elevated_user = "SYSTEM"
@@ -485,13 +387,7 @@ build {
     inline = [
       "a:/OneDrive_removal.ps1",
       "a:/Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
-    ]
   }
-}
-
-build { 
-  name = "win_base"
-  sources = ["source.hyperv-vmcx.Windows_base"]
 
   provisioner "powershell" {
     inline = [
@@ -504,7 +400,7 @@ build {
       # Web Browsers
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.chrome, "name", "Chrome")}' -installParams '${lookup(var.chrome, "parameters", "/quiet /norestart")}' -installername '${lookup(var.chrome,"installer","GoogleChromeStandaloneEnterprise64.msi")}'",
       "${var.win_temp_dir}\\scripts\\Firefox\\install_firefox.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.firefox, "name", "Firefox")}' -installername '${lookup(var.firefox,"installer","Firefox Setup 101.0.exe")}'"
-      ]
+    ]
   }
 
   provisioner "powershell" {
@@ -514,118 +410,6 @@ build {
       "${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install",
     ]
   }
-}
- 
-
-
-build { 
-  name = "win_base"
-  sources = ["source.qemu.Windows_base"]
-
-  provisioner "powershell" {
-    inline = [
-      "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.wget_path}\\wget.exe'",
-      # Utilities
-      "a:\\Install_pswindowsupdate.ps1",
-      "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -SearchPath '${var.win_temp_dir}\\apps' -app 'sysinternals'",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.seven_zip, "name", "7zip")}' -installParams '${lookup(var.seven_zip, "parameters", "/S")}' -installername '${lookup(var.seven_zip, "installer", "7z2107-x64.exe")}'",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.winscp, "name", "Winscp")}' -installParams '${lookup(var.winscp, "parameters", "/S")}' -installername '${lookup(var.winscp, "installer", "7z2107-x64.exe")}'",
-      # "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.fileshredder, "name", "FileShredder")}' -installParams '${lookup(var.fileshredder, "parameters", "/SILENT")}' -installername '${lookup(var.fileshredder, "installer", "file_shredder_setup.exe")}'", 
-      # "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.speedcrunch, "name", "SpeedCrunch")}' -installParams '${lookup(var.speedcrunch, "parameters", "/S")}' -installername '${lookup(var.speedcrunch,"installer", "SpeedCrunch-0.12-win32.exe")}'", 
-      # "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.winmerge, "name", "WinMerge")}' -installParams '${lookup(var.winmerge, "parameters", "/VERYSILENT /NORESTART /MERGETASKS=!desktopicon")}' -installername '${lookup(var.winmerge,"installer", "WinMerge-2.16.20-x64-Setup.exe")}'", 
-      # Web Browsers
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.chrome, "name", "Chrome")}' -installParams '${lookup(var.chrome, "parameters", "/quiet /norestart")}' -installername '${lookup(var.chrome,"installer","GoogleChromeStandaloneEnterprise64.msi")}'",
-      "${var.win_temp_dir}\\scripts\\Firefox\\install_firefox.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.firefox, "name", "Firefox")}' -installername '${lookup(var.firefox,"installer","Firefox Setup 101.0.exe")}'",
-      # Git and Git LFS
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.git, "name", "Git")}' -installParams '${lookup(var.git, "parameters", "/VERYSILENT /NORESTART")}' -installername '${lookup(var.git, "installer", "Git-2.36.1-64-bit.exe")}'",
-      # "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.git_lfs, "name", "Git LFS")}' -installParams '${lookup(var.git_lfs, "parameters", "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART")}' -installername '${lookup(var.git_lfs ,"installer", "git-lfs-windows-v3.2.0.exe")}'",
-      # Text and Code Editors
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.vscode, "name", "VSCode")}' -installParams '${lookup(var.vscode, "parameters", "/VERYSILENT /loadinf=vscode.inf /MERGETASKS=!runcode")}' -installername '${lookup(var.vscode, "installer", "VSCodeSetup-x64-1.67.0.exe")}'",
-      # "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.atom, "name", "Atom")}' -installParams '${lookup(var.atom, "parameters", "-s")}' -installername '${lookup(var.atom,"installer", "AtomSetup-x64.exe")}'", 
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.npp, "name", "Notepad++")}' -installParams '${lookup(var.npp, "parameters", "/S")}' -installername '${lookup(var.npp,"installer", "npp.8.4.1.Installer.x64.exe")}'",
-      # "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.vim, "name", "VIM")}' -installParams '${lookup(var.vim, "parameters", "/S")}' -installername '${lookup(var.vim,"installer", "gvim_9.0.0001_x64.exe")}'",
-      # Python and Conda
-      # "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.python_27, "name", "Python2.7")}' -installParams '${lookup(var.python_27, "parameters", "/quiet")}' -installername '${lookup(var.python_27, "installer", "python-2.7.18.amd64.msi")}'",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.python_39, "name", "Python 3.9.13")}' -installParams '${lookup(var.python_39, "parameters", "/quiet")}' -installername '${lookup(var.python_39, "installer", "python-3.9.13-amd64.exe")}'",
-      # "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.conda, "name", "Anaconda3 2021.11")}' -installParams '${lookup(var.conda, "parameters", "/S /RegisterPython=1 /AddToPath=1 /InstallationType=AllUsers")}' -installername '${lookup(var.conda, "installer", "Anaconda3-2021.11-Windows-x86_64.exe")}'",
-      # R and R Studio
-      # "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.r, "name", "R")}' -installParams '${lookup(var.r, "parameters", "/verysilent /NORESTART /MERGETASKS=!desktopicon")}' -installername '${lookup(var.r, "installer", "R-4.2.0-win.exe")}'",
-      # "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.r_studio, "name","R Studio 2022.02.1-461")}' -installParams '${lookup(var.r_studio, "parameters","/S")}' -installername '${lookup(var.r_studio,"installer","RStudio-2022.02.1-461.exe")}'", 
-      # "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.r_tools_40, "name","R Tools")}' -installParams '${lookup(var.r_tools_40, "parameters","/VERYSILENT")}' -installername '${lookup(var.r_tools_40,"installer","rtools40-x86_64.exe")}'", 
-      # Java
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.java_x86, "name", "Java 8 R333 x86")}' -installParams '${lookup(var.java_x86, "parameters", "INSTALLCFG=${var.win_temp_dir}\\apps\\java\\java_install.cfg")}' -installername '${lookup(var.java_x86, "installer", "jre-8u333-windows-i586.exe")}'", 
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.java_x64, "name","Java 8 R333 x64")}' -installParams '${lookup(var.java_x64, "parameters", "INSTALLCFG=${var.win_temp_dir}\\apps\\java\\java_install.cfg")}' -installername '${lookup(var.java_x64, "installer", "jre-8u333-windows-x64.exe")}'", 
-      # Julia
-      # "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.julia, "name","Julia")}' -installParams '${lookup(var.julia, "parameters", "/SP /verysilent /allusers")}' -installername '${lookup(var.julia, "installer", "julia-1.7.3-win32.exe")}'", 
-      ]
-  }
-
-  # provisioner "powershell" {
-  #   inline = [
-  #      # TexStudio and Miktex
-  #     "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.miktex, "name", "MikTex")}' -installParams '${lookup(var.miktex, "parameters", "--verbose --local-package-repository=C:\\temp\\apps\\miktex\\repo --shared=yes install")}' -installername '${lookup(var.miktex,"installer", "miktexsetup_standalone.exe")}'", 
-  #     "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.texstudio, "name", "TexStudio")}' -installParams '${lookup(var.texstudio, "parameters", "/S")}' -installername '${lookup(var.texstudio,"installer", "texstudio-4.2.3-win-qt6.exe")}'", 
-  #   ]
-  # }
-
-  provisioner "powershell" {
-    inline = [
-      # App Customization
-      "${var.win_temp_dir}\\scripts\\Chrome\\install_Chrome_MasterPrefs.ps1 -SearchPath '${var.win_temp_dir}\\scripts'",
-      "${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install",
-      # "${var.win_temp_dir}\\scripts\\Rstudio\\copy_rstudio_confs.ps1 -SearchPath '${var.win_temp_dir}' -crashHandlerFile 'crash-handler.conf' -preferenceFile 'rstudio-prefs.json' -preferencesDestination 'C:\\ProgramData\\Rstudio' -crashHandlerDestination 'C:\\ProgramData\\RStudio'",
-      # "${var.win_temp_dir}\\scripts\\notepadplusplus\\npp_disable_updates.ps1",
-      # "${var.win_temp_dir}\\scripts\\julia\\julia_addToPath.ps1",
-      # "${var.win_temp_dir}\\scripts\\Microsoft\\update_path.ps1 -app 'Rtools' -Path '${lookup(var.r_tools_40, "path","c:\\rtool40")}'",
-      # Conda Navigator update
-      # "${var.win_temp_dir}\\scripts\\anaconda\\conda_update_navigator.ps1",
-      # "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
-    ]
-  }
-}
-
-build { 
-  name = "win_base_apps1"
-  sources = ["source.qemu.Windows_base","source.hyperv-vmcx.Windows_base"]
-
-# Application installations
-  provisioner "powershell" {
-    inline = [
-      "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.wget_path}\\wget.exe'",
-      "${var.win_temp_dir}\\scripts\\Microsoft\\Install-wsl2.ps1",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -installername 'adksetup.exe' -app 'msadk' -installParams '/ceip off /norestart /quiet /features OptionId.WindowsPerformanceToolkit OptionId.DeploymentTools OptionId.ApplicationCompatibilityToolkit OptionId.WindowsAssessmentToolkit'",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -installername 'adkwinpesetup.exe' -app 'mswinpeadk' -installParams '/ceip off /norestart /quiet'",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -installername 'Setup_MakeMKV_v1.17.0.exe' -app 'MakeMKV' -installParams '/S' ",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -installername 'eac-1.6.exe' -app 'Exact Audio Copy' -installParams '/S' ",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -installername 'Postman-win64-Setup.exe' -app 'Postman x64' -installParams '-s' ",
-      # "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
-      # Customization
-      "${var.win_temp_dir}\\scripts\\lame\\install_lame.ps1 -SearchPath '${var.win_temp_dir}\\apps' -installername 'lame.exe' -app 'lame'",
-      ]
-  }
-}
-
-build { 
-  name = "win_base_apps2"
-  sources = ["source.qemu.Windows_base","source.hyperv-vmcx.Windows_base"]
-
-# Application installations
-  provisioner "powershell" {
-    inline = [
-      "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.wget_path}\\wget.exe'",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.docker, "name", "Docker")}' -installParams '${lookup(var.docker, "parameters", "install --quiet --accept-license")}' -installername '${lookup(var.docker, "installer", "Docker Desktop Installer.exe")}'", 
-      "${var.win_temp_dir}\\scripts\\docker\\docker_customize.ps1 -SearchPath '${var.win_temp_dir}' -settingsFileDest 'c:\\users\\Administrator\\Appdata\\Roaming\\Docker'", 
-      "${var.win_temp_dir}\\scripts\\docker\\docker_customize.ps1 -SearchPath '${var.win_temp_dir}'", 
-      ]
-  }
-
-  provisioner "windows-restart" {}
-
-}
-
-build { 
-  name = "win_base_optimize"
-  sources = ["source.qemu.Windows_base","source.hyperv-vmcx.Windows_base"]
 
   provisioner "powershell" {
     elevated_user = "SYSTEM"
@@ -634,4 +418,6 @@ build {
       "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}' -sdelete"
       ]
   }
+
 }
+ 
