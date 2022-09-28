@@ -329,31 +329,35 @@ packer {
 source "vsphere-iso" "win_iso" {
   boot_wait        = "60s"
   communicator     = "winrm"
-  cpus             = "${var.cpu_num}"
-  disk_size        = "${var.disk_size}"
-  disk_adapter_type  = "${var.vmware_disk_adapter_type}"
+  CPUs             = "${var.cpu_num}"
+  RAM              = "${var.memory}"
+  disk_controller_type = ["pvscsi"]
+  storage {
+    disk_size             = "${var.disk_size}"
+    disk_thin_provisioned = true
+  }
+
   floppy_files     = ["${var.autounattend}","./src/scripts/"]
   format           = "qcow2"
   guest_os_type    = "${var.vmware_guest_os_type}"
-  headless         = "${var.headless}"
   iso_checksum     = "${var.iso_checksum}"
   iso_url          = "${var.iso_url}"
-  memory           = "${var.memory}"
+
   network_adapter_type = "${var.vmware_network_adapter_type}"
   output_directory = "${var.nix_output_directory}"
   shutdown_command = "${var.shutdown_command}"
   vm_name          = "${var.vm_name}"
-  vmdk_name        = "${var.vm_name}"
+  folder        = "${var.vm_name}"
   winrm_insecure   = "${var.winrm_insecure}"
   winrm_password   = "${var.winrm_password}"
   winrm_timeout    = "${var.winrm_timeout}"
   winrm_use_ntlm   = "${var.winrm_use_ntlm}"
   winrm_use_ssl    = "${var.winrm_use_ssl}"
   winrm_username   = "${var.winrm_username}"
-  tools_upload_flavor = "${var.tools_upload_flavor}"
+
   host = "${var.vcenter_server}"
-  vcenter_username = "${var.vmware_username}"
-  vcenter_password  = "${var.vmware_password}"
+  username = "${var.vmware_username}"
+  password  = "${var.vmware_password}"
 }
 
 
