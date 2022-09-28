@@ -348,7 +348,7 @@ source "vmware-iso" "win_iso" {
   headless = "true"
   tools_upload_flavor = "${var.tools_upload_flavor}"
 
-  floppy_files     = ["${var.autounattend}","./src/scripts/","./src/apps/VMware-Tools-windows-12.1.0-20219665/floppies/pvscsi-Windows8"]
+  floppy_files     = ["${var.autounattend}","./src/scripts/","./src/apps/VMware-Tools-windows-12.1.0-20219665/floppies/pvscsi-Windows8/AMD64/"]
   iso_checksum     = "${var.iso_checksum}"
   iso_url          = "${var.iso_url}"
 
