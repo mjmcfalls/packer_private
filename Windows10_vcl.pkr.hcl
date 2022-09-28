@@ -94,10 +94,6 @@ variable "vm_name" {
   default = "${env("vm_name")}"
 }
 
-variable "vm_choco_name" {
-  type    = string
-}
-
 variable "audit_json_path"{
   type = string
 }
@@ -346,7 +342,6 @@ source "vsphere-iso" "win_iso" {
   network_adapter_type = "${var.vmware_network_adapter_type}"
   output_directory = "${var.nix_output_directory}"
   shutdown_command = "${var.shutdown_command}"
-
   vm_name          = "${var.vm_name}"
   vmdk_name        = "${var.vm_name}"
   winrm_insecure   = "${var.winrm_insecure}"
@@ -356,7 +351,7 @@ source "vsphere-iso" "win_iso" {
   winrm_use_ssl    = "${var.winrm_use_ssl}"
   winrm_username   = "${var.winrm_username}"
   tools_upload_flavor = "${var.tools_upload_flavor}"
-  vcenter_server = "${var.vcenter_server}"
+  host = "${var.vcenter_server}"
   vcenter_username = "${var.vmware_username}"
   vcenter_password  = "${var.vmware_password}"
 }
