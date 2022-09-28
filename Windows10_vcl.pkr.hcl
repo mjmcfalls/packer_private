@@ -387,6 +387,7 @@ build {
     inline = [
       "a:/OneDrive_removal.ps1",
       "a:/Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
+    ]
   }
 
   provisioner "powershell" {
