@@ -360,14 +360,17 @@ source "vmware-iso" "win_iso" {
   winrm_use_ntlm   = "${var.winrm_use_ntlm}"
   winrm_use_ssl    = "${var.winrm_use_ssl}"
   winrm_username   = "${var.winrm_username}"
+
   insecure_connection  = "true"
-  
   remote_type = "esx5"
   remote_host = "${var.vcenter_server}"
   remote_datastore = "${var.datastore}"
   remote_username = "${var.vmware_username}"
   remote_password  = "${var.vmware_password}"
   vnc_disable_password = "true"
+
+  keep_registered = "true"
+  skip_export = "true"
 }
 
 
