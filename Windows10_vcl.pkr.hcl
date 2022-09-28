@@ -331,7 +331,7 @@ packer {
 # source. Read the documentation for source blocks here:
 # https://www.packer.io/docs/templates/hcl_templates/blocks/source
 
-source "vsphere-iso" "win_iso" {
+source "vmware-iso" "win_iso" {
   boot_wait        = "60s"
   communicator     = "winrm"
   CPUs             = "${var.cpu_num}"
@@ -339,28 +339,24 @@ source "vsphere-iso" "win_iso" {
 
   disk_controller_type = ["pvscsi"]
 
-  storage {
-    disk_size             = "${var.disk_size}"
-    disk_thin_provisioned = true
-  }
+  disk_size             = "${var.disk_size}"
+  disk_thin_provisioned = true
 
-  network_adapters {
-      network = "Public"
-      network_card = "e1000e"
-  }
-  network_adapters {
-      network = "Private"
-      network_card = "e1000e"
-  }
+  network_name = "Packer"
+  network_card = "e1000"
+ 
+  guest_os_type    = "${var.vmware_guest_os_type}"
+  vm_name          = "${var.vm_name}"
+  folder        = "${var.vm_name}"
+  headless = "false"
+  tools_upload_flavor = "${var.tools_upload_flavor}"
 
   floppy_files     = ["${var.autounattend}","./src/scripts/"]
-  guest_os_type    = "${var.vmware_guest_os_type}"
   iso_checksum     = "${var.iso_checksum}"
   iso_url          = "${var.iso_url}"
 
   shutdown_command = "${var.shutdown_command}"
-  vm_name          = "${var.vm_name}"
-  folder        = "${var.vm_name}"
+
   winrm_insecure   = "${var.winrm_insecure}"
   winrm_password   = "${var.winrm_password}"
   winrm_timeout    = "${var.winrm_timeout}"
@@ -369,17 +365,18 @@ source "vsphere-iso" "win_iso" {
   winrm_username   = "${var.winrm_username}"
   insecure_connection  = "true"
   
-  vcenter_server = "${var.vcenter_server}"
-  host = "${var.vcenter_server}"
-  datastore = "${var.datastore}"
-  username = "${var.vmware_username}"
-  password  = "${var.vmware_password}"
+  remote_type = "esx5"
+  remote_host = "${var.vcenter_server}"
+  remote_datastore = "${var.datastore}"
+  remote_username = "${var.vmware_username}"
+  remote_password  = "${var.vmware_password}"
+  vnc_disable_password = "true"
 }
 
 
 build {
   name = "win_iso"
-  sources = ["source.vsphere-iso.win_iso"]
+  sources = ["source.vmware-iso.win_iso"]
 
   provisioner "powershell" {
     elevated_user = "SYSTEM"
