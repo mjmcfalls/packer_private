@@ -6,7 +6,7 @@ Param (
     [string]$oneDriveUninstallParams = "/uninstall",
     $appxIgnoreList = @("microsoft.windowscommunicationsapps", "Microsoft.WindowsCalculator", "Microsoft.DesktopAppInstaller", "Microsoft.WindowsStore", "Microsoft.StorePurchaseApp", "Microsoft.Appconnector"),
     $winFeaturesToDisable = @("DirectPlay", "WindowsMediaPlayer"),
-    [string]$defaultsUserSettingsPath = "c:\temp\apps\Scripts\Microsoft\DefaultUsersSettings.txt",
+    [string]$defaultsUserSettingsPath = "c:\temp\apps\Scripts\Microsoft\DefaultUserSettings.txt",
     [string]$defaultsUserVisualSettingsPath = "c:\temp\apps\Scripts\Microsoft\DefaultUserVisualEffects.txt",
     [string]$ScheduledTasksListPath = "c:\temp\apps\Scripts\Microsoft\ScheduledTasks.txt",
     [string]$automaticTracingFilePath = "c:\temp\apps\Scripts\Microsoft\AutomaticTracers.txt",
