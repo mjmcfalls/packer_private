@@ -213,6 +213,11 @@ variable "vcenter_server" {
   type    = string
   default = ""
 }
+
+variable "datastore" {
+  type    = string
+  default = ""
+}
 # Application specific map variables
 variable "winscp" {
   type = map(string)
@@ -366,7 +371,7 @@ source "vsphere-iso" "win_iso" {
   
   vcenter_server = "${var.vcenter_server}"
   host = "${var.vcenter_server}"
-  
+  datastore = "${var.datastore}"
   username = "${var.vmware_username}"
   password  = "${var.vmware_password}"
 }
