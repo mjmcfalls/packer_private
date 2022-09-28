@@ -371,6 +371,29 @@ source "vmware-iso" "win_iso" {
 
   keep_registered = "true"
   skip_export = "true"
+  vmx_data = {
+    "ethernet0.addressType" = "static"
+    "ethernet0.connectionType" = "custom"
+    "ethernet0.networkName" = "Public"
+    "ethernet0.present" = "TRUE"
+    "ethernet0.virtualDev" = "e1000e"
+    "ethernet1.addressType" = "static"
+    "ethernet1.connectionType" = "custom"
+    "ethernet1.networkName" = "Private"
+    "ethernet1.present" = "TRUE"
+    "ethernet1.virtualDev" = "e1000e"
+    "featMask.vm.hv.capable" = "Min:1"
+    "mem.hotadd" = "TRUE"
+    "toolScripts.afterPowerOn" = "FALSE"
+    "toolScripts.afterResume" = "FALSE"
+    "toolScripts.beforePowerOff" = "FALSE"
+    "toolScripts.beforeSuspend" = "FALSE"
+    "tools.remindInstall" = "FALSE"
+    "tools.syncTime" = "FALSE"
+    "vcpu.hotadd" = "TRUE"
+    "vhv.enable" = "TRUE"
+    }
+
 }
 
 
