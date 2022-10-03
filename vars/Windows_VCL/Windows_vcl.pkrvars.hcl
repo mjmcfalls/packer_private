@@ -23,6 +23,6 @@ boot_wait = "60s"
 # VMWare
 tools_upload_flavor = "windows"
 vmware_network_adapter_type = "e1000"
-vmware_disk_adapter_type  = "scsi"
+vmware_disk_adapter_type  = "lsisas1068"
 vmware_guest_os_type = "windows9-64"
 
