@@ -332,6 +332,8 @@ packer {
 # https://www.packer.io/docs/templates/hcl_templates/blocks/source
 
 source "vmware-iso" "win_iso" {
+  http_directory   = "${var.http_directory}"
+
   boot_wait        = "60s"
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
