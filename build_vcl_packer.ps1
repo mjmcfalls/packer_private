@@ -59,8 +59,8 @@ Write-Log -Level "INFO" -Message "Building $($vm_name_postfix) from $($isoPath)"
 
 $env:PACKER_LOG_PATH = "$($outPath)\$($vm_name_postfix).log"
 
-Write-Log -Level "DEBUG" -Message "$($packerpath) build -timestamp-ui -only $buildTarget -var "autounattend=$($unattendPath)" -var `"iso_checksum=$($isoSha)`" -var `"iso_url=$($isoPath)`" -var `"vm_name=$($vm_name_postfix)`" -var-file $($varsfile) -var-file $($appvarFile)  -var-file $($secretsfile) $($buildfile)" 
-Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -timestamp-ui -only $buildTarget -var "autounattend=$($unattendPath)" -var `"iso_checksum=$($isoSha)`" -var `"iso_url=$($isoPath)`" -var `"vm_name=$($vm_name_postfix)`" -var-file $($varsfile) -var-file $($appvarFile) -var-file $($secretsfile) $($buildfile)" -Wait
+Write-Log -Level "DEBUG" -Message "$($packerpath) build -timestamp-ui -only $buildTarget -var `"autounattend=$($unattendPath)`" -var `"iso_checksum=$($isoSha)`" -var `"iso_url=$($isoPath)`" -var `"vm_name=$($vm_name_postfix)`" -var-file $($varsfile) -var-file $($appvarFile)  -var-file $($secretsfile) $($buildfile)" 
+Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -timestamp-ui -only $buildTarget -var `"autounattend=$($unattendPath)`" -var `"iso_checksum=$($isoSha)`" -var `"iso_url=$($isoPath)`" -var `"vm_name=$($vm_name_postfix)`" -var-file $($varsfile) -var-file $($appvarFile) -var-file $($secretsfile) $($buildfile)" -Wait
 
 Write-Log -Level "INFO" -Message "End Build $($vm_name_postfix) from $($isoPath)"
 
