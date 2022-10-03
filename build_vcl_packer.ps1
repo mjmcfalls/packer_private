@@ -3,7 +3,7 @@
 Param (
     [int]$debugging = 1,
     $postfix = (Get-Date -format yyyyMMddhhmm),
-    [string]$outPath = "c:\users\mmcfall\Desktop\packer\",
+    [string]$outPath = "c:\temp\",
     [string]$debugLog = "$($outpath)\packerlog_$($postfix).log",
     [string]$varsfile = ".\vars\Windows_VCL\Windows_vcl.pkrvars.hcl",
     [string]$appvarFile = "vars\Windows_App_Vars.pkrvars.hcl",
