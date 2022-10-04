@@ -4,4 +4,4 @@ Set-NetConnectionProfile -InterfaceIndex (Get-NetConnectionProfile).InterfaceInd
 
 Set-ExecutionPolicy Bypass -Force -Confirm:$false
 
-New-NetFirewallRule -DisplayName "Alow Outbound Port 80" -Direction Outbound -LocalPort 80 -Protocol TCP -Action Allow
+# New-NetFirewallRule -DisplayName "Alow Outbound Port 80" -Direction Outbound -LocalPort 80 -Protocol TCP -Action Allow
