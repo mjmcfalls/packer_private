@@ -3,7 +3,12 @@
 Param (
     [string]$uri,
     [string]$outpath = $env:temp,
-    [string]$wgetPath = "a:\wget.exe"
+    [string]$wgetPath = "a:\wget.exe",
+    [switch]$wget,
+    [switch]$network,
+    [string]$netpath,
+    [string]$pass,
+    [string]$user
 )
 
 function New-TempFolder {
@@ -44,26 +49,36 @@ Function Write-Log {
     }
 }
 
-Write-Log -Level "INFO" -Message "Wget path: $($wgetPath)"
-Write-Log -Level "INFO" -Message "URI: $($uri)"
-Write-Log -Level "INFO" -Message "Output Directory: $($outpath)"
+if ($wget.IsPresent) {
+    Write-Log -Level "INFO" -Message "Wget path: $($wgetPath)"
+    Write-Log -Level "INFO" -Message "URI: $($uri)"
+    Write-Log -Level "INFO" -Message "Output Directory: $($outpath)"
 
-$serverAddress = ($uri -Split ":")[1].trim("/")
+    $serverAddress = ($uri -Split ":")[1].trim("/")
 
 
-Write-Log -Level "INFO" -Message "ServerAddress: $($serverAddress)"
+    Write-Log -Level "INFO" -Message "ServerAddress: $($serverAddress)"
 
-Start-Process -NoNewWindow -PassThru -Wait -FilePath $wgetPath -ArgumentList "-r --no-parent --verbose --no-clobber $($uri) -P $($outpath)"
+    Start-Process -NoNewWindow -PassThru -Wait -FilePath $wgetPath -ArgumentList "-r --no-parent --verbose --no-clobber $($uri) -P $($outpath)"
 
-Write-Log -Level "INFO" -Message "Move downloads out of subfolder"
-$dirExists = Get-ChildItem -Directory -Path $outpath | Where-Object { $_.Name -Like "$($serverAddress)*" }
+    Write-Log -Level "INFO" -Message "Move downloads out of subfolder"
+    $dirExists = Get-ChildItem -Directory -Path $outpath | Where-Object { $_.Name -Like "$($serverAddress)*" }
 
-if ($dirExists) {
-    $topLevelDirs = Get-ChildItem -Path $dirExists.FullName 
+    if ($dirExists) {
+        $topLevelDirs = Get-ChildItem -Path $dirExists.FullName 
     
-    foreach ($dir in $topLevelDirs) {
-        Move-Item -Path $dir.FullName -Destination $outpath -Force
-    }
+        foreach ($dir in $topLevelDirs) {
+            Move-Item -Path $dir.FullName -Destination $outpath -Force
+        }
 
-    Remove-Item -Path $dirExists.FullName -Force -Recurse
+        Remove-Item -Path $dirExists.FullName -Force -Recurse
+    }
+}
+
+
+if ($network.IsPresent) {
+    $password = ConvertTo-SecureString "$($pass)" -AsPlainText -Force
+    $cred = New-Object System.Management.Automation.PSCredential ("$($user)", $password)
+    New-PSDrive -Name "$($outpath)" -Root "$($netpath)" -PSProvider "FileSystem" -Credential $cred
+    Net Use
 }

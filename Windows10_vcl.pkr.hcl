@@ -89,6 +89,24 @@ variable "boot_wait" {
 }
 
 # Build Specific variables
+
+variable "net_drive" {
+  type    = string
+  default = "z:"
+}
+
+variable "net_pass" {
+  type    = string
+  default = ""
+}
+variable "net_user" {
+  type    = string
+  default = ""
+}
+variable "net_path" {
+  type    = string
+  default = ""
+}
 variable "vm_name" {
   type    = string
   default = "${env("vm_name")}"
@@ -422,46 +440,34 @@ build {
     direction   =  "upload"
   }
 
-  provisioner "file" {
-    source      = "./src/apps"
-    destination = "${var.win_temp_dir}"
-    direction   =  "upload"
-  }
-
-  provisioner "file" {
-    source      = "./src/scripts"
-    destination = "${var.win_temp_dir}"
-    direction   =  "upload"
-  }
-
   provisioner "powershell" {
     inline = [
-      "'${var.win_temp_dir}\\apps\\vmware\\vmtools\\windows\\setup.exe /S /v '/qn REBOOT=R ADDLOCAL=ALL REMOVE=Hgfs,FileIntrospection,NetworkIntrospection,BootCamp,CBHelper'",
-      "a:/OneDrive_removal.ps1",
-      "a:/Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
+
     ]
   }
 
   provisioner "powershell" {
     inline = [
-      # "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.wget_path}\\wget.exe'",
-
+      "a:/download_installers.ps1 -OutPath '${var.net_drive}' -network -netpath '${var.net_path}' -user '${var.net_user}' -pass '${var.net_pass}'",
+      "'${var.net_drive}\\apps\\vmware\\vmtools\\windows\\setup.exe /S /v '/qn REBOOT=R ADDLOCAL=ALL REMOVE=Hgfs,FileIntrospection,NetworkIntrospection,BootCamp,CBHelper'",
+      "a:/OneDrive_removal.ps1",
+      # "a:/Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
       # Utilities
       "a:\\Install_pswindowsupdate.ps1",
       "a:\\Install_pester.ps1 -remove",
-      "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -SearchPath '${var.win_temp_dir}\\apps' -app 'sysinternals'",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.seven_zip, "name", "7zip")}' -installParams '${lookup(var.seven_zip, "parameters", "/S")}' -installername '${lookup(var.seven_zip, "installer", "7z2107-x64.exe")}'",
+      "${var.net_drive}\\scripts\\BGInfo\\install_BGInfo.ps1 -SearchPath '${var.net_drive}\\apps' -app 'sysinternals'",
+      "${var.net_drive}\\scripts\\install_app.ps1 -SearchPath '${var.net_drive}' -app '${lookup(var.seven_zip, "name", "7zip")}' -installParams '${lookup(var.seven_zip, "parameters", "/S")}' -installername '${lookup(var.seven_zip, "installer", "7z2107-x64.exe")}'",
       # Web Browsers
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.chrome, "name", "Chrome")}' -installParams '${lookup(var.chrome, "parameters", "/quiet /norestart")}' -installername '${lookup(var.chrome,"installer","GoogleChromeStandaloneEnterprise64.msi")}'",
-      "${var.win_temp_dir}\\scripts\\Firefox\\install_firefox.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.firefox, "name", "Firefox")}' -installername '${lookup(var.firefox,"installer","Firefox Setup 101.0.exe")}'"
+      "${var.net_drive}\\scripts\\install_app.ps1 -SearchPath '${var.net_drive}' -app '${lookup(var.chrome, "name", "Chrome")}' -installParams '${lookup(var.chrome, "parameters", "/quiet /norestart")}' -installername '${lookup(var.chrome,"installer","GoogleChromeStandaloneEnterprise64.msi")}'",
+      "${var.net_drive}\\scripts\\Firefox\\install_firefox.ps1 -SearchPath '${var.net_drive}' -app '${lookup(var.firefox, "name", "Firefox")}' -installername '${lookup(var.firefox,"installer","Firefox Setup 101.0.exe")}'"
     ]
   }
 
   provisioner "powershell" {
     inline = [
       # App Customization
-      "${var.win_temp_dir}\\scripts\\Chrome\\install_Chrome_MasterPrefs.ps1 -SearchPath '${var.win_temp_dir}\\scripts'",
-      "${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install",
+      "${var.net_drive}\\scripts\\Chrome\\install_Chrome_MasterPrefs.ps1 -SearchPath '${var.net_drive}\\scripts'",
+      "${var.net_drive}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.net_drive}' -install",
     ]
   }
 
