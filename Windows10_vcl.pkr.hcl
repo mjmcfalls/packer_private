@@ -423,13 +423,13 @@ build {
   }
 
   provisioner "file" {
-    source      = "./src/apps/"
+    source      = "./src/apps"
     destination = "${var.win_temp_dir}"
     direction   =  "upload"
   }
 
   provisioner "file" {
-    source      = "./src/scripts/"
+    source      = "./src/scripts"
     destination = "${var.win_temp_dir}"
     direction   =  "upload"
   }
