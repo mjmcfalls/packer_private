@@ -470,6 +470,7 @@ build {
     elevated_user = "SYSTEM"
     elevated_password = ""
     inline = [
+      "a:/Windows_os_optimize.ps1 -defaultsUserSettingsPath 'a:\\DefaultUsersSettings.txt' -ScheduledTasksListPath 'a:\\ScheduledTasks.txt' -automaticTracingFilePath 'a:\\AutomaticTracers.txt' -servicesToDisablePath 'a:\\ServicesToDisable.txt'",
       "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}' -sdelete"
       ]
   }
