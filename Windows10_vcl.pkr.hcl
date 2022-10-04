@@ -422,8 +422,21 @@ build {
     direction   =  "upload"
   }
 
+  provisioner "file" {
+    source      = "./src/apps/"
+    destination = "${var.win_temp_dir}"
+    direction   =  "upload"
+  }
+
+  provisioner "file" {
+    source      = "./src/scripts/"
+    destination = "${var.win_temp_dir}"
+    direction   =  "upload"
+  }
+
   provisioner "powershell" {
     inline = [
+      "'${var.win_temp_dir}\\apps\\vmware\\vmtools\\windows\\setup.exe /S /v '/qn REBOOT=R ADDLOCAL=ALL REMOVE=Hgfs,FileIntrospection,NetworkIntrospection,BootCamp,CBHelper'"
       "a:/OneDrive_removal.ps1",
       "a:/Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
     ]
@@ -431,7 +444,8 @@ build {
 
   provisioner "powershell" {
     inline = [
-      "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.wget_path}\\wget.exe'",
+      # "a:/download_installers.ps1 -OutPath '${var.win_temp_dir}' -uri 'http://${build.PackerHTTPAddr}' -wgetPath '${var.wget_path}\\wget.exe'",
+
       # Utilities
       "a:\\Install_pswindowsupdate.ps1",
       "a:\\Install_pester.ps1 -remove",
