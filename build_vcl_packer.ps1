@@ -6,7 +6,7 @@ Param (
     [string]$outPath = "c:\temp\",
     [string]$debugLog = "$($outpath)\packerlog_$($postfix).log",
     [string]$varsfile = ".\vars\Windows_VCL\Windows_vcl.pkrvars.hcl",
-    [string]$appvarFile = "vars\Windows_App_Vars.pkrvars.hcl",
+    [string]$appvarFile = "vars\Windows_VCL\Windows_VCL_App_Vars.pkrvars.hcl",
     [string]$secretsfile = ".\secrets\secrets.pkrvars.hcl",
     [string]$buildfile = ".\Windows10_vcl.pkr.hcl",
     [string]$packerpath = ".\bin\packer.exe",
