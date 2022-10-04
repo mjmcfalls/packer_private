@@ -83,7 +83,7 @@ if ($network.IsPresent) {
     $cred = New-Object System.Management.Automation.PSCredential ("$($user)", $password)
     
     Write-Log -Level "INFO" -Message "Mapping $($netpath) to $($drive)"
-    New-PSDrive -Name "$($drive)" -Root "$($netpath)" -PSProvider "FileSystem" -Credential $cred
+    New-PSDrive -Persist -Name "$($drive)" -Root "$($netpath)" -PSProvider "FileSystem" -Credential $cred
     
     Net Use
     Write-Log -Level "INFO" -Message "Copying $($drive) to $($outPath)"
