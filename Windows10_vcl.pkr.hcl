@@ -333,21 +333,22 @@ packer {
 
 source "vmware-iso" "win_iso" {
   http_directory   = "${var.http_directory}"
+  headless         = "true"
 
   boot_wait        = "60s"
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
-  memory              = "${var.memory}"
+  memory           = "${var.memory}"
 
   disk_adapter_type = "${var.vmware_disk_adapter_type}"
-  disk_size             = "${var.disk_size}"
+  disk_size         = "${var.disk_size}"
 
   network_name = "Packer"
   network_adapter_type = "${var.vmware_network_adapter_type}"
  
   guest_os_type    = "${var.vmware_guest_os_type}"
   vm_name          = "${var.vm_name}"
-  headless = "true"
+ 
   tools_upload_flavor = "${var.tools_upload_flavor}"
 
   floppy_files     = ["${var.autounattend}","./src/scripts/","./src/apps/VMware-Tools-windows-12.1.0-20219665/floppies/pvscsi-Windows8/AMD64/"]
