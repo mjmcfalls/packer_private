@@ -86,7 +86,7 @@ conda = {
 
 firefox = {
     "name" = "Firefox"
-    "installer" = "Firefox Setup 105.0.1.exe"
+    "installer" = "Firefox Setup 105.0.2.exe"
     "parameters" = ""
 }
 
