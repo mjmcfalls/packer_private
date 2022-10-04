@@ -436,7 +436,7 @@ build {
 
   provisioner "powershell" {
     inline = [
-      "'${var.win_temp_dir}\\apps\\vmware\\vmtools\\windows\\setup.exe /S /v '/qn REBOOT=R ADDLOCAL=ALL REMOVE=Hgfs,FileIntrospection,NetworkIntrospection,BootCamp,CBHelper'"
+      "'${var.win_temp_dir}\\apps\\vmware\\vmtools\\windows\\setup.exe /S /v '/qn REBOOT=R ADDLOCAL=ALL REMOVE=Hgfs,FileIntrospection,NetworkIntrospection,BootCamp,CBHelper'",
       "a:/OneDrive_removal.ps1",
       "a:/Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
     ]
