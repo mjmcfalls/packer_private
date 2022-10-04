@@ -467,13 +467,13 @@ build {
 
   provisioner "windows-restart" {}
 
-  # provisioner "powershell" {
-  #   elevated_user = "SYSTEM"
-  #   elevated_password = ""
-  #   inline = [
-  #     "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}' -sdelete"
-  #     ]
-  # }
+  provisioner "powershell" {
+    elevated_user = "SYSTEM"
+    elevated_password = ""
+    inline = [
+      "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}' -sdelete"
+      ]
+  }
 
 }
  
