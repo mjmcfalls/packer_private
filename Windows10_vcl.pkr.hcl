@@ -415,8 +415,8 @@ source "vmware-iso" "win_iso" {
     "tools.syncTime" = "FALSE"
     "vcpu.hotadd" = "TRUE"
     "vhv.enable" = "TRUE"
+    "usb_xhci.present" = "TRUE" 
     }
-
 }
 
 build {
