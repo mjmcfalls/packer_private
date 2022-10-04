@@ -433,7 +433,7 @@ build {
       "a:/OneDrive_removal.ps1",
       "a:/download_installers.ps1 -outpath '${var.win_temp_dir}' -drive '${var.net_drive}' -network -netpath '${var.net_path}' -user '${var.net_user}' -pass '${var.net_pass}'",
       # "a:/Windows_os_optimize.ps1 -defaultsUserSettingsPath 'a:\\DefaultUsersSettings.txt' -ScheduledTasksListPath 'a:\\ScheduledTasks.txt' -automaticTracingFilePath 'a:\\AutomaticTracers.txt' -servicesToDisablePath 'a:\\ServicesToDisable.txt'",
-      "'${var.win_temp_dir}'\\apps\\vmware\\vmtools\\windows\\setup.exe /S /v '/qn REBOOT=R ADDLOCAL=ALL REMOVE=Hgfs,FileIntrospection,NetworkIntrospection,BootCamp,CBHelper'",
+      "${var.win_temp_dir}\\apps\\vmware\\vmtools\\windows\\setup.exe /S /v '/qn REBOOT=R ADDLOCAL=ALL REMOVE=Hgfs,FileIntrospection,NetworkIntrospection,BootCamp,CBHelper'",
     ]
   }
 
