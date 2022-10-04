@@ -430,6 +430,7 @@ build {
       "a:/Config_Winrm.ps1",
       "a:/Create_wget_directory.ps1 -wgetPath '${var.wget_path}'",
       "a:/Install_dotnet3.5.ps1",
+      "a:/OneDrive_removal.ps1",
       "a:/Windows_os_optimize.ps1 -defaultsUserSettingsPath 'a:\\DefaultUsersSettings.txt' -ScheduledTasksListPath 'a:\\ScheduledTasks.txt' -automaticTracingFilePath 'a:\\AutomaticTracers.txt' -servicesToDisablePath 'a:\\ServicesToDisable.txt'",
     ]
   }
@@ -442,16 +443,8 @@ build {
 
   provisioner "powershell" {
     inline = [
-
-    ]
-  }
-
-  provisioner "powershell" {
-    inline = [
       "a:/download_installers.ps1 -OutPath '${var.net_drive}' -network -netpath '${var.net_path}' -user '${var.net_user}' -pass '${var.net_pass}'",
       "'${var.net_drive}\\apps\\vmware\\vmtools\\windows\\setup.exe /S /v '/qn REBOOT=R ADDLOCAL=ALL REMOVE=Hgfs,FileIntrospection,NetworkIntrospection,BootCamp,CBHelper'",
-      "a:/OneDrive_removal.ps1",
-      # "a:/Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}'"
       # Utilities
       "a:\\Install_pswindowsupdate.ps1",
       "a:\\Install_pester.ps1 -remove",
@@ -471,6 +464,8 @@ build {
     ]
   }
 
+  provisioner "windows-restart" {}
+  
   provisioner "powershell" {
     elevated_user = "SYSTEM"
     elevated_password = ""
