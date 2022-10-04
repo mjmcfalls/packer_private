@@ -87,5 +87,8 @@ if ($network.IsPresent) {
     
     Net Use
     Write-Log -Level "INFO" -Message "Copying $($drive) to $($outPath)"
-    robocopy /e /z /w:0 /r:0 "$($drive)" "$($outPath)"
+    Start-Process -NoNewWindows -PassThru -Wait -FilePath robocopy -ArgumentList "/e /z /w:0 /r:0 `"$($drive)`" `"$($outPath)`""
+
+    Write-Log -Level "INFO" -Message "Removing $($drive)"
+    Remove-PSDrive -Name "$($drive)"
 }
