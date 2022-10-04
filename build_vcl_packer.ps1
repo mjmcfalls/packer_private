@@ -64,7 +64,7 @@ Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -time
 
 Write-Log -Level "INFO" -Message "End Build $($vm_name_postfix) from $($isoPath)"
 
-$bareVM_StopWatch.Stop()
+$vm_name_postfix_StopWatch.Stop()
 
 $scriptStopWatch.Stop()
 
