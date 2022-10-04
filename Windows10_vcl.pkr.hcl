@@ -431,7 +431,9 @@ build {
       "a:/Create_wget_directory.ps1 -wgetPath '${var.wget_path}'",
       "a:/Install_dotnet3.5.ps1",
       "a:/OneDrive_removal.ps1",
-      "a:/Windows_os_optimize.ps1 -defaultsUserSettingsPath 'a:\\DefaultUsersSettings.txt' -ScheduledTasksListPath 'a:\\ScheduledTasks.txt' -automaticTracingFilePath 'a:\\AutomaticTracers.txt' -servicesToDisablePath 'a:\\ServicesToDisable.txt'",
+      "a:/download_installers.ps1 -outpath '${var.win_temp_dir}' -drive '${var.net_drive}' -network -netpath '${var.net_path}' -user '${var.net_user}' -pass '${var.net_pass}'",
+      # "a:/Windows_os_optimize.ps1 -defaultsUserSettingsPath 'a:\\DefaultUsersSettings.txt' -ScheduledTasksListPath 'a:\\ScheduledTasks.txt' -automaticTracingFilePath 'a:\\AutomaticTracers.txt' -servicesToDisablePath 'a:\\ServicesToDisable.txt'",
+      "'${var.win_temp_dir}\\apps\\vmware\\vmtools\\windows\\setup.exe /S /v '/qn REBOOT=R ADDLOCAL=ALL REMOVE=Hgfs,FileIntrospection,NetworkIntrospection,BootCamp,CBHelper'",
     ]
   }
 
@@ -443,36 +445,35 @@ build {
 
   provisioner "powershell" {
     inline = [
-      "a:/download_installers.ps1 -OutPath '${var.net_drive}' -network -netpath '${var.net_path}' -user '${var.net_user}' -pass '${var.net_pass}'",
-      "'${var.net_drive}\\apps\\vmware\\vmtools\\windows\\setup.exe /S /v '/qn REBOOT=R ADDLOCAL=ALL REMOVE=Hgfs,FileIntrospection,NetworkIntrospection,BootCamp,CBHelper'",
+      # "a:/download_installers.ps1 -outpath '${var.win_temp_dir}' -drive '${var.net_drive}' -network -netpath '${var.net_path}' -user '${var.net_user}' -pass '${var.net_pass}'",
       # Utilities
       "a:\\Install_pswindowsupdate.ps1",
       "a:\\Install_pester.ps1 -remove",
-      "${var.net_drive}\\scripts\\BGInfo\\install_BGInfo.ps1 -SearchPath '${var.net_drive}\\apps' -app 'sysinternals'",
-      "${var.net_drive}\\scripts\\install_app.ps1 -SearchPath '${var.net_drive}' -app '${lookup(var.seven_zip, "name", "7zip")}' -installParams '${lookup(var.seven_zip, "parameters", "/S")}' -installername '${lookup(var.seven_zip, "installer", "7z2107-x64.exe")}'",
+      "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -SearchPath '${var.win_temp_dir}\\apps' -app 'sysinternals'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.net_drive}' -app '${lookup(var.seven_zip, "name", "7zip")}' -installParams '${lookup(var.seven_zip, "parameters", "/S")}' -installername '${lookup(var.seven_zip, "installer", "7z2107-x64.exe")}'",
       # Web Browsers
-      "${var.net_drive}\\scripts\\install_app.ps1 -SearchPath '${var.net_drive}' -app '${lookup(var.chrome, "name", "Chrome")}' -installParams '${lookup(var.chrome, "parameters", "/quiet /norestart")}' -installername '${lookup(var.chrome,"installer","GoogleChromeStandaloneEnterprise64.msi")}'",
-      "${var.net_drive}\\scripts\\Firefox\\install_firefox.ps1 -SearchPath '${var.net_drive}' -app '${lookup(var.firefox, "name", "Firefox")}' -installername '${lookup(var.firefox,"installer","Firefox Setup 101.0.exe")}'"
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.chrome, "name", "Chrome")}' -installParams '${lookup(var.chrome, "parameters", "/quiet /norestart")}' -installername '${lookup(var.chrome,"installer","GoogleChromeStandaloneEnterprise64.msi")}'",
+      "${var.win_temp_dir}\\scripts\\Firefox\\install_firefox.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.firefox, "name", "Firefox")}' -installername '${lookup(var.firefox,"installer","Firefox Setup 101.0.exe")}'"
     ]
   }
 
   provisioner "powershell" {
     inline = [
       # App Customization
-      "${var.net_drive}\\scripts\\Chrome\\install_Chrome_MasterPrefs.ps1 -SearchPath '${var.net_drive}\\scripts'",
-      "${var.net_drive}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.net_drive}' -install",
+      "${var.win_temp_dir}\\scripts\\Chrome\\install_Chrome_MasterPrefs.ps1 -SearchPath '${var.win_temp_dir}\\scripts'",
+      "${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install",
     ]
   }
 
   provisioner "windows-restart" {}
-  
-  provisioner "powershell" {
-    elevated_user = "SYSTEM"
-    elevated_password = ""
-    inline = [
-      "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}' -sdelete"
-      ]
-  }
+
+  # provisioner "powershell" {
+  #   elevated_user = "SYSTEM"
+  #   elevated_password = ""
+  #   inline = [
+  #     "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}' -sdelete"
+  #     ]
+  # }
 
 }
  

@@ -8,7 +8,8 @@ Param (
     [switch]$network,
     [string]$netpath,
     [string]$pass,
-    [string]$user
+    [string]$user,
+    [string]$drive
 )
 
 function New-TempFolder {
@@ -77,8 +78,14 @@ if ($wget.IsPresent) {
 
 
 if ($network.IsPresent) {
+    Write-Log -Level "INFO" -Message "Setting up copy from $($netpath)"
     $password = ConvertTo-SecureString "$($pass)" -AsPlainText -Force
     $cred = New-Object System.Management.Automation.PSCredential ("$($user)", $password)
-    New-PSDrive -Name "$($outpath)" -Root "$($netpath)" -PSProvider "FileSystem" -Credential $cred
+    
+    Write-Log -Level "INFO" -Message "Mapping $($netpath) to $($drive)"
+    New-PSDrive -Name "$($drive)" -Root "$($netpath)" -PSProvider "FileSystem" -Credential $cred
+    
     Net Use
+    Write-Log -Level "INFO" -Message "Copying $($drive) to $($outPath)"
+    robocopy /e /z /w:0 /r:0 "$($drive)" "$($outPath)"
 }
