@@ -89,6 +89,10 @@ variable "boot_wait" {
 }
 
 # Build Specific variables
+variable "root_pwd" {
+  type    = string
+  default = ""
+}
 
 variable "net_drive" {
   type    = string
@@ -237,6 +241,14 @@ variable "datastore" {
   default = ""
 }
 # Application specific map variables
+variable "vcl" {
+  type = map(string)
+}
+
+variable "cygwin" {
+  type = map(string)
+}
+
 variable "winscp" {
   type = map(string)
 }
@@ -449,10 +461,10 @@ build {
       "a:\\Install_pswindowsupdate.ps1",
       "a:\\Install_pester.ps1 -remove",
       "${var.win_temp_dir}\\scripts\\BGInfo\\install_BGInfo.ps1 -SearchPath '${var.win_temp_dir}\\apps' -app 'sysinternals'",
-      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.net_drive}' -app '${lookup(var.seven_zip, "name", "7zip")}' -installParams '${lookup(var.seven_zip, "parameters", "/S")}' -installername '${lookup(var.seven_zip, "installer", "7z2107-x64.exe")}'",
+      "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.seven_zip, "name", "7zip")}' -installParams '${lookup(var.seven_zip, "parameters", "/S")}' -installername '${lookup(var.seven_zip, "installer", "7z2107-x64.exe")}'",
       # Web Browsers
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.chrome, "name", "Chrome")}' -installParams '${lookup(var.chrome, "parameters", "/quiet /norestart")}' -installername '${lookup(var.chrome,"installer","GoogleChromeStandaloneEnterprise64.msi")}'",
-      "${var.win_temp_dir}\\scripts\\Firefox\\install_firefox.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.firefox, "name", "Firefox")}' -installername '${lookup(var.firefox,"installer","Firefox Setup 101.0.exe")}'"
+      "${var.win_temp_dir}\\scripts\\Firefox\\install_firefox.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.firefox, "name", "Firefox")}' -installername '${lookup(var.firefox,"installer","Firefox Setup 101.0.exe")}'",
     ]
   }
 
@@ -461,6 +473,19 @@ build {
       # App Customization
       "${var.win_temp_dir}\\scripts\\Chrome\\install_Chrome_MasterPrefs.ps1 -SearchPath '${var.win_temp_dir}\\scripts'",
       "${var.win_temp_dir}\\scripts\\Edge\\install_edge.ps1 -OutPath '${var.win_temp_dir}' -install",
+      # VCL Customization
+      "${var.win_temp_dir}\\scripts\\VCL\\copy_vcl_scripts.ps1 -searchPath '${lookup(var.vcl, "src_path", "C:\\temp")}' -scriptsPath '${lookup(var.vcl, "script_path", "C:\\Scripts")}' -packerScriptsPath ${var.win_temp_dir}"
+      
+    ]
+  }
+
+  # Cygwin
+  provisioner "powershell"{
+    elevated_user = "root"
+    elevated_password = "${var.root_pwd}"
+    inline=[
+      "${var.win_temp_dir}\\scripts\\cygwin\\install_cygwin.ps1 -cygwinroot '${lookup(var.cygwin, "root", "C:\\cygwin")}'",
+      "${var.win_temp_dir}\\scripts\\cygwin\\customize_cygwin.ps1 -sourcePath '${var.win_temp_dir}\\apps\\cygwin' -cygwinroot '${lookup(var.cygwin, "root", "C:\\cygwin")}'",
     ]
   }
 

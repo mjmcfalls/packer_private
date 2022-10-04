@@ -18,9 +18,18 @@ wget_path = "c:\\Program Files\\wget"
 audit_json_path = "c:\\ProgramData\\Packer"
 audit_json_file = "audit.json"
 
+vcl = {
+    "src_path" = "c:\\temp\\scripts\\VCL\\UserScripts"
+    "script_path" = "C:\\Scripts"
+}
+
+cygwin = {
+    "root" = "C:\cygwin"
+}
+
 winscp = {
-    "name" = " WinSCP-5.21.3"
-    "installer" = " WinSCP-5.21.3-Setup.exe"
+    "name" = "WinSCP-5.21.3"
+    "installer" = "WinSCP-5.21.3-Setup.exe"
     "parameters" = "/S"
 }
 
