@@ -500,6 +500,8 @@ build {
 
   # Cygwin
   provisioner "powershell"{
+    elevated_user = "${var.winrm_username}}"
+    elevated_password = "${var.winrm_password}}"
     inline=[
       "${var.win_temp_dir}\\scripts\\cygwin\\install_cygwin.ps1 -cygwinroot '${lookup(var.cygwin, "root", "C:\\cygwin")}'",
       "${var.win_temp_dir}\\scripts\\cygwin\\customize_cygwin.ps1 -sourcePath '${var.win_temp_dir}\\apps\\cygwin' -cygwinroot '${lookup(var.cygwin, "root", "C:\\cygwin")}'",
