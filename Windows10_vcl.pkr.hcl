@@ -371,7 +371,7 @@ packer {
 # https://www.packer.io/docs/templates/hcl_templates/blocks/source
 
 source "vmware-iso" "win_iso" {
-  http_directory   = "${var.http_directory}"
+  # http_directory   = "${var.http_directory}"
   headless         = "true"
 
   boot_wait        = "60s"
