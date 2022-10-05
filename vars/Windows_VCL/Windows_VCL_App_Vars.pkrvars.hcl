@@ -24,7 +24,7 @@ vcl = {
 }
 
 cygwin = {
-    "root" = "C:\cygwin"
+    "root" = "C:\\cygwin"
 }
 
 winscp = {
