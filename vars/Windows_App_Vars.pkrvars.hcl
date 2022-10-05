@@ -21,7 +21,7 @@ audit_json_file = "audit.json"
 os_optimize = {
     "defaultsUserSettingsPath" = "a:\\DefaultUserSettings.txt" 
     "ScheduledTasksListPath" = "a:\\ScheduledTasks.txt"
-    "automaticTracingFilePath" = "'a:\\AutomaticTracers.txt"
+    "automaticTracingFilePath" = "a:\\AutomaticTracers.txt"
     "servicesToDisablePath" = "a:\\ServicesToDisable.txt"
 }
 
