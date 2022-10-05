@@ -460,9 +460,7 @@ build {
   }
  
   # Reboot for VMware tools installation
-  provisioner "windows-restart" {
-    restart_timeout = "1m"
-  }
+  provisioner "windows-restart" {}
 
   # provisioner "file" {
   #   source      = "./src/apps/wget/"
@@ -505,9 +503,7 @@ build {
   }
 
   # Reboot before optimiziation
-  provisioner "windows-restart" {
-    restart_timeout = "1m"
-  }
+  provisioner "windows-restart" {}
 
   provisioner "powershell" {
     elevated_user = "SYSTEM"
