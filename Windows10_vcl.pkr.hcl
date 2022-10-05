@@ -89,7 +89,12 @@ variable "boot_wait" {
 }
 
 # Build Specific variables
-variable "root_pwd" {
+variable "elevated_user" {
+  type    = string
+  default = ""
+}
+
+variable "elevated_pwd" {
   type    = string
   default = ""
 }
@@ -487,8 +492,8 @@ build {
 
   # Cygwin
   provisioner "powershell"{
-    elevated_user = "root"
-    elevated_password = "${var.root_pwd}"
+    elevated_user = "${var.elevated_user}"
+    elevated_password = "${var.elevated_pwd}"
     inline=[
       "${var.win_temp_dir}\\scripts\\cygwin\\install_cygwin.ps1 -cygwinroot '${lookup(var.cygwin, "root", "C:\\cygwin")}'",
       "${var.win_temp_dir}\\scripts\\cygwin\\customize_cygwin.ps1 -sourcePath '${var.win_temp_dir}\\apps\\cygwin' -cygwinroot '${lookup(var.cygwin, "root", "C:\\cygwin")}'",
