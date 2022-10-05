@@ -456,7 +456,7 @@ build {
       "a:/Config_Winrm.ps1",
       "a:/Create_wget_directory.ps1 -wgetPath '${var.wget_path}'",
       "a:/Install_dotnet3.5.ps1",
-      "a:/Windows_os_optimize.ps1 -defaultsUserSettingsPath '${lookup(var.os_optimize, "defaultsUserSettingsPath", "a:\\DefaultUserSettings.txt")}' -ScheduledTasksListPath '${lookup(var.os_optimize, "ScheduledTasksListPath", "a:\\ScheduledTasks.txt")}-automaticTracingFilePath '${lookup(var.os_optimize, "automaticTracingFilePath", "a:\\AutomaticTracers.txt")}' -servicesToDisablePath '${lookup(var.os_optimize, "servicesToDisablePath", "a:\\ServicesToDisable.txt")}'",
+      "a:/Windows_os_optimize.ps1 -defaultsUserSettingsPath '${lookup(var.os_optimize, "defaultsUserSettingsPath", "a:\\DefaultUserSettings.txt")}' -ScheduledTasksListPath '${lookup(var.os_optimize, "ScheduledTasksListPath", "a:\\ScheduledTasks.txt")} -automaticTracingFilePath '${lookup(var.os_optimize, "automaticTracingFilePath", "a:\\AutomaticTracers.txt")}' -servicesToDisablePath '${lookup(var.os_optimize, "servicesToDisablePath", "a:\\ServicesToDisable.txt")}'",
     ]
   }
 
