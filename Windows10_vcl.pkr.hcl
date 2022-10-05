@@ -460,7 +460,9 @@ build {
   }
  
   # Reboot for VMware tools installation
-  provisioner "windows-restart" {}
+  provisioner "windows-restart" {
+    restart_timeout = "1m"
+  }
 
   # provisioner "file" {
   #   source      = "./src/apps/wget/"
