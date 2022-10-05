@@ -505,7 +505,9 @@ build {
   }
 
   # Reboot before optimiziation
-  provisioner "windows-restart" {}
+  provisioner "windows-restart" {
+    restart_timeout = "1m"
+  }
 
   provisioner "powershell" {
     elevated_user = "SYSTEM"
