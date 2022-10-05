@@ -90,5 +90,5 @@ if ($network.IsPresent) {
     Start-Process -NoNewWindow -PassThru -Wait -FilePath robocopy -ArgumentList "/np /e /z /w:0 /r:0 $($drive):\ $($outPath)"
 
     Write-Log -Level "INFO" -Message "Removing $($drive)"
-    Get-PSDrive $drive | Remove-PSDrive
+    Remove-PSDrive $drive -Verbose
 }
