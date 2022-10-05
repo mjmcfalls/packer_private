@@ -11,6 +11,8 @@ UsbCeip
 Data Integrity Scan
 Data Integrity Scan for Crash Recovery
 ScheduledDefrag
+Synchronize Language Settings
+Scheduled Start
 SilentCleanup
 Microsoft-Windows-DiskDiagnosticDataCollector
 Diagnostics
