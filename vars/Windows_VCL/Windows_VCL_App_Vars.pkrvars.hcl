@@ -18,6 +18,13 @@ wget_path = "c:\\Program Files\\wget"
 audit_json_path = "c:\\ProgramData\\Packer"
 audit_json_file = "audit.json"
 
+os_optimize = {
+    "defaultsUserSettingsPath" = "a:\\DefaultUserSettings.txt" 
+    "ScheduledTasksListPath" = "a:\\ScheduledTasks.txt"
+    "automaticTracingFilePath" = "'a:\\AutomaticTracers.txt"
+    "servicesToDisablePath" = "a:\\ServicesToDisable.txt"
+}
+
 vcl = {
     "src_path" = "c:\\temp\\scripts\\VCL\\UserScripts"
     "script_path" = "C:\\Scripts"
