@@ -160,6 +160,7 @@ variable "winrm_username" {
 }
 
 variable "winrm_password" {
+  sensitive = true
   type    = string
   default = "${env("winrm_password")}"
 }
@@ -170,6 +171,7 @@ variable "ssh_username" {
 }
 
 variable "ssh_password" {
+  sensitive = true
   type    = string
   default = ""
 }

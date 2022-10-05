@@ -95,8 +95,10 @@ variable "elevated_user" {
 }
 
 variable "elevated_pwd" {
+  sensitive = true
   type    = string
   default = ""
+ 
 }
 
 variable "net_drive" {
@@ -105,6 +107,7 @@ variable "net_drive" {
 }
 
 variable "net_pass" {
+   sensitive = true
   type    = string
   default = ""
 }
@@ -191,6 +194,7 @@ variable "winrm_username" {
 }
 
 variable "winrm_password" {
+  sensitive = true
   type    = string
   default = "${env("winrm_password")}"
 }
@@ -201,6 +205,7 @@ variable "ssh_username" {
 }
 
 variable "ssh_password" {
+  sensitive = true
   type    = string
   default = ""
 }
@@ -212,6 +217,7 @@ variable "vmware_username" {
 }
 
 variable "vmware_password" {
+  sensitive = true
   type    = string
   default = ""
 }
