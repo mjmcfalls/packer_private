@@ -18,10 +18,12 @@ PimIndexMaintenanceSvc
 Power
 SEMgrSvc
 SmsRouter
+Spooler
 SysMain
 VSS
 WdiSystemHost
 WerSvc
+WSearch
 XblAuthManager
 XblGameSave
 XboxGipSvc

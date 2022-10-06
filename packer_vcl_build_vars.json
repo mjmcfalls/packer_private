@@ -1,0 +1,32 @@
+{
+    "Windows10": {
+        "varsfile": ".\\vars\\Windows_VCL\\Windows_vcl.pkrvars.hcl",
+        "appvarFile": "vars\\Windows_VCL\\Windows_VCL_App_Vars.pkrvars.hcl",
+        "secretsfile": ".\\secrets\\secrets.pkrvars.hcl",
+        "buildfile": ".\\Windows_vcl.pkr.hcl",
+        "packerpath": ".\\bin\\packer.exe",
+        "vm_name": "Windows10",
+        "keepregistered": "false",
+        "isoPath": "D:\\isos\\windows10_202209291037.iso",
+        "isoSha": "sha256:B9276B4A2C389AD4AC2288DEB18E18BD9A2FFD0453F65C8EDD8D02C06CEBEF5D",
+        "unattendPath": "C:\\Users\\mmcfall\\Desktop\\dev\\UnattendFiles\\Windows10_ltsb\\autounattend.xml",
+        "buildTarget": "windows10.vmware-iso.win_iso",
+        "startTime": "",
+        "endTime": ""
+    },
+    "Windows11": {
+        "varsfile": ".\\vars\\Windows_VCL\\Windows_vcl.pkrvars.hcl",
+        "appvarFile": "vars\\Windows_VCL\\Windows_VCL_App_Vars.pkrvars.hcl",
+        "secretsfile": ".\\secrets\\secrets.pkrvars.hcl",
+        "buildfile": ".\\Windows_vcl.pkr.hcl",
+        "packerpath": ".\\bin\\packer.exe",
+        "vm_name": "Windows11",
+        "keepregistered": "false",
+        "isoPath": "D:\\isos\\Win11_ENT_x64_KMS.iso",
+        "isoSha": "sha256:1AEFF40314E5B490F6D0EFE437FCA6DED5E5B771B22758E9979419C4384A3677",
+        "unattendPath": "C:\\Users\\mmcfall\\Desktop\\dev\\UnattendFiles\\Windows11\\TPM_Secureboot_bypass\\autounattend.xml",
+        "buildTarget": "windows11.vmware-iso.win_iso",
+        "startTime": "",
+        "endTime": ""
+    }
+}
