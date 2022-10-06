@@ -447,7 +447,7 @@ source "vmware-iso" "win_iso" {
 }
 
 build {
-  name = "win_iso"
+  name = "windows10"
   sources = ["source.vmware-iso.win_iso"]
 
   provisioner "powershell" {
@@ -519,6 +519,5 @@ build {
       "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}' -sdelete"
       ]
   }
-
 }
  
