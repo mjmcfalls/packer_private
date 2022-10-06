@@ -15,7 +15,7 @@ Param (
     [string]$isoPath,
     [string]$isoSha,
     [string]$unattendPath = "C:\Users\mmcfall\Desktop\dev\UnattendFiles\Windows10_ltsb\autounattend.xml",
-    [string]$buildTarget = "win_iso.vmware-iso.windows10"
+    [string]$buildTarget = "windows10.vmware-iso.win_iso"
 )
 
 Function Write-Log {
