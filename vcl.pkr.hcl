@@ -364,12 +364,12 @@ variable "docker" {
 }
 
 packer {
-  required_plugins {
-    windows-update = {
-      version = "0.14.1"
-      source = "github.com/rgl/windows-update"
-    }
-  }
+  # required_plugins {
+  #   windows-update = {
+  #     version = "0.14.1"
+  #     source = "github.com/rgl/windows-update"
+  #   }
+  # }
 }
 # source blocks are generated from your builders; a source can be referenced in
 # build blocks. A build block runs provisioner and post-processors on a
@@ -500,20 +500,10 @@ build {
       # VCL Customization
       "${var.win_temp_dir}\\scripts\\VCL\\copy_vcl_scripts.ps1 -searchPath '${lookup(var.vcl, "src_path", "C:\\temp")}' -scriptsPath '${lookup(var.vcl, "script_path", "C:\\Scripts")}' -packerScriptsPath ${var.win_temp_dir}",
       # Cygwin Customization
-      "${var.win_temp_dir}\\scripts\\cygwin\\customize_cygwin.ps1 -sourcePath '${var.win_temp_dir}\\apps\\cygwin' -cygwinroot '${lookup(var.cygwin, "root", "C:\\cygwin")}'",
+      "${var.win_temp_dir}\\scripts\\cygwin\\customize_cygwin.ps1 -renamesvc -nopublicIcon -sourcePath '${var.win_temp_dir}\\apps\\cygwin' -cygwinroot '${lookup(var.cygwin, "root", "C:\\cygwin")}'",
       
     ]
   }
-
-  # Cygwin
-  # provisioner "powershell"{
-  #   # elevated_user = ${var.winrm_username}
-  #   # elevated_password = ${var.winrm_password}
-  #   inline=[
-
-
-  #   ]
-  # }
 
   # Reboot before optimiziation
   provisioner "windows-restart" {}
