@@ -461,7 +461,7 @@ build {
       "a:/Windows_Disable_Updates.ps1",
       "a:/download_installers.ps1 -outpath '${var.win_temp_dir}' -drive '${var.net_drive}' -network -netpath '${var.net_path}' -user '${var.net_user}' -pass '${var.net_pass}'",
       "Start-Process -NoNewWindow -Wait -FilePath \"${var.win_temp_dir}\\apps\\vmware\\vmtools\\windows\\setup.exe\" -ArgumentList \"/S /v /qn REBOOT=R ADDLOCAL=ALL REMOVE=Hgfs,FileIntrospection,NetworkIntrospection,BootCamp,CBHelper\"",
-      "a:/Windows_os_optimize.ps1 -defaultsUserSettingsPath '${lookup(var.os_optimize, "defaultsUserSettingsPath", "a:\\DefaultUserSettings.txt")}' -ScheduledTasksListPath '${lookup(var.os_optimize, "ScheduledTasksListPath", "a:\\ScheduledTasks.txt")}' -automaticTracingFilePath '${lookup(var.os_optimize, "automaticTracingFilePath", "a:\\AutomaticTracers.txt")}' -servicesToDisablePath '${lookup(var.os_optimize, "servicesToDisablePath", "a:\\ServicesToDisable.txt")}'",
+      # "a:/Windows_os_optimize.ps1 -defaultsUserSettingsPath '${lookup(var.os_optimize, "defaultsUserSettingsPath", "a:\\DefaultUserSettings.txt")}' -ScheduledTasksListPath '${lookup(var.os_optimize, "ScheduledTasksListPath", "a:\\ScheduledTasks.txt")}' -automaticTracingFilePath '${lookup(var.os_optimize, "automaticTracingFilePath", "a:\\AutomaticTracers.txt")}' -servicesToDisablePath '${lookup(var.os_optimize, "servicesToDisablePath", "a:\\ServicesToDisable.txt")}'",
     ]
   }
  
@@ -488,6 +488,7 @@ build {
       # Cygwin Install
       "${var.win_temp_dir}\\scripts\\cygwin\\install_cygwin.ps1 -cygwinroot '${lookup(var.cygwin, "root", "C:\\cygwin")}' -pass '${var.winrm_password}' -vclscriptpath '${var.win_temp_dir}\\scripts\\cygwin\\cygwin-sshd-config.sh'",
       "${var.win_temp_dir}\\scripts\\cygwin\\cygwin-rebaseall.ps1 -cygwinroot '${lookup(var.cygwin, "root", "C:\\cygwin")}'"
+
     ]
   }
 
@@ -525,5 +526,6 @@ build {
       "a:\\Windows_vm_optimize.ps1 -outpath '${var.win_temp_dir}' -sdelete"
       ]
   }
+}
 }
  

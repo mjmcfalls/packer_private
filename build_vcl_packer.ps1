@@ -6,7 +6,8 @@ Param (
     [string]$outPath = "c:\temp\",
     [string]$configFile = ".\packer_vcl_build_vars.json",
     $targetOS,
-    [switch]$vmtimestamp
+    [switch]$vmtimestamp,
+    [string]$logfile
     # [string]$debugLog = "$($outpath)\packerlog_$($postfix).log",
     # [string]$varsfile = ".\vars\Windows_VCL\Windows_vcl.pkrvars.hcl",
     # [string]$appvarFile = "vars\Windows_VCL\Windows_VCL_App_Vars.pkrvars.hcl",
@@ -125,7 +126,6 @@ Foreach ($os in $targetOS) {
     if ($buildVariables.$os) {
         Write-Log -Level "INFO" -Message "$($os) - Found in build variables" -logfile $logfile
         $buildVariables.$os = Start-PackerBuild -build $buildVariables.$os -vmtimestamp $vmtimestamp
-        $buildVariables.$os.stopwatch
     }
     else {
         Write-Log -Level "INFO" -Message "$($os) - Not Found in build variables" -logfile $logfile
