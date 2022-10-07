@@ -18,7 +18,7 @@ wget_path = "c:\\Program Files\\wget"
 audit_json_path = "c:\\ProgramData\\Packer"
 audit_json_file = "audit.json"
 
-start_menu_xml = "BaseNoApps_StartMenu_202209190125.xml"
+win_startmenu_xml = "BaseNoApps_StartMenu_202209190125.xml"
 
 os_optimize = {
     "defaultsUserSettingsPath" = "a:\\DefaultUserSettings.txt" 
