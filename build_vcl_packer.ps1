@@ -90,7 +90,7 @@ Function Start-PackerBuild {
 
     Write-Log -Level "INFO" -Message "$($build.packerpath) build -timestamp-ui -only $($build.buildTarget) -var `"autounattend=$($build.unattendPath)`" -var `"iso_checksum=$($build.isoSha)`" -var `"iso_url=$($build.isoPath)`" -var `"vm_name=$($build.vm_name)`" -var-file $($build.varsfile) -var-file $($build.appvarFile)  -var-file $($build.secretsfile) $($build.buildfile)"  -logfile $logfile
 
-    Start-Process -NoNewWindow -FilePath "$($packerpath)" -ArgumentList "build -timestamp-ui -only $build.buildTarget -var `"autounattend=$($build.unattendPath)`" -var `"iso_checksum=$($build.isoSha)`" -var `"iso_url=$($build.isoPath)`" -var `"vm_name=$($build.vm_name)`" -var-file $($build.varsfile) -var-file $($build.appvarFile) -var-file $($build.secretsfile) $($build.buildfile)" -Wait
+    Start-Process -NoNewWindow -FilePath "$($build.packerpath)" -ArgumentList "build -timestamp-ui -only $($build.buildTarget) -var `"autounattend=$($build.unattendPath)`" -var `"iso_checksum=$($build.isoSha)`" -var `"iso_url=$($build.isoPath)`" -var `"vm_name=$($build.vm_name)`" -var-file $($build.varsfile) -var-file $($build.appvarFile) -var-file $($build.secretsfile) $($build.buildfile)" -Wait
 
     Write-Log -Level "INFO" -Message "$($build.vm_name) - End Packer build" -logfile $logfile
 
