@@ -506,7 +506,7 @@ build {
       "${var.win_temp_dir}\\scripts\\VCL\\copy_vcl_scripts.ps1 -searchPath '${lookup(var.vcl, "src_path", "C:\\temp")}' -scriptsPath '${lookup(var.vcl, "script_path", "C:\\Scripts")}' -packerScriptsPath ${var.win_temp_dir}",
       # Cygwin Customization
       "${var.win_temp_dir}\\scripts\\cygwin\\customize_cygwin.ps1 -renamesvc -nopublicIcon -sourcePath '${var.win_temp_dir}\\apps\\cygwin' -cygwinroot '${lookup(var.cygwin, "root", "C:\\cygwin")}'",
-      "${var.win_temp_dir}\\scripts\\import_startmenu_xml.ps1 -searchpath '${var.win_temp_dir}' -startmenufile '${var.win_startmenu_xml}"
+      "${var.win_temp_dir}\\scripts\\import_startmenu_xml.ps1 -searchpath '${var.win_temp_dir}' -startmenufile '${var.win_startmenu_xml}'",
     ]
   }
 
