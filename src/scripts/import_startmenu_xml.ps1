@@ -34,9 +34,13 @@ Function Write-Log {
 
 $script_filename = $MyInvocation.MyCommand.Name
 
-Write-Log -logfile $logfile -Level "INFO" -Message "$($script_filename) - Import Start Menu"
+Write-Log -logfile $logfile -Level "INFO" -Message "$($script_filename) - Start Import Start Menu"
 
 $xmlpath = Get-ChildItem -Recurse -Path $searchpath | Where-Object { $_.Name -like $startmenufile }
 
-$xmlpath
+Write-Log -logfile $logfile -Level "INFO" -Message "$($script_filename) - Found $($xmlpath.Name)"
 
+Write-Log -logfile $logfile -Level "INFO" -Message "$($script_filename) - Importing $($xmlpath.Name)"
+Import-StartLayout -LayoutPath $xmlpath.FullName -MountPath C:\
+
+Write-Log -logfile $logfile -Level "INFO" -Message "$($script_filename) - End Import Start Menu"
