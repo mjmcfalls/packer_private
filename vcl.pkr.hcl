@@ -381,7 +381,7 @@ packer {
 # source. Read the documentation for source blocks here:
 # https://www.packer.io/docs/templates/hcl_templates/blocks/source
 
-source "vmware-iso" "win_iso" {
+source "vmware-iso" "win10_iso" {
   # http_directory   = "${var.http_directory}"
   headless         = "true"
 
@@ -451,9 +451,84 @@ source "vmware-iso" "win_iso" {
     }
 }
 
+source "vmware-iso" "win11_iso" {
+  # http_directory   = "${var.http_directory}"
+  headless         = "true"
+
+  boot_wait        = "60s"
+  communicator     = "winrm"
+  cpus             = "${var.cpu_num}"
+  memory           = "${var.memory}"
+
+  disk_adapter_type = "${var.vmware_disk_adapter_type}"
+  disk_size         = "${var.disk_size}"
+
+  network_name = "Packer"
+  network_adapter_type = "${var.vmware_network_adapter_type}"
+ 
+  guest_os_type    = "${var.vmware_guest_os_type}"
+  vm_name          = "${var.vm_name}"
+ 
+  tools_upload_flavor = "${var.tools_upload_flavor}"
+
+  floppy_files     = ["${var.autounattend}","./src/scripts/","./src/apps/VMware/floppies/pvscsi-Windows8/AMD64/"]
+  iso_checksum     = "${var.iso_checksum}"
+  iso_url          = "${var.iso_url}"
+
+  shutdown_command = "${var.shutdown_command}"
+
+  winrm_insecure   = "${var.winrm_insecure}"
+  winrm_password   = "${var.winrm_password}"
+  winrm_timeout    = "${var.winrm_timeout}"
+  winrm_use_ntlm   = "${var.winrm_use_ntlm}"
+  winrm_use_ssl    = "${var.winrm_use_ssl}"
+  winrm_username   = "${var.winrm_username}"
+
+  insecure_connection  = "true"
+  remote_type = "esx5"
+  remote_host = "${var.vcenter_server}"
+  remote_datastore = "${var.datastore}"
+  remote_username = "${var.vmware_username}"
+  remote_password  = "${var.vmware_password}"
+  vnc_disable_password = "true"
+
+  keep_registered = "true"
+  skip_export = "true"
+  vmx_data = {
+    "ethernet0.address" = "00:50:56:06:80:08"
+    "ethernet0.addressType" = "static"
+    "ethernet0.connectionType" = "custom"
+    "ethernet0.networkName" = "Public"
+    "ethernet0.present" = "TRUE"
+    "ethernet0.virtualDev" = "e1000e"
+    "ethernet1.address" = "00:50:56:06:80:09"
+    "ethernet1.addressType" = "static"
+    "ethernet1.connectionType" = "custom"
+    "ethernet1.networkName "= "Private"
+    "ethernet1.present" = "TRUE"
+    "ethernet1.virtualDev" = "e1000e"
+    "featMask.vm.hv.capable" = "Min:1"
+    "mem.hotadd" = "TRUE"
+    "toolScripts.afterPowerOn" = "FALSE"
+    "toolScripts.afterResume" = "FALSE"
+    "toolScripts.beforePowerOff" = "FALSE"
+    "toolScripts.beforeSuspend" = "FALSE"
+    "tools.remindInstall" = "FALSE"
+    "tools.syncTime" = "FALSE"
+    "vcpu.hotadd" = "TRUE"
+    "vhv.enable" = "TRUE"
+    "usb_xhci.present" = "TRUE" 
+    "vhv.enable" = "TRUE"
+    "uefi.secureBoot.enabled" = "TRUE"
+    "vvtd.enable" = "TRUE"
+    "windows.vbs.enabled" = "TRUE"
+    }
+}
+
+
 build {
-  name = "windows10"
-  sources = ["source.vmware-iso.win_iso"]
+  name = "windows_base"
+  sources = ["source.vmware-iso.win10_iso","source.vmware-iso.win11_iso"]
 
   provisioner "powershell" {
     elevated_user = "SYSTEM"
