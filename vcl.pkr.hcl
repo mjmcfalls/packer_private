@@ -519,6 +519,7 @@ source "vmware-iso" "win11_iso" {
     "vhv.enable" = "TRUE"
     "usb_xhci.present" = "TRUE" 
     "vhv.enable" = "TRUE"
+    "firmware" = "efi"
     "uefi.secureBoot.enabled" = "TRUE"
     "vvtd.enable" = "TRUE"
     "windows.vbs.enabled" = "TRUE"
