@@ -30,7 +30,7 @@
         "isoPath": "D:\\isos\\Win11_ENT_x64_KMS.iso",
         "isoSha": "sha256:1AEFF40314E5B490F6D0EFE437FCA6DED5E5B771B22758E9979419C4384A3677",
         "unattendPath": "C:\\Users\\mmcfall\\Desktop\\dev\\UnattendFiles\\Windows11\\TPM_Secureboot_bypass\\autounattend.xml",
-        "buildTarget": "windows11.vmware-iso.win_iso",
+        "buildTarget": "windows10.vmware-iso.win_iso",
         "startTime": "",
         "endTime": "",
         "stopwatch":""

@@ -492,7 +492,7 @@ build {
       "${var.win_temp_dir}\\scripts\\Firefox\\install_firefox.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.firefox, "name", "Firefox")}' -installername '${lookup(var.firefox,"installer","Firefox Setup 101.0.exe")}'",
       # Cygwin Install
       "${var.win_temp_dir}\\scripts\\cygwin\\install_cygwin.ps1 -cygwinroot '${lookup(var.cygwin, "root", "C:\\cygwin")}' -pass '${var.winrm_password}' -vclscriptpath '${var.win_temp_dir}\\scripts\\cygwin\\cygwin-sshd-config.sh'",
-      "${var.win_temp_dir}\\scripts\\cygwin\\cygwin-rebaseall.ps1 -cygwinroot '${lookup(var.cygwin, "root", "C:\\cygwin")}'"
+      "${var.win_temp_dir}\\scripts\\cygwin\\cygwin-rebaseall.ps1 -cygwinroot '${lookup(var.cygwin, "root", "C:\\cygwin")}'",
 
     ]
   }
