@@ -93,7 +93,7 @@ if ($network.IsPresent) {
     Try {
         Remove-PSDrive $drive -Verbose -ErrorAction SilentlyContinue
     }
-    else {
+    Catch {
         Write-Log -Level "INFO" -Message "Could not remove $($drive)"
         Write-Log -Level "INFO" -Message "Error $($_)"
     }
