@@ -31,8 +31,9 @@
         "isoSha": "sha256:F29E211154CBA49D680D9CA4C75B2622AD3F2C2C0B48D69976F963FF12BB1C52",
         "unattendPath": "C:\\Users\\mmcfall\\Desktop\\dev\\UnattendFiles\\Windows11\\TPM_Secureboot_bypass\\autounattend.xml",
         "buildTarget": "windows_base.vmware-iso.win11_iso",
-        "startTime": "",
+        "startMenu":"",
         "endTime": "",
         "stopwatch":""
+
     }
 }
