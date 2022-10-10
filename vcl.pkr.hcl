@@ -454,7 +454,7 @@ source "vmware-iso" "win10_iso" {
 source "vmware-iso" "win11_iso" {
   # http_directory   = "${var.http_directory}"
   headless         = "true"
-
+  timeout          = "60m"
   # boot_wait        = "60s"
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
