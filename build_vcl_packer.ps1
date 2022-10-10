@@ -74,7 +74,7 @@ Function Start-PackerBuild {
     }
 
     if ($build.debug -like "1") {
-        $env:PACKER_LOG = $debug
+        $env:PACKER_LOG = ([int]$build.debug)
         $env:PACKER_LOG_PATH = Join-path -Path $outPath -ChildPath "$($build.vm_name).log"
         # $build
         Write-Log -Level "INFO" -Message "$($build.vm_name) - Debugging log enabled" -logfile $logfile
