@@ -598,7 +598,7 @@ build {
       # Cygwin Customization
       "${var.win_temp_dir}\\scripts\\cygwin\\customize_cygwin.ps1 -renamesvc -nopublicIcon -sourcePath '${var.win_temp_dir}\\apps\\cygwin' -cygwinroot '${lookup(var.cygwin, "root", "C:\\cygwin")}'",
       "a:/Windows_os_optimize.ps1 -defaultsUserSettingsPath '${lookup(var.os_optimize, "defaultsUserSettingsPath", "a:\\DefaultUserSettings.txt")}' -ScheduledTasksListPath '${lookup(var.os_optimize, "ScheduledTasksListPath", "a:\\ScheduledTasks.txt")}' -automaticTracingFilePath '${lookup(var.os_optimize, "automaticTracingFilePath", "a:\\AutomaticTracers.txt")}' -servicesToDisablePath '${lookup(var.os_optimize, "servicesToDisablePath", "a:\\ServicesToDisable.txt")}'",
-      "${var.win_temp_dir}\\scripts\\import_startmenu_xml.ps1 -searchpath '${var.win_temp_dir}' -startmenufile '${var.win_startmenu_xml}'",
+      "${var.win_temp_dir}\\scripts\\import_startmenu_xml.ps1 -searchpath '${var.win_temp_dir}' -startmenufile 'Windows11_base_202210100336.json'",
     ]
   }
 
