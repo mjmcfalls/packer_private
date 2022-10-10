@@ -458,7 +458,7 @@ source "vmware-iso" "win10_iso" {
 source "vmware-iso" "win11_iso" {
   # http_directory   = "${var.http_directory}"
   headless         = "true"
-  boot_wait        = "${var.boot_wait}"
+  boot_wait        = "4m"
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
   memory           = "${var.memory}"
@@ -542,7 +542,7 @@ build {
     inline = [
       "a:/Config_Winrm.ps1",
       # "a:/Create_wget_directory.ps1 -wgetPath '${var.wget_path}'",
-      # "a:/Install_dotnet3.5.ps1",
+      "a:/Install_dotnet3.5.ps1",
       "a:/OneDrive_removal.ps1",
       "a:/Windows_Disable_Updates.ps1",
       "a:/download_installers.ps1 -outpath '${var.win_temp_dir}' -drive '${var.net_drive}' -network -netpath '${var.net_path}' -user '${var.net_user}' -pass '${var.net_pass}'",
