@@ -23,7 +23,7 @@ win_startmenu_xml = "BaseNoApps_StartMenu_202209190125.xml"
 vmware_tools = {
     "name" = "VMWware Tools"
     "installer" = "setup.exe"
-    "parameters" = "\"/S /v /qn REBOOT=R ADDLOCAL=ALL REMOVE=Hgfs,FileIntrospection,NetworkIntrospection,BootCamp,CBHelper\""
+    "parameters" = "/S /v /qn REBOOT=R ADDLOCAL=ALL REMOVE=Hgfs,FileIntrospection,NetworkIntrospection,BootCamp,CBHelper"
 }
 
 os_optimize = {
