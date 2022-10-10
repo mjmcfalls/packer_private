@@ -455,7 +455,7 @@ source "vmware-iso" "win11_iso" {
   # http_directory   = "${var.http_directory}"
   headless         = "true"
 
-  boot_wait        = "60s"
+  # boot_wait        = "1s"
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
   memory           = "${var.memory}"
@@ -520,9 +520,10 @@ source "vmware-iso" "win11_iso" {
     "usb_xhci.present" = "TRUE" 
     "vhv.enable" = "TRUE"
     "firmware" = "efi"
-    "uefi.secureBoot.enabled" = "TRUE"
+    "uefi.secureBoot.enabled" = "FALSE"
     "vvtd.enable" = "TRUE"
     "windows.vbs.enabled" = "TRUE"
+    "disk.EnableUUID" = "TRUE"
     }
 }
 
