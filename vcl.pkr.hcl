@@ -389,7 +389,7 @@ source "vmware-iso" "win10_iso" {
   # http_directory   = "${var.http_directory}"
   headless         = "true"
 
-  boot_wait        = "60s"
+  boot_wait        = "${var.boot_wait}"
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
   memory           = "${var.memory}"
@@ -458,7 +458,7 @@ source "vmware-iso" "win10_iso" {
 source "vmware-iso" "win11_iso" {
   # http_directory   = "${var.http_directory}"
   headless         = "true"
-  # boot_wait        = "60s"
+  boot_wait        = "${var.boot_wait}"
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
   memory           = "${var.memory}"
