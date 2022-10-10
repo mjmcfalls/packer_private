@@ -20,6 +20,15 @@ audit_json_file = "audit.json"
 
 win_startmenu_xml = "BaseNoApps_StartMenu_202209190125.xml"
 
+"Start-Process -NoNewWindow -Wait -FilePath \"${var.win_temp_dir}\\apps\\vmware\\vmtools\\windows\\" -ArgumentList 
+",
+
+vmware_tools = {
+    "name" = "VMWware Tools"
+    "installer" = "setup.exe"
+    "parameters" = "\"/S /v /qn REBOOT=R ADDLOCAL=ALL REMOVE=Hgfs,FileIntrospection,NetworkIntrospection,BootCamp,CBHelper\""
+}
+
 os_optimize = {
     "defaultsUserSettingsPath" = "a:\\DefaultUserSettings.txt" 
     "ScheduledTasksListPath" = "a:\\ScheduledTasks.txt"
