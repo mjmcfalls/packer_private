@@ -454,7 +454,6 @@ source "vmware-iso" "win10_iso" {
 source "vmware-iso" "win11_iso" {
   # http_directory   = "${var.http_directory}"
   headless         = "true"
-  timeout          = "60m"
   # boot_wait        = "60s"
   communicator     = "winrm"
   cpus             = "${var.cpu_num}"
@@ -533,8 +532,9 @@ build {
   sources = ["source.vmware-iso.win10_iso","source.vmware-iso.win11_iso"]
 
   provisioner "powershell" {
-    elevated_user = "SYSTEM"
+    elevated_user     = "SYSTEM"
     elevated_password = ""
+    timeout           = "60m"
     inline = [
       "a:/Config_Winrm.ps1",
       # "a:/Create_wget_directory.ps1 -wgetPath '${var.wget_path}'",
