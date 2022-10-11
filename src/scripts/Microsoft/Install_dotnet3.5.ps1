@@ -33,4 +33,11 @@ Function Write-Log {
 # Install dot Net 3.5
 Write-Log -logfile $logfile -Level "INFO" -Message "Installing .NET 3.5"
 #$dismDotNetThreeFiveResults = Start-Process -NoNewWindow -Wait -PassThru -FilePath "Dism.exe" -ArgumentList "/online /Enable-Feature /FeatureName:NetFx3 /All /NoRestart /Quiet"
-Start-Process -NoNewWindow -Wait -PassThru -FilePath "Dism.exe" -ArgumentList "/online /Enable-Feature /FeatureName:NetFx3 /All /NoRestart"
+$netDotResults = Start-Process -NoNewWindow -Wait -PassThru -FilePath "Dism.exe" -ArgumentList "/online /Enable-Feature /FeatureName:NetFx3 /All /NoRestart"
+
+$handle = $netDotResults.Handle # cache Handle
+$netDotResults.WaitForExit()
+
+if ($netDotResults.ExitCode -ne 0) {
+    Write-Warning "$_ exited with status code $($netDotResults.ExitCode)"
+}
