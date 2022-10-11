@@ -542,7 +542,6 @@ build {
     inline = [
       "a:/Config_Winrm.ps1",
       # "a:/Create_wget_directory.ps1 -wgetPath '${var.wget_path}'",
-      "a:/Install_dotnet3.5.ps1",
       "a:/OneDrive_removal.ps1",
       "a:/Windows_Disable_Updates.ps1",
       "a:/download_installers.ps1 -outpath '${var.win_temp_dir}' -drive '${var.net_drive}' -network -netpath '${var.net_path}' -user '${var.net_user}' -pass '${var.net_pass}'",
@@ -555,6 +554,7 @@ build {
     elevated_password = ""
     timeout           = "60m"
     inline = [
+      "a:/Install_dotnet3.5.ps1",
       # "Start-Process -NoNewWindow -Wait -FilePath \"${var.win_temp_dir}\\apps\\vmware\\vmtools\\windows\\setup.exe\" -ArgumentList \"/S /v /qn REBOOT=R ADDLOCAL=ALL REMOVE=Hgfs,FileIntrospection,NetworkIntrospection,BootCamp,CBHelper\"",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}\\apps\\vmware\\vmtools\\windows' -app '${lookup(var.vmware_tools, "name", "VMWare Tools")}' -installParams \"${lookup(var.vmware_tools, "parameters", "\"/S /v /qn REBOOT=R ADDLOCAL=ALL REMOVE=Hgfs,FileIntrospection,NetworkIntrospection,BootCamp,CBHelper\"")}\" -installername '${lookup(var.vmware_tools,"installer","setup.exe")}'",
     ]
