@@ -87,10 +87,9 @@ Function Start-PackerBuild {
 
     Write-Log -Level "INFO" -Message "$($build.vm_name) - Building from $($build.isoPath)" -logfile $logfile
 
+    Write-Log -Level "INFO" -Message "$($build.packerpath) build -timestamp-ui -only $($build.buildTarget) -var `"autounattend=$($build.unattendPath)`" -var `"iso_checksum=$($build.isoSha)`" -var `"iso_url=$($build.isoPath)`" -var `"vm_name=$($build.vm_name)`" -var os_hostname=$($build.os_hostname) -var `"deploy_private_mac=$($build.deploy_private_mac)`" -var `"deploy_public_mac=$($build.deploy_public_mac)`" -var `"prod_private_mac=$($build.prod_private_mac)`" -var `"prod_public_mac=$($build.prod_public_mac)`" -var `"win_startmenu_xml=$($build.win_startmenu_xml)`" -var-file $($build.varsfile) -var-file $($build.appvarFile)  -var-file $($build.secretsfile) $($build.buildfile)"  -logfile $logfile
 
-    Write-Log -Level "INFO" -Message "$($build.packerpath) build -timestamp-ui -only $($build.buildTarget) -var `"autounattend=$($build.unattendPath)`" -var `"iso_checksum=$($build.isoSha)`" -var `"iso_url=$($build.isoPath)`" -var `"vm_name=$($build.vm_name)`" -var os_hostname=$($build.os_hostname) -var-file $($build.varsfile) -var-file $($build.appvarFile)  -var-file $($build.secretsfile) $($build.buildfile)"  -logfile $logfile
-
-    Start-Process -NoNewWindow -FilePath "$($build.packerpath)" -ArgumentList "build -timestamp-ui -only $($build.buildTarget) -var `"autounattend=$($build.unattendPath)`" -var `"iso_checksum=$($build.isoSha)`" -var `"iso_url=$($build.isoPath)`" -var `"vm_name=$($build.vm_name)`" -var `"os_hostname=$($build.os_hostname)`"  -var-file $($build.varsfile) -var-file $($build.appvarFile) -var-file $($build.secretsfile) $($build.buildfile)" -Wait
+    Start-Process -NoNewWindow -FilePath "$($build.packerpath)" -ArgumentList "build -timestamp-ui -only $($build.buildTarget) -var `"autounattend=$($build.unattendPath)`" -var `"iso_checksum=$($build.isoSha)`" -var `"iso_url=$($build.isoPath)`" -var `"vm_name=$($build.vm_name)`" -var `"os_hostname=$($build.os_hostname)`"  -var `"deploy_private_mac=$($build.deploy_private_mac)`" -var `"deploy_public_mac=$($build.deploy_public_mac)`" -var `"prod_private_mac=$($build.prod_private_mac)`" -var `"prod_public_mac=$($build.prod_public_mac)`" -var `"win_startmenu_xml=$($build.win_startmenu_xml)`" -var-file $($build.varsfile) -var-file $($build.appvarFile) -var-file $($build.secretsfile) $($build.buildfile)" -Wait
 
     Write-Log -Level "INFO" -Message "$($build.vm_name) - End Packer build" -logfile $logfile
 

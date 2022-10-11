@@ -1,7 +1,7 @@
 {
     "Windows10": {
         "debug": "1",
-        "logPath":"c:\\temp",
+        "logPath": "c:\\temp",
         "varsfile": ".\\vars\\Windows_VCL\\Windows_vcl.pkrvars.hcl",
         "appvarFile": "vars\\Windows_VCL\\Windows_VCL_App_Vars.pkrvars.hcl",
         "secretsfile": ".\\secrets\\secrets.pkrvars.hcl",
@@ -16,11 +16,16 @@
         "buildTarget": "windows_base.vmware-iso.win10_iso",
         "startTime": "",
         "endTime": "",
-        "stopwatch":""
+        "stopwatch": "",
+        "deploy_private_mac": "00:50:56:06:80:09",
+        "deploy_public_mac": "00:50:56:06:80:08",
+        "prod_private_mac": "00:50:56:06:7e:39",
+        "prod_public_mac": "00:50:56:06:7e:38",
+        "win_startmenu_xml": "BaseNoApps_StartMenu_202209190125.xml"
     },
     "Windows11": {
         "debug": "1",
-        "logPath":"c:\\temp\\",
+        "logPath": "c:\\temp\\",
         "varsfile": ".\\vars\\Windows_VCL\\Windows_vcl.pkrvars.hcl",
         "appvarFile": "vars\\Windows_VCL\\Windows_VCL_App_Vars.pkrvars.hcl",
         "secretsfile": ".\\secrets\\secrets.pkrvars.hcl",
@@ -33,9 +38,13 @@
         "isoSha": "sha256:F29E211154CBA49D680D9CA4C75B2622AD3F2C2C0B48D69976F963FF12BB1C52",
         "unattendPath": "C:\\Users\\mmcfall\\Desktop\\dev\\UnattendFiles\\Windows11\\TPM_Secureboot_bypass\\autounattend.xml",
         "buildTarget": "windows_base.vmware-iso.win11_iso",
-        "startMenu":"",
+        "startMenu": "",
         "endTime": "",
-        "stopwatch":""
-
+        "stopwatch": "",
+        "deploy_private_mac": "00:50:56:06:80:09",
+        "deploy_public_mac": "00:50:56:06:80:08",
+        "prod_private_mac": "00:50:56:06:7e:83",
+        "prod_public_mac": "00:50:56:06:7e:82",
+        "win_startmenu_xml": "Windows11_base_202210100336.json"
     }
 }
