@@ -18,6 +18,8 @@ wget_path = "c:\\Program Files\\wget"
 audit_json_path = "c:\\ProgramData\\Packer"
 audit_json_file = "audit.json"
 
+os_hostname = "CHANGEME"
+
 win_startmenu_xml = "BaseNoApps_StartMenu_202209190125.xml"
 
 vmware_tools = {

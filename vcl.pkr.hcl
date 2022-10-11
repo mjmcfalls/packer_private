@@ -98,12 +98,16 @@ variable "elevated_pwd" {
   sensitive = true
   type    = string
   default = ""
- 
-}
 
+}
 variable "net_drive" {
   type    = string
   default = "z:"
+}
+
+variable "os_hostname" {
+  type    = string
+  default = ""
 }
 
 variable "net_pass" {
@@ -557,6 +561,7 @@ build {
       "a:/Install_dotnet3.5.ps1",
       # "Start-Process -NoNewWindow -Wait -FilePath \"${var.win_temp_dir}\\apps\\vmware\\vmtools\\windows\\setup.exe\" -ArgumentList \"/S /v /qn REBOOT=R ADDLOCAL=ALL REMOVE=Hgfs,FileIntrospection,NetworkIntrospection,BootCamp,CBHelper\"",
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}\\apps\\vmware\\vmtools\\windows' -app '${lookup(var.vmware_tools, "name", "VMWare Tools")}' -installParams \"${lookup(var.vmware_tools, "parameters", "\"/S /v /qn REBOOT=R ADDLOCAL=ALL REMOVE=Hgfs,FileIntrospection,NetworkIntrospection,BootCamp,CBHelper\"")}\" -installername '${lookup(var.vmware_tools,"installer","setup.exe")}'",
+      "a:/set_win_hostname.ps1 -hostname '${var.os_hostname}'",
     ]
   }
  
