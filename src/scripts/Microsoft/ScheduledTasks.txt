@@ -55,6 +55,7 @@ QueueReporting
 UpdateLibrary
 Scheduled Start
 sih
-XblGameSaveTask
+XblGame*
+OneDrive*
 GoogleUpdate*
 MicrosoftEdge*
