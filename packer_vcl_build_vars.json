@@ -1,50 +1,56 @@
 {
     "Windows10": {
+        "varfiles": [
+            ".\\vars\\Windows_VCL\\Windows_vcl.pkrvars.hcl",
+            "vars\\Windows_VCL\\Windows_VCL_App_Vars.pkrvars.hcl",
+            ".\\secrets\\secrets.pkrvars.hcl"
+        ],
+        "vars": {
+            "vm_name": "Windows10",
+            "os_hostname": "Windows10",
+            "keepregistered": "true",
+            "isoPath": "D:\\isos\\windows10_202209291037.iso",
+            "isoSha": "sha256:B9276B4A2C389AD4AC2288DEB18E18BD9A2FFD0453F65C8EDD8D02C06CEBEF5D",
+            "unattendPath": "C:\\Users\\mmcfall\\Desktop\\dev\\UnattendFiles\\Windows10_ltsb\\autounattend.xml",
+            "win_startmenu_xml": "BaseNoApps_StartMenu_202209190125.xml",
+            "deploy_private_mac": "00:50:56:06:80:09",
+            "deploy_public_mac": "00:50:56:06:80:08",
+            "prod_private_mac": "00:50:56:06:7e:39",
+            "prod_public_mac": "00:50:56:06:7e:38"
+        },
         "debug": "1",
         "logPath": "c:\\temp",
-        "varsfile": ".\\vars\\Windows_VCL\\Windows_vcl.pkrvars.hcl",
-        "appvarFile": "vars\\Windows_VCL\\Windows_VCL_App_Vars.pkrvars.hcl",
-        "secretsfile": ".\\secrets\\secrets.pkrvars.hcl",
         "buildfile": ".\\vcl.pkr.hcl",
         "packerpath": ".\\bin\\packer.exe",
-        "vm_name": "Windows10",
-        "os_hostname": "Windows10",
-        "keepregistered": "true",
-        "isoPath": "D:\\isos\\windows10_202209291037.iso",
-        "isoSha": "sha256:B9276B4A2C389AD4AC2288DEB18E18BD9A2FFD0453F65C8EDD8D02C06CEBEF5D",
-        "unattendPath": "C:\\Users\\mmcfall\\Desktop\\dev\\UnattendFiles\\Windows10_ltsb\\autounattend.xml",
         "buildTarget": "windows_base.vmware-iso.win10_iso",
         "startTime": "",
         "endTime": "",
-        "stopwatch": "",
-        "deploy_private_mac": "00:50:56:06:80:09",
-        "deploy_public_mac": "00:50:56:06:80:08",
-        "prod_private_mac": "00:50:56:06:7e:39",
-        "prod_public_mac": "00:50:56:06:7e:38",
-        "win_startmenu_xml": "BaseNoApps_StartMenu_202209190125.xml"
+        "stopwatch": ""
     },
     "Windows11": {
+        "varfiles": [
+            ".\\vars\\Windows_VCL\\Windows_vcl.pkrvars.hcl",
+            "vars\\Windows_VCL\\Windows_VCL_App_Vars.pkrvars.hcl",
+            ".\\secrets\\secrets.pkrvars.hcl"
+        ],
+        "vars": {
+            "vm_name": "Windows11",
+            "os_hostname": "Windows11",
+            "keepregistered": "true",
+            "isoPath": "D:\\isos\\Win11_ENT_x64_KMS_NOBOOT_202210100920.iso",
+            "isoSha": "sha256:F29E211154CBA49D680D9CA4C75B2622AD3F2C2C0B48D69976F963FF12BB1C52",
+            "unattendPath": "C:\\Users\\mmcfall\\Desktop\\dev\\UnattendFiles\\Windows11\\TPM_Secureboot_bypass\\autounattend.xml",
+            "deploy_private_mac": "00:50:56:06:80:09",
+            "deploy_public_mac": "00:50:56:06:80:08",
+            "prod_private_mac": "00:50:56:06:7e:83",
+            "prod_public_mac": "00:50:56:06:7e:82"
+        },
         "debug": "1",
         "logPath": "c:\\temp\\",
-        "varsfile": ".\\vars\\Windows_VCL\\Windows_vcl.pkrvars.hcl",
-        "appvarFile": "vars\\Windows_VCL\\Windows_VCL_App_Vars.pkrvars.hcl",
-        "secretsfile": ".\\secrets\\secrets.pkrvars.hcl",
         "buildfile": ".\\vcl.pkr.hcl",
         "packerpath": ".\\bin\\packer.exe",
-        "vm_name": "Windows11",
-        "os_hostname": "Windows11",
-        "keepregistered": "true",
-        "isoPath": "D:\\isos\\Win11_ENT_x64_KMS_NOBOOT_202210100920.iso",
-        "isoSha": "sha256:F29E211154CBA49D680D9CA4C75B2622AD3F2C2C0B48D69976F963FF12BB1C52",
-        "unattendPath": "C:\\Users\\mmcfall\\Desktop\\dev\\UnattendFiles\\Windows11\\TPM_Secureboot_bypass\\autounattend.xml",
         "buildTarget": "windows_base.vmware-iso.win11_iso",
-        "startMenu": "",
         "endTime": "",
-        "stopwatch": "",
-        "deploy_private_mac": "00:50:56:06:80:09",
-        "deploy_public_mac": "00:50:56:06:80:08",
-        "prod_private_mac": "00:50:56:06:7e:83",
-        "prod_public_mac": "00:50:56:06:7e:82",
-        "win_startmenu_xml": "Windows11_base_202210100336.json"
+        "stopwatch": ""
     }
 }

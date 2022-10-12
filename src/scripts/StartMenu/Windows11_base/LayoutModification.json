@@ -1,0 +1,22 @@
+{
+    "pinnedList": [
+        {
+            "desktopAppId": "c:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+        },
+        {
+            "desktopAppId": "%ALLUSERSPROFILE%\\Microsoft\\Windows\\Start Menu\\Programs\\7-Zip\\7-Zip File Manager.lnk"
+        },
+        {
+            "desktopAppId": "Microsoft.Windows.Explorer"
+        },
+        {
+            "desktopAppId": "MSEdge"
+        },
+        {
+            "desktopAppId": "%ALLUSERSPROFILE%\\Microsoft\\Windows\\Start Menu\\Programs\\Firefox.lnk"
+        },
+        {
+            "desktopAppId": "%ALLUSERSPROFILE%\\Microsoft\\Windows\\Start Menu\\Programs\\Google Chrome.lnk"
+        }
+    ]
+}

@@ -29,6 +29,9 @@
 			"site_settings": false
 		},
 		"dark_theme": true,
+		"first_run_tabs": [
+			"https://its.unc.edu/research-computing/"
+		],
 		"show_toolbar_bookmarks_button": true,
 		"show_toolbar_collections_button": true,
 		"show_toolbar_downloads_button": false,
@@ -46,7 +49,7 @@
 	"fullscreen": {
 		"allowed": true
 	},
-	"homepage": "https://www.google.com/",
+	"homepage": "https://its.unc.edu/research-computing/",
 	"homepage_is_newtabpage": true,
 	"history": {
 		"clear_on_exit": false,
@@ -54,6 +57,9 @@
 	},
 	"feedback_allowed": false,
 	"session": {
-		"restore_on_startup": 5
+		"restore_on_startup": 4,
+		"startup_urls": [
+			"https://its.unc.edu/research-computing/"
+		]
 	}
 }
