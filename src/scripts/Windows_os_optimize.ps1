@@ -4,7 +4,7 @@ Param (
     [string]$outPath = "c:\temp",
     [string]$oneDrivePath = "c:\Windows\SysWOW64\onedrivesetup.exe",
     [string]$oneDriveUninstallParams = "/uninstall",
-    $appxIgnoreList = @("microsoft.windowscommunicationsapps", "Microsoft.WindowsCalculator", "Microsoft.DesktopAppInstaller", "Microsoft.WindowsStore", "Microsoft.StorePurchaseApp", "Microsoft.Appconnector"),
+    $appxIgnoreList = @("Microsoft.WindowsTerminal","microsoft.windowscommunicationsapps", "Microsoft.WindowsCalculator", "Microsoft.DesktopAppInstaller", "Microsoft.WindowsStore", "Microsoft.StorePurchaseApp", "Microsoft.Appconnector"),
     $winFeaturesToDisable = @("DirectPlay", "WindowsMediaPlayer"),
     [string]$defaultsUserSettingsPath = "c:\temp\apps\Scripts\Microsoft\DefaultUserSettings.txt",
     [string]$defaultsUserVisualSettingsPath = "c:\temp\apps\Scripts\Microsoft\DefaultUserVisualEffects.txt",
