@@ -164,6 +164,13 @@ foreach ($file in $filesToClean) {
     
 }
 
+
+# Clean up OneDrive installer caches
+# $users = Get-ChildItem -Directory "c:\users\"
+# foreach ($u in $users){
+#     \AppData\Local\Microsoft\OneDrive
+# }
+
 # Clean up from installs
 Clear-Directory -patharray $tempPaths
 

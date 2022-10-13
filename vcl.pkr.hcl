@@ -531,6 +531,7 @@ source "vmware-iso" "win11_iso" {
     "vvtd.enable" = "TRUE"
     "windows.vbs.enabled" = "TRUE"
     "disk.EnableUUID" = "TRUE"
+    "tools.upgrade.policy" = "manual"
     }
 }
 
@@ -542,7 +543,6 @@ build {
   provisioner "powershell" {
     elevated_user     = "SYSTEM"
     elevated_password = ""
-    timeout           = "60m"
     inline = [
       "a:/Config_Winrm.ps1",
       # "a:/Create_wget_directory.ps1 -wgetPath '${var.wget_path}'",
@@ -556,7 +556,6 @@ build {
     provisioner "powershell" {
     elevated_user     = "SYSTEM"
     elevated_password = ""
-    timeout           = "60m"
     inline = [
       "a:/Install_dotnet3.5.ps1",
       # "Start-Process -NoNewWindow -Wait -FilePath \"${var.win_temp_dir}\\apps\\vmware\\vmtools\\windows\\setup.exe\" -ArgumentList \"/S /v /qn REBOOT=R ADDLOCAL=ALL REMOVE=Hgfs,FileIntrospection,NetworkIntrospection,BootCamp,CBHelper\"",
