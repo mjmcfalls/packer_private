@@ -71,7 +71,8 @@ $osRegistryChangesArray = @(
     @{DisplayName = "MS Edge First Run Experience"; Path = "HKLM:\Software\Policies\Microsoft\Edge"; Name = 'HideFirstRunExperience'; PropertyType = "DWORD"; Value = "1"; ParentPath = "HKLM:\Software\Policies\Microsoft"; ParentKey = "Edge"; ItemResults = $null; PropertyResults = $null }
     @{DisplayName = "OOBE Experience for Current User"; Path = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\UserProfileEngagement'; Name = 'ScoobeSystemSettingEnabled'; PropertyType = "DWORD"; Value = "0"; ParentPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion"; ParentKey = "UserProfileEngagement"; ItemResults = $null; PropertyResults = $null }
     @{DisplayName = "First Run Animations"; Path = 'HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon'; Name = 'EnableFirstLogonAnimation'; PropertyType = "DWORD"; Value = "0"; ParentPath = $null; ParentKey = $null; ItemResults = $null; PropertyResults = $null }
-    @{DisplayName = "Disable Privacy Experience"; Path = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\OOBE'; Name = 'DisablePrivacyExperience'; PropertyType = "DWORD"; Value = "1"; ParentPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\"; ParentKey = "OOBE"; ItemResults = $null; PropertyResults = $null }
+    @{DisplayName = "Disable Privacy Experience"; Path = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\OOBE'; Name = 'DisablePrivacyExperience'; PropertyType = "DWORD"; Value = "1"; ParentPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\"; ParentKey = "OOBE"; ItemResults = $null; PropertyResults = $null },
+    @{DisplayName = "Disable Privacy Experience"; Path = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Chat'; Name = 'ChatIcon'; PropertyType = "DWORD"; Value = "3"; ParentPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\"; ParentKey = "Windows Chat"; ItemResults = $null; PropertyResults = $null }
 )
 
 
