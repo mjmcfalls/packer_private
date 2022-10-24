@@ -56,47 +56,62 @@ Function Start-PackerBuild {
     )
 
     $vm_build_stopWatch = [System.Diagnostics.StopWatch]::StartNew()
+    $packerVars = New-Object System.Collections.Generic.List[String]
+    $packerVarfiles = New-Object System.Collections.Generic.List[String]
 
     Write-Log -Level "INFO" -Message "$($build.vm_name) - Start of Packer Build" -logfile $logfile
 
     if($vmtimestamp.IsPresent){
-        Write-Log -Level "INFO" -Message "$($build.vm_name) - Appending Timestamp to VM Name; Current VM Name: $($build.vm_name)" -logfile $logfile
-        $build.vm_name = "$($build.vm_name)_$(Get-Date -Format yyyyMMddhhmm)"
-        Write-Log -Level "INFO" -Message "$($build.vm_name) - New VM Name: $($build.vm_name)" -logfile $logfile
+        Write-Log -Level "INFO" -Message "$($build.vm_name) - Appending Timestamp to VM Name; Current VM Name: $($build.vars.vm_name)" -logfile $logfile
+        $build.vars.vm_name = "$($build.vars.vm_name)_$(Get-Date -Format yyyyMMddhhmm)"
+        Write-Log -Level "INFO" -Message "$($build.vm_name) - New VM Name: $($build.vars.vm_name)" -logfile $logfile
     }
 
 
-    Write-Log -Level "INFO" -Message "$($build.vm_name) - Build Parameters:" -logfile $logfile
-    Foreach($item in $build.PSObject.Properties){
-        Write-Log -Level "INFO" -Message "$($build.vm_name) - $($item.Name): $($item.value)"
-        # $item.Name
-        # $item.value
+    Write-Log -Level "INFO" -Message "*** $($build.vars.vm_name) - *** Build Parameters ***" -logfile $logfile
+    
+    Write-Log -Level "INFO" -Message "$($build.vars.vm_name) - Build Parameters - vars:" -logfile $logfile
+    Foreach($item in $build.vars.PSObject.Properties){
+        Write-Log -Level "INFO" -Message "$($build.vars.vm_name) - $($item.Name): $($item.value)"
+        # -var `"win_startmenu_xml=$($build.win_startmenu_xml)`"
+        $tempvarstr = "-var `"$($item.Name)=$($item.value)`""
+        $packerVars.Add($tempvarstr)
     }
+    
+    Write-Log -Level "INFO" -Message "$($build.vars.vm_name) - Build Parameters - varfiles:" -logfile $logfile
+    Foreach($item in $build.varfiles){
+        Write-Log -Level "INFO" -Message "$($build.vars.vm_name) - $($item)"
+        # -var-file $($build.secretsfile) $($build.buildfile)"
+        $tempvarstr = "-var-file $($item)"
+        $packerVarfiles.add($tempvarstr)
+    }
+
+    Write-Log -Level "INFO" -Message "$($build.vars.vm_name) - *** END Build Parameters ***" -logfile $logfile
 
     if ($build.debug -like "1") {
         $env:PACKER_LOG = ([int]$build.debug)
-        $env:PACKER_LOG_PATH = Join-path -Path $outPath -ChildPath "$($build.vm_name).log"
+        $env:PACKER_LOG_PATH = Join-path -Path $outPath -ChildPath "$($build.vars.vm_name).log"
         # $build
-        Write-Log -Level "INFO" -Message "$($build.vm_name) - Debugging log enabled" -logfile $logfile
-        Write-Log -Level "INFO" -Message "$($build.vm_name) - Logging to $($env:PACKER_LOG_PATH)" -logfile $logfile
+        Write-Log -Level "INFO" -Message "$($build.vars.vm_name) - Debugging log enabled" -logfile $logfile
+        Write-Log -Level "INFO" -Message "$($build.vars.vm_name) - Logging to $($env:PACKER_LOG_PATH)" -logfile $logfile
     }
     else {
-        Write-Log -Level "INFO" -Message "$($build.vm_name) - Debugging log disabled" -logfile $logfile
+        Write-Log -Level "INFO" -Message "$($build.vars.vm_name) - Debugging log disabled" -logfile $logfile
     }
 
 
-    Write-Log -Level "INFO" -Message "$($build.vm_name) - Building from $($build.isoPath)" -logfile $logfile
+    Write-Log -Level "INFO" -Message "$($build.vm_name) - Building from $($build.vars.isoPath)" -logfile $logfile
 
-    Write-Log -Level "INFO" -Message "$($build.packerpath) build -timestamp-ui -only $($build.buildTarget) -var `"autounattend=$($build.unattendPath)`" -var `"iso_checksum=$($build.isoSha)`" -var `"iso_url=$($build.isoPath)`" -var `"vm_name=$($build.vm_name)`" -var os_hostname=$($build.os_hostname) -var `"deploy_private_mac=$($build.deploy_private_mac)`" -var `"deploy_public_mac=$($build.deploy_public_mac)`" -var `"prod_private_mac=$($build.prod_private_mac)`" -var `"prod_public_mac=$($build.prod_public_mac)`" -var `"win_startmenu_xml=$($build.win_startmenu_xml)`" -var-file $($build.varsfile) -var-file $($build.appvarFile)  -var-file $($build.secretsfile) $($build.buildfile)"  -logfile $logfile
+    Write-Log -Level "INFO" -Message "$($build.packerpath) build -timestamp-ui -only $($build.buildTarget) $($packerVars -join ' ') $($packerVarfiles -join ' ') $($build.buildfile)" -logfile $logfile
 
-    # Start-Process -NoNewWindow -FilePath "$($build.packerpath)" -ArgumentList "build -timestamp-ui -only $($build.buildTarget) -var `"autounattend=$($build.unattendPath)`" -var `"iso_checksum=$($build.isoSha)`" -var `"iso_url=$($build.isoPath)`" -var `"vm_name=$($build.vm_name)`" -var `"os_hostname=$($build.os_hostname)`"  -var `"deploy_private_mac=$($build.deploy_private_mac)`" -var `"deploy_public_mac=$($build.deploy_public_mac)`" -var `"prod_private_mac=$($build.prod_private_mac)`" -var `"prod_public_mac=$($build.prod_public_mac)`" -var `"win_startmenu_xml=$($build.win_startmenu_xml)`" -var-file $($build.varsfile) -var-file $($build.appvarFile) -var-file $($build.secretsfile) $($build.buildfile)" -Wait
+    # Start-Process -NoNewWindow -FilePath "$($build.packerpath)" -ArgumentList "build -timestamp-ui -only $($build.buildTarget) $($packerVars -join ' ') $($packerVarfiles -join ' ') $($build.buildfile)" -Wait
 
-    Write-Log -Level "INFO" -Message "$($build.vm_name) - End Packer build" -logfile $logfile
+    Write-Log -Level "INFO" -Message "$($build.vars.vm_name) - End Packer build" -logfile $logfile
 
     $vm_build_stopWatch.Stop()
     $build.stopwatch = $vm_build_stopWatch
     
-    Write-Log -Level "INFO" -Message "$($build.vm_name) - Build Time: $($vm_build_stopWatch.Elapsed)" -logfile $logfile
+    Write-Log -Level "INFO" -Message "$($build.vars.vm_name) - Build Time: $($vm_build_stopWatch.Elapsed)" -logfile $logfile
 
     $build
 }

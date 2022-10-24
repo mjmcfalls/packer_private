@@ -376,18 +376,24 @@ variable "docker" {
   type = map(string)
 }
 
-packer {
-  # required_plugins {
-  #   windows-update = {
-  #     version = "0.14.1"
-  #     source = "github.com/rgl/windows-update"
-  #   }
-  # }
+variable "build_public_mac" {
+  type = string
 }
-# source blocks are generated from your builders; a source can be referenced in
-# build blocks. A build block runs provisioner and post-processors on a
-# source. Read the documentation for source blocks here:
-# https://www.packer.io/docs/templates/hcl_templates/blocks/source
+
+variable "deploy_public_mac" {
+  type = string
+}
+
+variable "build_private_mac" {
+  type = string
+}
+
+variable "deploy_private_mac" {
+  type = string
+}
+
+packer {
+}
 
 source "vmware-iso" "win10_iso" {
   # http_directory   = "${var.http_directory}"
@@ -433,30 +439,47 @@ source "vmware-iso" "win10_iso" {
   keep_registered = "true"
   skip_export = "true"
   vmx_data = {
-    "ethernet0.address" = "00:50:56:06:80:08"
+    "ethernet0.address" = "${var.build_public_mac}"
     "ethernet0.addressType" = "static"
-    "ethernet0.connectionType" = "custom"
+    # "ethernet0.connectionType" = "custom"
     "ethernet0.networkName" = "Public"
     "ethernet0.present" = "TRUE"
-    "ethernet0.virtualDev" = "e1000e"
-    "ethernet1.address" = "00:50:56:06:80:09"
-    "ethernet1.addressType" = "static"
-    "ethernet1.connectionType" = "custom"
-    "ethernet1.networkName "= "Private"
-    "ethernet1.present" = "TRUE"
-    "ethernet1.virtualDev" = "e1000e"
+    # "ethernet0.virtualDev" = "e1000e"
+    # "ethernet1.address" = "${var.build_private_mac}"
+    # "ethernet1.addressType" = "static"
+    # "ethernet1.connectionType" = "custom"
+    # "ethernet1.networkName "= "Private"
+    # "ethernet1.present" = "TRUE"
+    # "ethernet1.virtualDev" = "e1000e"
     "featMask.vm.hv.capable" = "Min:1"
     "mem.hotadd" = "TRUE"
-    "toolScripts.afterPowerOn" = "TRUE"
-    "toolScripts.afterResume" = "TRUE"
-    "toolScripts.beforePowerOff" = "TRUE"
-    "toolScripts.beforeSuspend" = "TRUE"
+    "toolScripts.afterPowerOn" = "FALSE"
+    "toolScripts.afterResume" = "FALSE"
+    "toolScripts.beforePowerOff" = "FALSE"
+    "toolScripts.beforeSuspend" = "FALSE"
     "tools.remindInstall" = "FALSE"
     "tools.syncTime" = "FALSE"
     "vcpu.hotadd" = "TRUE"
     "vhv.enable" = "TRUE"
     "usb_xhci.present" = "TRUE" 
+    "virtualHW.version" = "15"
+    "tools.upgrade.policy" = "manual"
     }
+  vmx_data_post = {
+    "ethernet0.address" = "${var.deploy_public_mac}"
+    "ethernet0.addressType" = "static"
+    "ethernet0.connectionType" = "custom"
+    "ethernet0.networkName" = "Public"
+    "ethernet0.present" = "TRUE"
+    "ethernet0.virtualDev" = "e1000e"
+    "ethernet1.address" = "${var.deploy_private_mac}"
+    "ethernet1.addressType" = "static"
+    "ethernet1.connectionType" = "custom"
+    "ethernet1.networkName "= "Private"
+    "ethernet1.present" = "TRUE"
+    "ethernet1.virtualDev" = "e1000e"
+    "ide1:0.present" = "FALSE"
+  }
 }
 
 source "vmware-iso" "win11_iso" {
@@ -502,18 +525,18 @@ source "vmware-iso" "win11_iso" {
   keep_registered = "true"
   skip_export = "true"
   vmx_data = {
-    "ethernet0.address" = "00:50:56:06:80:08"
+    "ethernet0.address" = "${var.build_public_mac}"
     "ethernet0.addressType" = "static"
     "ethernet0.connectionType" = "custom"
     "ethernet0.networkName" = "Public"
     "ethernet0.present" = "TRUE"
     "ethernet0.virtualDev" = "e1000e"
-    "ethernet1.address" = "00:50:56:06:80:09"
-    "ethernet1.addressType" = "static"
-    "ethernet1.connectionType" = "custom"
-    "ethernet1.networkName "= "Private"
-    "ethernet1.present" = "TRUE"
-    "ethernet1.virtualDev" = "e1000e"
+    # "ethernet1.address" = "${var.build_private_mac}"
+    # "ethernet1.addressType" = "static"
+    # "ethernet1.connectionType" = "custom"
+    # "ethernet1.networkName "= "Private"
+    # "ethernet1.present" = "TRUE"
+    # "ethernet1.virtualDev" = "e1000e"
     "featMask.vm.hv.capable" = "Min:1"
     "mem.hotadd" = "TRUE"
     "toolScripts.afterPowerOn" = "TRUE"
@@ -523,16 +546,29 @@ source "vmware-iso" "win11_iso" {
     "tools.remindInstall" = "FALSE"
     "tools.syncTime" = "FALSE"
     "vcpu.hotadd" = "TRUE"
-    "vhv.enable" = "TRUE"
+    "vhv.enable" = "FALSE"
     "usb_xhci.present" = "TRUE" 
-    "vhv.enable" = "TRUE"
     "firmware" = "efi"
     "uefi.secureBoot.enabled" = "FALSE"
-    "vvtd.enable" = "TRUE"
-    "windows.vbs.enabled" = "TRUE"
+    "vvtd.enable" = "FALSE"
+    "windows.vbs.enabled" = "FALSE"
     "disk.EnableUUID" = "TRUE"
-    "tools.upgrade.policy" = "manual"
     }
+  vmx_data_post = {
+    "ethernet0.address" = "${var.deploy_public_mac}"
+    "ethernet0.addressType" = "static"
+    "ethernet0.connectionType" = "custom"
+    "ethernet0.networkName" = "Public"
+    "ethernet0.present" = "TRUE"
+    "ethernet0.virtualDev" = "e1000e"
+    "ethernet1.address" = "${var.deploy_private_mac}"
+    "ethernet1.addressType" = "static"
+    "ethernet1.connectionType" = "custom"
+    "ethernet1.networkName "= "Private"
+    "ethernet1.present" = "TRUE"
+    "ethernet1.virtualDev" = "e1000e"
+    "ide1:0.present" = "FALSE"
+  }
 }
 
 
@@ -585,8 +621,8 @@ build {
       "${var.win_temp_dir}\\scripts\\install_app.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.chrome, "name", "Chrome")}' -installParams '${lookup(var.chrome, "parameters", "/quiet /norestart")}' -installername '${lookup(var.chrome,"installer","GoogleChromeStandaloneEnterprise64.msi")}'",
       "${var.win_temp_dir}\\scripts\\Firefox\\install_firefox.ps1 -SearchPath '${var.win_temp_dir}' -app '${lookup(var.firefox, "name", "Firefox")}' -installername '${lookup(var.firefox,"installer","Firefox Setup 101.0.exe")}'",
       # Cygwin Install
-      "${var.win_temp_dir}\\scripts\\cygwin\\install_cygwin.ps1 -cygwinroot '${lookup(var.cygwin, "root", "C:\\cygwin")}' -pass '${var.winrm_password}' -vclscriptpath '${var.win_temp_dir}\\scripts\\cygwin\\cygwin-sshd-config.sh'",
-      "${var.win_temp_dir}\\scripts\\cygwin\\cygwin-rebaseall.ps1 -cygwinroot '${lookup(var.cygwin, "root", "C:\\cygwin")}'",
+      # "${var.win_temp_dir}\\scripts\\cygwin\\install_cygwin.ps1 -cygwinroot '${lookup(var.cygwin, "root", "C:\\cygwin")}' -pass '${var.winrm_password}' -vclscriptpath '${var.win_temp_dir}\\scripts\\cygwin\\cygwin-sshd-config.sh'",
+      # "${var.win_temp_dir}\\scripts\\cygwin\\cygwin-rebaseall.ps1 -cygwinroot '${lookup(var.cygwin, "root", "C:\\cygwin")}'",
 
     ]
   }
@@ -600,7 +636,7 @@ build {
       # VCL Customization
       "${var.win_temp_dir}\\scripts\\VCL\\copy_vcl_scripts.ps1 -searchPath '${lookup(var.vcl, "src_path", "C:\\temp")}' -scriptsPath '${lookup(var.vcl, "script_path", "C:\\Scripts")}' -packerScriptsPath ${var.win_temp_dir}",
       # Cygwin Customization
-      "${var.win_temp_dir}\\scripts\\cygwin\\customize_cygwin.ps1 -renamesvc -nopublicIcon -sourcePath '${var.win_temp_dir}\\apps\\cygwin' -cygwinroot '${lookup(var.cygwin, "root", "C:\\cygwin")}'",
+      # "${var.win_temp_dir}\\scripts\\cygwin\\customize_cygwin.ps1 -renamesvc -nopublicIcon -sourcePath '${var.win_temp_dir}\\apps\\cygwin' -cygwinroot '${lookup(var.cygwin, "root", "C:\\cygwin")}'",
       "a:/Windows_os_optimize.ps1 -defaultsUserSettingsPath '${lookup(var.os_optimize, "defaultsUserSettingsPath", "a:\\DefaultUserSettings.txt")}' -ScheduledTasksListPath '${lookup(var.os_optimize, "ScheduledTasksListPath", "a:\\ScheduledTasks.txt")}' -automaticTracingFilePath '${lookup(var.os_optimize, "automaticTracingFilePath", "a:\\AutomaticTracers.txt")}' -servicesToDisablePath '${lookup(var.os_optimize, "servicesToDisablePath", "a:\\ServicesToDisable.txt")}'",
       "${var.win_temp_dir}\\scripts\\import_startmenu_xml.ps1 -searchpath '${var.win_temp_dir}' -startmenufile 'Windows11_base_202210100336.json'",
     ]
