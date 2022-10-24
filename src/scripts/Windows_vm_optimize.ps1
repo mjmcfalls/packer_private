@@ -208,7 +208,7 @@ if ($statusdefragsvc.Status -eq "Stopped") {
     Start-Service $svcdefragsvc
 }
 
-Optimize-Volume -DriveLetter C -Defrag -NormalPriority #-Verbose
+Optimize-Volume -DriveLetter C -Defrag -NormalPriority 
 Write-Log -LogFile $logfile -Level "INFO" -Message "$($app) - Stopping $($svcdefragsvc)"
 Stop-Service $svcdefragsvc
 Write-Log -LogFile $logfile -Level "INFO" -Message "$($app) - Setting $($svcdefragsvc) to Disabled"
